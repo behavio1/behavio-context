@@ -45,7 +45,7 @@ struct CaptureSettingsView: View {
 
     private var sourceRow: some View {
         HStack(spacing: 14) {
-            settingIcon("macwindow", color: .accentColor)
+            settingIcon("CaptureGlyph")
 
             VStack(alignment: .leading, spacing: 3) {
                 Text("Recording source")
@@ -72,7 +72,7 @@ struct CaptureSettingsView: View {
 
     private var microphoneRow: some View {
         HStack(spacing: 14) {
-            settingIcon("mic.fill", color: .purple)
+            settingIcon("MicrophoneGlyph")
 
             Text("Microphone")
                 .font(.body.weight(.medium))
@@ -145,12 +145,13 @@ struct CaptureSettingsView: View {
         .background(Color.orange.opacity(0.10), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 
-    private func settingIcon(_ name: String, color: Color) -> some View {
-        Image(systemName: name)
-            .font(.system(size: 15, weight: .semibold))
-            .foregroundStyle(color)
-            .frame(width: 30, height: 30)
-            .background(color.opacity(0.12), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+    private func settingIcon(_ name: String) -> some View {
+        Image(nsImage: AppResourceBundle.image(named: name))
+            .resizable()
+            .interpolation(.high)
+            .scaledToFit()
+            .frame(width: 34, height: 34)
+            .shadow(color: .cyan.opacity(0.18), radius: 5, y: 2)
             .accessibilityHidden(true)
     }
 

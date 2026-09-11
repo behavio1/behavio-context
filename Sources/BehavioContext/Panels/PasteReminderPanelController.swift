@@ -79,9 +79,11 @@ private struct PasteReminderView: View {
 
     var body: some View {
         HStack(spacing: 14) {
-            Image(systemName: "doc.on.clipboard")
-                .font(.system(size: 26, weight: .medium))
-                .foregroundStyle(Color.accentColor)
+            Image(nsImage: AppResourceBundle.image(named: "CopyGlyph"))
+                .resizable()
+                .interpolation(.high)
+                .scaledToFit()
+                .frame(width: 34, height: 34)
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 5) {
                 Text(title)

@@ -7,11 +7,12 @@ struct ShortcutSettingsView: View {
 
     var body: some View {
         HStack(spacing: 14) {
-            Image(systemName: "keyboard")
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(.blue)
-                .frame(width: 30, height: 30)
-                .background(Color.blue.opacity(0.12), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+            Image(nsImage: AppResourceBundle.image(named: "ShortcutGlyph"))
+                .resizable()
+                .interpolation(.high)
+                .scaledToFit()
+                .frame(width: 34, height: 34)
+                .shadow(color: .blue.opacity(0.20), radius: 5, y: 2)
                 .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 2) {

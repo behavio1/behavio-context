@@ -103,6 +103,20 @@ final class RepositoryContractTests: XCTestCase {
         XCTAssertFalse(captureSource.contains("Label(\"Screens\""))
     }
 
+    func testRecordingCapsuleRemainsInteractiveDuringLiveUpdates() throws {
+        let feedbackURL = repositoryRoot.appendingPathComponent(
+            "Sources/BehavioContext/Panels/RecordingFeedbackPanelController.swift"
+        )
+        let source = try String(contentsOf: feedbackURL, encoding: .utf8)
+
+        XCTAssertTrue(source.contains("InteractiveRecordingPanel("))
+        XCTAssertTrue(source.contains("override var canBecomeKey: Bool { true }"))
+        XCTAssertTrue(source.contains("panel.becomesKeyOnlyIfNeeded = true"))
+        XCTAssertTrue(source.contains("@Bindable var store: RecordingSessionStore"))
+        XCTAssertTrue(source.contains(".contentShape(Rectangle())"))
+        XCTAssertEqual(source.components(separatedBy: "panel.contentView =").count - 1, 1)
+    }
+
     func testRecordingPlaybackStartsAutomatically() throws {
         let playbackURL = repositoryRoot
             .appendingPathComponent("Sources/BehavioContext/Views/RecordingResultView.swift")
@@ -136,7 +150,10 @@ final class RepositoryContractTests: XCTestCase {
         XCTAssertTrue(source.contains("notification: .announcementRequested"))
         XCTAssertTrue(source.contains("item.setString(fileURL.absoluteString, forType: .fileURL)"))
         XCTAssertTrue(source.contains("pasteboard.writeObjects([item])"))
-        XCTAssertFalse(source.contains("ScrollView {"))
+        XCTAssertTrue(source.contains("contextDocumentPreview"))
+        XCTAssertTrue(source.contains("appendingPathComponent(\"context.md\")"))
+        XCTAssertTrue(source.contains("copyContextDocumentToPasteboard"))
+        XCTAssertTrue(source.contains("AppResourceBundle.image(named: \"CopyGlyph\")"))
         XCTAssertFalse(source.contains("Text(\"Share this recording\")"))
         XCTAssertFalse(source.contains("sharingOptions"))
         XCTAssertFalse(source.contains("NSCursor.pointingHand"))
@@ -190,6 +207,11 @@ final class RepositoryContractTests: XCTestCase {
         let catalog = resources.appendingPathComponent("Assets.xcassets")
         for relativePath in [
             "AppIcon.appiconset/icon_512x512@2x.png",
+            "CaptureGlyph.imageset/CaptureGlyph@2x.png",
+            "MicrophoneGlyph.imageset/MicrophoneGlyph@2x.png",
+            "ShortcutGlyph.imageset/ShortcutGlyph@2x.png",
+            "ContextGlyph.imageset/ContextGlyph@2x.png",
+            "CopyGlyph.imageset/CopyGlyph@2x.png",
         ] {
             XCTAssertTrue(
                 FileManager.default.fileExists(
@@ -198,6 +220,28 @@ final class RepositoryContractTests: XCTestCase {
                 "Missing brand asset: \(relativePath)"
             )
         }
+
+        for fileName in [
+            "CaptureGlyph.png",
+            "MicrophoneGlyph.png",
+            "ShortcutGlyph.png",
+            "ContextGlyph.png",
+            "CopyGlyph.png",
+        ] {
+            XCTAssertTrue(
+                FileManager.default.fileExists(
+                    atPath: resources.appendingPathComponent(fileName).path
+                ),
+                "Missing runtime brand asset: \(fileName)"
+            )
+        }
+
+        let loaderURL = repositoryRoot
+            .appendingPathComponent("Sources/BehavioContext/AppResourceBundle.swift")
+        let loaderSource = try String(contentsOf: loaderURL, encoding: .utf8)
+        XCTAssertTrue(loaderSource.contains("Bundle.main.resourceURL"))
+        XCTAssertTrue(loaderSource.contains("BehavioContext_BehavioContext.bundle"))
+        XCTAssertTrue(loaderSource.contains("NSImage(contentsOf: url)"))
 
         let retiredName = ["Paste", "Cast"].joined()
         for fileURL in try repositoryFiles(under: repositoryRoot) {

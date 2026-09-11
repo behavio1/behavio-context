@@ -80,7 +80,15 @@ struct MenuBarContentView: View {
         } else {
             Button(action: toggleRecording) {
                 HStack(spacing: 9) {
-                    Image(systemName: store.phase.isRecording ? "stop.fill" : "record.circle")
+                    if store.phase.isRecording || store.phase == .preparing {
+                        Image(systemName: "stop.fill")
+                    } else {
+                        Image(nsImage: AppResourceBundle.image(named: "CaptureGlyph"))
+                            .resizable()
+                            .interpolation(.high)
+                            .scaledToFit()
+                            .frame(width: 20, height: 20)
+                    }
                     Text(store.phase.isRecording || store.phase == .preparing ? "Stop Recording" : "Start Recording")
                         .fontWeight(.semibold)
                     Spacer(minLength: 0)
@@ -100,8 +108,12 @@ struct MenuBarContentView: View {
 
     private var footer: some View {
         HStack(spacing: 8) {
-            Image(systemName: "mic.fill")
-                .foregroundStyle(.secondary)
+            Image(nsImage: AppResourceBundle.image(named: "MicrophoneGlyph"))
+                .resizable()
+                .interpolation(.high)
+                .scaledToFit()
+                .frame(width: 18, height: 18)
+                .accessibilityHidden(true)
             Text(verbatim: store.selectedMicrophoneName) // localization: allow-verbatim runtime device name
                 .font(.caption)
                 .foregroundStyle(.secondary)

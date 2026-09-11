@@ -1,0 +1,8 @@
+{
+  "images" : [
+    { "filename" : "MicrophoneGlyph.png", "idiom" : "universal", "scale" : "1x" },
+    { "filename" : "MicrophoneGlyph@2x.png", "idiom" : "universal", "scale" : "2x" },
+    { "filename" : "MicrophoneGlyph@3x.png", "idiom" : "universal", "scale" : "3x" }
+  ],
+  "info" : { "author" : "xcode", "version" : 1 }
+}

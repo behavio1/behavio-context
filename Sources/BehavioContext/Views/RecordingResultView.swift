@@ -18,6 +18,7 @@ struct RecordingResultView: View {
     @State private var isDeletingRecording = false
     @State private var destinationAlert: RecordingContextDestinationAlert?
     @State private var isReturningToApplication = false
+    @State private var contextDocumentText: String?
 
     private enum CopyContent {
         case context, video
@@ -48,6 +49,9 @@ struct RecordingResultView: View {
         }
         .onDisappear {
             copyToastDismissTask?.cancel()
+        }
+        .task(id: result.id) {
+            loadContextDocument()
         }
         .confirmationDialog(
             "Delete Recording?",
@@ -188,16 +192,25 @@ struct RecordingResultView: View {
     }
 
     private var contextCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 10) {
-                Image(systemName: result.contextDirectoryURL == nil ? "doc.fill" : "checkmark.circle.fill")
-                    .font(.title3)
-                    .foregroundStyle(result.contextDirectoryURL == nil ? Color.secondary : Color.green)
+                if result.contextDirectoryURL == nil {
+                    Image(systemName: "doc.fill")
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
+                } else {
+                    Image(nsImage: AppResourceBundle.image(named: "ContextGlyph"))
+                        .resizable()
+                        .interpolation(.high)
+                        .scaledToFit()
+                        .frame(width: 34, height: 34)
+                        .accessibilityHidden(true)
+                }
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(verbatim: contextLabel) // localization: allow-verbatim Polish v1 context result label
                         .font(.headline)
-                    Text(verbatim: result.context) // localization: allow-verbatim local file path
+                    Text(verbatim: contextDocumentURL?.path ?? result.context) // localization: allow-verbatim local file path
                         .font(.caption.monospaced())
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
@@ -206,6 +219,26 @@ struct RecordingResultView: View {
                 }
 
                 Spacer(minLength: 0)
+
+                if let contextDocumentText, !contextDocumentText.isEmpty {
+                    Button {
+                        copyContextDocumentToPasteboard(contextDocumentText)
+                    } label: {
+                        Image(nsImage: AppResourceBundle.image(named: "CopyGlyph"))
+                            .resizable()
+                            .interpolation(.high)
+                            .scaledToFit()
+                            .frame(width: 30, height: 30)
+                    }
+                    .buttonStyle(.plain)
+                    .contentShape(Circle())
+                    .help(Text(verbatim: copyContextDocumentLabel)) // localization: allow-verbatim Polish v1 help
+                    .accessibilityLabel(Text(verbatim: copyContextDocumentLabel)) // localization: allow-verbatim Polish v1 label
+                }
+            }
+
+            if result.contextDirectoryURL != nil {
+                contextDocumentPreview
             }
 
             contextActions
@@ -215,6 +248,32 @@ struct RecordingResultView: View {
         .overlay {
             RoundedRectangle(cornerRadius: 14, style: .continuous)
                 .strokeBorder(Color.primary.opacity(0.08), lineWidth: 1)
+        }
+    }
+
+    @ViewBuilder
+    private var contextDocumentPreview: some View {
+        if let contextDocumentText {
+            ScrollView {
+                Text(verbatim: contextDocumentText.isEmpty ? result.context : contextDocumentText) // localization: allow-verbatim agent context file contents
+                    .font(.system(size: 11.5, design: .monospaced))
+                    .foregroundStyle(.primary.opacity(0.86))
+                    .textSelection(.enabled)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(12)
+            }
+            .frame(height: 116)
+            .background(Color.black.opacity(colorScheme == .dark ? 0.20 : 0.045))
+            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .strokeBorder(Color.primary.opacity(0.08), lineWidth: 1)
+            }
+        } else {
+            ProgressView()
+                .controlSize(.small)
+                .frame(maxWidth: .infinity)
+                .frame(height: 116)
         }
     }
 
@@ -258,10 +317,38 @@ struct RecordingResultView: View {
     private var locale: Locale { store.effectiveLocale }
 
     private var contextLabel: String {
-        result.contextDirectoryURL == nil ? "Plik nagrania" : "Folder kontekstu dla agenta"
+        result.contextDirectoryURL == nil ? "Plik nagrania" : "Kontekst dla agenta · context.md"
     }
 
     private var overflowAccessibilityLabel: String { "Więcej" }
+    private var copyContextDocumentLabel: String { "Kopiuj treść context.md" }
+
+    private var contextDocumentURL: URL? {
+        result.contextDirectoryURL?.appendingPathComponent("context.md")
+    }
+
+    private func loadContextDocument() {
+        contextDocumentText = nil
+        guard let contextDocumentURL else {
+            contextDocumentText = ""
+            return
+        }
+        contextDocumentText = (try? String(contentsOf: contextDocumentURL, encoding: .utf8)) ?? ""
+    }
+
+    private func copyContextDocumentToPasteboard(_ contents: String) {
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        guard pasteboard.setString(contents, forType: .string) else {
+            destinationAlert = RecordingContextDestinationAlert(
+                title: String(localized: "Couldn’t Copy Context", locale: locale),
+                message: String(localized: "Try copying the context again.", locale: locale)
+            )
+            return
+        }
+        analytics.capture(.contextCopied)
+        showCopyToast(String(localized: "Context copied", locale: locale))
+    }
 
     @discardableResult
     private func copyVideoToPasteboard(_ fileURL: URL, showConfirmation: Bool = true) -> Bool {
@@ -390,11 +477,12 @@ private struct RecordingSidebarRow: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            Image(systemName: "video.fill")
-                .font(.system(size: 12, weight: .semibold))
-                .foregroundStyle(Color.accentColor)
+            Image(nsImage: AppResourceBundle.image(named: "CaptureGlyph"))
+                .resizable()
+                .interpolation(.high)
+                .scaledToFit()
                 .frame(width: 28, height: 28)
-                .background(Color.accentColor.opacity(0.12), in: RoundedRectangle(cornerRadius: 8))
+                .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(

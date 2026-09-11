@@ -17,7 +17,7 @@ final class RecordingFeedbackPanelController {
     ) {
         self.store = store
         self.stopRecording = stopRecording
-        panel = NSPanel(
+        panel = InteractiveRecordingPanel(
             contentRect: NSRect(x: 0, y: 0, width: 940, height: 68),
             styleMask: [.borderless, .nonactivatingPanel],
             backing: .buffered,
@@ -29,10 +29,22 @@ final class RecordingFeedbackPanelController {
         panel.level = .floating
         panel.hidesOnDeactivate = false
         panel.isReleasedWhenClosed = false
+        panel.becomesKeyOnlyIfNeeded = true
+        panel.acceptsMouseMovedEvents = true
         panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
         panel.animationBehavior = .utilityWindow
         let accessibilityLabel = "Behavio Context recording controls"
         panel.setAccessibilityLabel(accessibilityLabel)
+        panel.contentView = NSHostingView(rootView: RecordingCapsuleView(
+            store: store,
+            stopRecording: stopRecording,
+            dismissFeedback: { [weak store] in
+                store?.dismissFeedback()
+            },
+            selectMicrophone: { [weak store] deviceID in
+                Task { await store?.selectMicrophoneDevice(deviceID) }
+            }
+        ))
     }
 
     func synchronize() {
@@ -57,27 +69,6 @@ final class RecordingFeedbackPanelController {
         panel.setContentSize(NSSize(width: width, height: 68))
         position(on: screen)
         panel.ignoresMouseEvents = store.phase == .preparing || store.phase == .finalizing
-        panel.contentView = NSHostingView(rootView: RecordingCapsuleView(
-            phase: store.phase,
-            elapsedSeconds: store.elapsedSeconds,
-            microphoneLevel: store.microphoneLevel,
-            transcript: store.liveTranscript,
-            transcriptIsFinal: store.liveTranscriptIsFinal,
-            microphoneName: store.selectedMicrophoneName,
-            microphoneDeviceID: store.microphoneDeviceID,
-            microphones: store.microphones,
-            sourceName: store.selectedCaptureSource?.displayName ?? "Aktywne okno",
-            message: store.hudMessage ?? store.compilationMessage,
-            locale: store.effectiveLocale,
-            isRightToLeft: store.usesRightToLeftLayout,
-            stopRecording: stopRecording,
-            dismissFeedback: { [weak store = self.store] in
-                store?.dismissFeedback()
-            },
-            selectMicrophone: { [weak store = self.store] deviceID in
-                Task { await store?.selectMicrophoneDevice(deviceID) }
-            }
-        ))
         panel.orderFrontRegardless()
 
         if phaseChanged || warningChanged {
@@ -138,27 +129,20 @@ final class RecordingFeedbackPanelController {
     }
 }
 
+private final class InteractiveRecordingPanel: NSPanel {
+    override var canBecomeKey: Bool { true }
+    override var canBecomeMain: Bool { false }
+}
+
 private struct RecordingCapsuleView: View {
-    let phase: RecordingPhase
-    let elapsedSeconds: TimeInterval
-    let microphoneLevel: Double
-    let transcript: String
-    let transcriptIsFinal: Bool
-    let microphoneName: String
-    let microphoneDeviceID: String?
-    let microphones: [CaptureDeviceOption]
-    let sourceName: String
-    let message: String?
-    let locale: Locale
-    let isRightToLeft: Bool
+    @Bindable var store: RecordingSessionStore
     let stopRecording: @MainActor () -> Void
     let dismissFeedback: @MainActor () -> Void
     let selectMicrophone: @MainActor (String) -> Void
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         Group {
-            if phase.isRecording {
+            if store.phase.isRecording {
                 recordingContent
             } else {
                 statusContent
@@ -166,23 +150,43 @@ private struct RecordingCapsuleView: View {
         }
         .padding(.horizontal, 12)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.thickMaterial, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .background {
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .fill(.thickMaterial)
+            if store.phase.isRecording {
+                RoundedRectangle(cornerRadius: 22, style: .continuous)
+                    .fill(
+                        LinearGradient(
+                            colors: [.red.opacity(0.10), .purple.opacity(0.06), .clear],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+            }
+        }
         .overlay {
             RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .strokeBorder(Color.white.opacity(0.14), lineWidth: 1)
+                .strokeBorder(
+                    LinearGradient(
+                        colors: store.phase.isRecording
+                            ? [.red.opacity(0.65), .purple.opacity(0.40), .white.opacity(0.12)]
+                            : [.white.opacity(0.18), .white.opacity(0.08)],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    ),
+                    lineWidth: 1
+                )
         }
-        .environment(\.locale, locale)
-        .environment(\.layoutDirection, isRightToLeft ? .rightToLeft : .leftToRight)
+        .shadow(color: store.phase.isRecording ? .purple.opacity(0.18) : .black.opacity(0.12), radius: 16, y: 7)
+        .environment(\.locale, store.effectiveLocale)
+        .environment(\.layoutDirection, store.usesRightToLeftLayout ? .rightToLeft : .leftToRight)
     }
 
     private var recordingContent: some View {
         HStack(spacing: 10) {
-            Circle()
-                .fill(.red)
-                .frame(width: 10, height: 10)
-                .shadow(color: .red.opacity(0.75), radius: reduceMotion ? 3 : 7)
+            RecordingPulse()
 
-            Text(verbatim: elapsedSeconds.recordingDuration) // localization: allow-verbatim numeric timer
+            Text(verbatim: store.elapsedSeconds.recordingDuration) // localization: allow-verbatim numeric timer
                 .font(.system(.body, design: .rounded, weight: .semibold))
                 .monospacedDigit()
                 .accessibilityLabel("Recording started")
@@ -193,27 +197,21 @@ private struct RecordingCapsuleView: View {
                 } icon: {
                     Image(systemName: "stop.fill")
                 }
-                    .font(.callout.weight(.semibold))
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 6)
+                .font(.callout.weight(.semibold))
+                .frame(minWidth: 86, minHeight: 36)
+                .contentShape(Rectangle())
             }
-            .buttonStyle(.plain)
-            .foregroundStyle(Color.red)
-            .background(Color.red.opacity(0.13), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
-            .overlay {
-                RoundedRectangle(cornerRadius: 9, style: .continuous)
-                    .strokeBorder(Color.red.opacity(0.55), lineWidth: 1)
-            }
+            .buttonStyle(StopRecordingButtonStyle())
             .accessibilityLabel("Stop Recording")
 
             Divider().frame(height: 28).opacity(0.40)
 
             Menu {
-                ForEach(microphones) { microphone in
+                ForEach(store.microphones) { microphone in
                     Button {
                         selectMicrophone(microphone.id)
                     } label: {
-                        if microphone.id == microphoneDeviceID {
+                        if microphone.id == store.microphoneDeviceID {
                             Label(microphone.name, systemImage: "checkmark")
                         } else {
                             Text(microphone.name)
@@ -221,7 +219,14 @@ private struct RecordingCapsuleView: View {
                     }
                 }
             } label: {
-                Label(microphoneName, systemImage: "mic.fill")
+                HStack(spacing: 6) {
+                    Image(nsImage: AppResourceBundle.image(named: "MicrophoneGlyph"))
+                        .resizable()
+                        .interpolation(.high)
+                        .scaledToFit()
+                        .frame(width: 18, height: 18)
+                    Text(verbatim: store.selectedMicrophoneName) // localization: allow-verbatim runtime device name
+                }
                     .font(.caption.weight(.medium))
                     .lineLimit(1)
                     .truncationMode(.middle)
@@ -234,16 +239,18 @@ private struct RecordingCapsuleView: View {
             .accessibilityLabel(Text(verbatim: microphoneAccessibilityLabel)) // localization: allow-verbatim runtime device name
             .accessibilityHint("Choose a microphone")
 
-            LevelWaveform(level: microphoneLevel)
-                .frame(width: 64, height: 24)
+            LevelWaveform(level: store.microphoneLevel)
+                .frame(width: 78, height: 28)
 
-            Text(transcript.isEmpty ? "Mów i wskazuj elementy w aktywnym oknie…" : transcript)
-                .font(.callout.weight(transcriptIsFinal ? .medium : .regular))
-                .foregroundStyle(transcript.isEmpty || !transcriptIsFinal ? .secondary : .primary)
+            Text(store.liveTranscript.isEmpty ? "Mów i wskazuj elementy w aktywnym oknie…" : store.liveTranscript)
+                .font(.callout.weight(store.liveTranscriptIsFinal ? .medium : .regular))
+                .foregroundStyle(store.liveTranscript.isEmpty || !store.liveTranscriptIsFinal ? .secondary : .primary)
                 .lineLimit(1)
                 .truncationMode(.head)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .accessibilityLabel(transcript.isEmpty ? "Oczekiwanie na mowę" : transcript)
+                .contentTransition(.interpolate)
+                .animation(.easeOut(duration: 0.18), value: store.liveTranscript)
+                .accessibilityLabel(store.liveTranscript.isEmpty ? "Oczekiwanie na mowę" : store.liveTranscript)
 
             Label(sourceName, systemImage: "macwindow")
                 .font(.caption.weight(.medium))
@@ -259,7 +266,7 @@ private struct RecordingCapsuleView: View {
 
     private var statusContent: some View {
         HStack(spacing: 12) {
-            if phase == .preparing || phase == .finalizing {
+            if store.phase == .preparing || store.phase == .finalizing {
                 ProgressView().controlSize(.small)
             } else {
                 Image(systemName: "exclamationmark.triangle.fill")
@@ -291,12 +298,12 @@ private struct RecordingCapsuleView: View {
     }
 
     private var isDismissableStatus: Bool {
-        if case .failed = phase { return true }
-        return phase == .idle && message != nil
+        if case .failed = store.phase { return true }
+        return store.phase == .idle && message != nil
     }
 
     private var statusTitle: String {
-        switch phase {
+        switch store.phase {
         case .preparing: "Przygotowuję aktywne okno…"
         case .finalizing: "Tworzę lekki kontekst dla agenta…"
         case .failed: "Nie udało się rozpocząć"
@@ -304,8 +311,66 @@ private struct RecordingCapsuleView: View {
         }
     }
 
+    private var sourceName: String {
+        store.selectedCaptureSource?.displayName ?? "Aktywne okno"
+    }
+
+    private var message: String? {
+        store.hudMessage ?? store.compilationMessage
+    }
+
     private var stopLabel: String { "Stop" }
-    private var microphoneAccessibilityLabel: String { "Microphone: \(microphoneName)" }
+    private var microphoneAccessibilityLabel: String { "Microphone: \(store.selectedMicrophoneName)" }
+}
+
+private struct RecordingPulse: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var isExpanded = false
+
+    var body: some View {
+        ZStack {
+            Circle()
+                .stroke(Color.red.opacity(0.65), lineWidth: 1.5)
+                .frame(width: 10, height: 10)
+                .scaleEffect(isExpanded ? 2.1 : 0.9)
+                .opacity(isExpanded ? 0 : 0.9)
+
+            Circle()
+                .fill(.red)
+                .frame(width: 10, height: 10)
+                .shadow(color: .red.opacity(0.8), radius: 6)
+        }
+        .frame(width: 18, height: 18)
+        .onAppear {
+            guard !reduceMotion else { return }
+            withAnimation(.easeOut(duration: 1.35).repeatForever(autoreverses: false)) {
+                isExpanded = true
+            }
+        }
+        .accessibilityHidden(true)
+    }
+}
+
+private struct StopRecordingButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundStyle(.white)
+            .background(
+                LinearGradient(
+                    colors: [.red, .pink.opacity(0.86)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                ),
+                in: RoundedRectangle(cornerRadius: 10, style: .continuous)
+            )
+            .shadow(
+                color: .red.opacity(configuration.isPressed ? 0.18 : 0.35),
+                radius: configuration.isPressed ? 3 : 8,
+                y: configuration.isPressed ? 1 : 4
+            )
+            .scaleEffect(configuration.isPressed ? 0.96 : 1)
+            .animation(.snappy(duration: 0.16), value: configuration.isPressed)
+    }
 }
 
 private struct LevelWaveform: View {
@@ -315,20 +380,32 @@ private struct LevelWaveform: View {
         HStack(alignment: .center, spacing: 2) {
             ForEach(0..<11, id: \.self) { index in
                 Capsule()
-                    .fill(index <= activeBars ? Color.accentColor : Color.secondary.opacity(0.28))
-                    .frame(width: 3, height: barHeight(index))
+                    .fill(
+                        LinearGradient(
+                            colors: [.pink, .purple, .cyan],
+                            startPoint: .bottom,
+                            endPoint: .top
+                        )
+                    )
+                    .frame(width: 4, height: responsiveHeight(index))
+                    .opacity(index <= activeBars ? 1 : 0.22)
+                    .shadow(
+                        color: index <= activeBars ? .purple.opacity(0.45) : .clear,
+                        radius: 3
+                    )
             }
         }
-        .animation(.easeOut(duration: 0.12), value: activeBars)
+        .animation(.smooth(duration: 0.14), value: level)
     }
 
     private var activeBars: Int {
         Int((min(1, max(0, level)) * 10).rounded())
     }
 
-    private func barHeight(_ index: Int) -> CGFloat {
+    private func responsiveHeight(_ index: Int) -> CGFloat {
         let pattern: [CGFloat] = [7, 11, 16, 22, 15, 10, 18, 24, 18, 12, 8]
-        return pattern[index]
+        let energy = 0.38 + min(1, max(0, level)) * 0.62
+        return max(4, pattern[index] * energy)
     }
 }
 
