@@ -1,0 +1,57 @@
+import AppKit
+import BehavioContextCore
+import SwiftUI
+
+struct MenuBarContentView: View {
+    @Bindable var store: RecordingSessionStore
+    let toggleRecording: () -> Void
+    let openRecordings: () -> Void
+    let openSettings: () -> Void
+
+    var body: some View {
+        if store.phase == .finalizing {
+            Text("Finalizing Recording…")
+        } else {
+            Button(action: toggleRecording) {
+                Text(store.phase.isRecording || store.phase == .preparing ? "Stop Recording" : "Start Recording")
+            }
+            .disabled(!store.isInitialized)
+        }
+        Text(store.globalShortcut.displayName)
+
+        Button("Recordings", action: openRecordings)
+            .disabled(store.recordingResults.isEmpty)
+
+        Divider()
+        Button("Settings…", action: openSettings)
+            .keyboardShortcut(",", modifiers: .command)
+        Divider()
+        Button("Quit Behavio Context") { NSApp.terminate(nil) }
+            .keyboardShortcut("q")
+    }
+}
+
+struct RecordingStatusLabel: View {
+    let store: RecordingSessionStore
+
+    var body: some View {
+        HStack(spacing: 4) {
+            Image(systemName: store.phase.isRecording ? "record.circle.fill" : "record.circle")
+                .foregroundStyle(store.phase.isRecording ? Color.red : Color.primary)
+            if store.phase.isRecording || store.phase == .finalizing {
+                Text(store.elapsedSeconds.recordingDuration)
+                    .monospacedDigit()
+            } else if store.phase == .preparing {
+                Text("Preparing…")
+            }
+        }
+        .accessibilityLabel(store.phase.isRecording ? "Stop Recording" : "Start Recording")
+    }
+}
+
+extension TimeInterval {
+    var recordingDuration: String {
+        let seconds = max(0, Int(self))
+        return String(format: "%02d:%02d:%02d", seconds / 3600, (seconds / 60) % 60, seconds % 60)
+    }
+}

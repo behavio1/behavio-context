@@ -1,0 +1,5914 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Blur Background": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Blur Background"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تمويه الخلفية"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hintergrund weichzeichnen"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desenfocar el fondo"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Flouter l’arrière-plan"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sfoca lo sfondo"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "背景をぼかす"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "배경 흐리게"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desfocar o fundo"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Размыть фон"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arka Planı Bulanıklaştır"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Làm mờ nền"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模糊背景"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模糊背景"
+          }
+        }
+      }
+    },
+    "Copy Video": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {"stringUnit": {"state": "translated", "value": "نسخ الفيديو"}},
+        "de": {"stringUnit": {"state": "translated", "value": "Video kopieren"}},
+        "en": {"stringUnit": {"state": "translated", "value": "Copy Video"}},
+        "es": {"stringUnit": {"state": "translated", "value": "Copiar vídeo"}},
+        "fr": {"stringUnit": {"state": "translated", "value": "Copier la vidéo"}},
+        "it": {"stringUnit": {"state": "translated", "value": "Copia video"}},
+        "ja-JP": {"stringUnit": {"state": "translated", "value": "ビデオをコピー"}},
+        "ko-KR": {"stringUnit": {"state": "translated", "value": "비디오 복사"}},
+        "pt-BR": {"stringUnit": {"state": "translated", "value": "Copiar vídeo"}},
+        "ru": {"stringUnit": {"state": "translated", "value": "Копировать видео"}},
+        "tr": {"stringUnit": {"state": "translated", "value": "Videoyu kopyala"}},
+        "vi": {"stringUnit": {"state": "translated", "value": "Sao chép video"}},
+        "zh-CN": {"stringUnit": {"state": "translated", "value": "复制视频"}},
+        "zh-TW": {"stringUnit": {"state": "translated", "value": "複製影片"}}
+      }
+    },
+    "Recording file": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {"stringUnit": {"state": "translated", "value": "Recording file"}},
+        "ar": {"stringUnit": {"state": "translated", "value": "ملف التسجيل"}},
+        "de": {"stringUnit": {"state": "translated", "value": "Aufnahmedatei"}},
+        "es": {"stringUnit": {"state": "translated", "value": "Archivo de grabación"}},
+        "fr": {"stringUnit": {"state": "translated", "value": "Fichier d’enregistrement"}},
+        "it": {"stringUnit": {"state": "translated", "value": "File della registrazione"}},
+        "ja-JP": {"stringUnit": {"state": "translated", "value": "録画ファイル"}},
+        "ko-KR": {"stringUnit": {"state": "translated", "value": "녹화 파일"}},
+        "pt-BR": {"stringUnit": {"state": "translated", "value": "Arquivo da gravação"}},
+        "ru": {"stringUnit": {"state": "translated", "value": "Файл записи"}},
+        "tr": {"stringUnit": {"state": "translated", "value": "Kayıt dosyası"}},
+        "vi": {"stringUnit": {"state": "translated", "value": "Tệp bản ghi"}},
+        "zh-CN": {"stringUnit": {"state": "translated", "value": "录制文件"}},
+        "zh-TW": {"stringUnit": {"state": "translated", "value": "錄製檔案"}}
+      }
+    },
+    "Copy File Path": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {"stringUnit": {"state": "translated", "value": "Copy File Path"}},
+        "ar": {"stringUnit": {"state": "translated", "value": "نسخ مسار الملف"}},
+        "de": {"stringUnit": {"state": "translated", "value": "Dateipfad kopieren"}},
+        "es": {"stringUnit": {"state": "translated", "value": "Copiar ruta del archivo"}},
+        "fr": {"stringUnit": {"state": "translated", "value": "Copier le chemin du fichier"}},
+        "it": {"stringUnit": {"state": "translated", "value": "Copia percorso del file"}},
+        "ja-JP": {"stringUnit": {"state": "translated", "value": "ファイルパスをコピー"}},
+        "ko-KR": {"stringUnit": {"state": "translated", "value": "파일 경로 복사"}},
+        "pt-BR": {"stringUnit": {"state": "translated", "value": "Copiar caminho do arquivo"}},
+        "ru": {"stringUnit": {"state": "translated", "value": "Скопировать путь к файлу"}},
+        "tr": {"stringUnit": {"state": "translated", "value": "Dosya Yolunu Kopyala"}},
+        "vi": {"stringUnit": {"state": "translated", "value": "Sao chép đường dẫn tệp"}},
+        "zh-CN": {"stringUnit": {"state": "translated", "value": "复制文件路径"}},
+        "zh-TW": {"stringUnit": {"state": "translated", "value": "複製檔案路徑"}}
+      }
+    },
+  "Copy Video & Return to %@": {
+    "extractionState": "manual",
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Copy Video & Return to %@"
+        }
+      },
+      "ar": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "نسخ الفيديو والعودة إلى %@"
+        }
+      },
+      "de": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Video kopieren & zu %@ zurückkehren"
+        }
+      },
+      "es": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Copiar vídeo y volver a %@"
+        }
+      },
+      "fr": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Copier la vidéo et revenir à %@"
+        }
+      },
+      "it": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Copia il video e torna a %@"
+        }
+      },
+      "ja-JP": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "ビデオをコピーして%@に戻る"
+        }
+      },
+      "ko-KR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "비디오를 복사하고 %@로 돌아가기"
+        }
+      },
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Copiar vídeo e voltar para %@"
+        }
+      },
+      "ru": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Скопировать видео и вернуться в %@"
+        }
+      },
+      "tr": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Videoyu Kopyala ve %@ Uygulamasına Dön"
+        }
+      },
+      "vi": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Sao chép video và quay lại %@"
+        }
+      },
+      "zh-CN": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "复制视频并返回 %@"
+        }
+      },
+      "zh-TW": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "複製影片並返回 %@"
+        }
+      }
+    }
+  },
+  "Couldn’t Copy Video": {
+    "extractionState": "manual",
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Couldn’t Copy Video"
+        }
+      },
+      "ar": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "تعذّر نسخ الفيديو"
+        }
+      },
+      "de": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Video konnte nicht kopiert werden"
+        }
+      },
+      "es": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "No se pudo copiar el vídeo"
+        }
+      },
+      "fr": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Impossible de copier la vidéo"
+        }
+      },
+      "it": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Impossibile copiare il video"
+        }
+      },
+      "ja-JP": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "ビデオをコピーできませんでした"
+        }
+      },
+      "ko-KR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "비디오를 복사할 수 없음"
+        }
+      },
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Não foi possível copiar o vídeo"
+        }
+      },
+      "ru": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Не удалось скопировать видео"
+        }
+      },
+      "tr": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Video Kopyalanamadı"
+        }
+      },
+      "vi": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Không thể sao chép video"
+        }
+      },
+      "zh-CN": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "无法复制视频"
+        }
+      },
+      "zh-TW": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "無法複製影片"
+        }
+      }
+    }
+  },
+  "Try copying the video again.": {
+    "extractionState": "manual",
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Try copying the video again."
+        }
+      },
+      "ar": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "حاول نسخ الفيديو مرة أخرى."
+        }
+      },
+      "de": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Versuche erneut, das Video zu kopieren."
+        }
+      },
+      "es": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Intenta copiar el vídeo de nuevo."
+        }
+      },
+      "fr": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Essayez de copier à nouveau la vidéo."
+        }
+      },
+      "it": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Prova a copiare di nuovo il video."
+        }
+      },
+      "ja-JP": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "ビデオをもう一度コピーしてください。"
+        }
+      },
+      "ko-KR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "비디오를 다시 복사해 보십시오."
+        }
+      },
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Tente copiar o vídeo novamente."
+        }
+      },
+      "ru": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Попробуйте скопировать видео ещё раз."
+        }
+      },
+      "tr": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Videoyu tekrar kopyalamayı deneyin."
+        }
+      },
+      "vi": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Hãy thử sao chép video lại."
+        }
+      },
+      "zh-CN": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "请尝试重新复制视频。"
+        }
+      },
+      "zh-TW": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "請嘗試重新複製影片。"
+        }
+      }
+    }
+  },
+  "Copy the video file and switch back to the original app. Press ⌘V there to paste.": {
+    "extractionState": "manual",
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Copy the video file and switch back to the original app. Press ⌘V there to paste."
+        }
+      },
+      "ar": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "انسخ ملف الفيديو وارجع إلى التطبيق الأصلي. اضغط على ⌘V هناك للصق."
+        }
+      },
+      "de": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Kopiere die Videodatei und wechsle zur ursprünglichen App zurück. Drücke dort ⌘V zum Einfügen."
+        }
+      },
+      "es": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Copia el archivo de vídeo y vuelve a la app original. Pulsa ⌘V allí para pegar."
+        }
+      },
+      "fr": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Copiez le fichier vidéo et revenez à l’app d’origine. Appuyez sur ⌘V pour le coller."
+        }
+      },
+      "it": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Copia il file video e torna all’app originale. Premi ⌘V per incollarlo."
+        }
+      },
+      "ja-JP": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "ビデオファイルをコピーして元のアプリに戻ります。そこで⌘Vを押してペーストしてください。"
+        }
+      },
+      "ko-KR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "비디오 파일을 복사하고 원래 앱으로 돌아갑니다. 해당 앱에서 ⌘V를 눌러 붙여넣으십시오."
+        }
+      },
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Copie o arquivo de vídeo e volte ao app original. Pressione ⌘V lá para colar."
+        }
+      },
+      "ru": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Скопируйте видеофайл и вернитесь в исходное приложение. Нажмите там ⌘V для вставки."
+        }
+      },
+      "tr": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Video dosyasını kopyalayın ve ilk uygulamaya dönün. Yapıştırmak için orada ⌘V tuşlarına basın."
+        }
+      },
+      "vi": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Sao chép tệp video và quay lại ứng dụng ban đầu. Nhấn ⌘V tại đó để dán."
+        }
+      },
+      "zh-CN": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "复制视频文件并切换回原来的应用。按 ⌘V 粘贴。"
+        }
+      },
+      "zh-TW": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "複製影片檔案並切換回原來的 App。按 ⌘V 貼上。"
+        }
+      }
+    }
+  },
+    "Press ⌘V to paste.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "اضغط على ⌘V للصق." } },
+        "de": { "stringUnit": { "state": "translated", "value": "Drücke ⌘V zum Einfügen." } },
+        "en": { "stringUnit": { "state": "translated", "value": "Press ⌘V to paste." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Pulsa ⌘V para pegar." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Appuyez sur ⌘V pour coller." } },
+        "it": { "stringUnit": { "state": "translated", "value": "Premi ⌘V per incollare." } },
+        "ja-JP": { "stringUnit": { "state": "translated", "value": "⌘Vを押してペーストしてください。" } },
+        "ko-KR": { "stringUnit": { "state": "translated", "value": "⌘V를 눌러 붙여넣으십시오." } },
+        "pt-BR": { "stringUnit": { "state": "translated", "value": "Pressione ⌘V para colar." } },
+        "ru": { "stringUnit": { "state": "translated", "value": "Нажмите ⌘V для вставки." } },
+        "tr": { "stringUnit": { "state": "translated", "value": "Yapıştırmak için ⌘V tuşlarına basın." } },
+        "vi": { "stringUnit": { "state": "translated", "value": "Nhấn ⌘V để dán." } },
+        "zh-CN": { "stringUnit": { "state": "translated", "value": "按 ⌘V 粘贴。" } },
+        "zh-TW": { "stringUnit": { "state": "translated", "value": "按 ⌘V 貼上。" } }
+      }
+    },
+    "Copy & Return to %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "نسخ والعودة إلى %@" } },
+        "de": { "stringUnit": { "state": "translated", "value": "Kopieren & zu %@ zurückkehren" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Copy & Return to %@" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Copiar y volver a %@" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Copier et revenir à %@" } },
+        "it": { "stringUnit": { "state": "translated", "value": "Copia e torna a %@" } },
+        "ja-JP": { "stringUnit": { "state": "translated", "value": "コピーして%@に戻る" } },
+        "ko-KR": { "stringUnit": { "state": "translated", "value": "복사하고 %@로 돌아가기" } },
+        "pt-BR": { "stringUnit": { "state": "translated", "value": "Copiar e voltar para %@" } },
+        "ru": { "stringUnit": { "state": "translated", "value": "Скопировать и вернуться в %@" } },
+        "tr": { "stringUnit": { "state": "translated", "value": "Kopyala ve %@ uygulamasına dön" } },
+        "vi": { "stringUnit": { "state": "translated", "value": "Sao chép và quay lại %@" } },
+        "zh-CN": { "stringUnit": { "state": "translated", "value": "复制并返回 %@" } },
+        "zh-TW": { "stringUnit": { "state": "translated", "value": "複製並返回 %@" } }
+      }
+    },
+    "Copy context and switch back to the original app. Press ⌘V there to paste.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "انسخ السياق وعد إلى التطبيق الأصلي. اضغط على ⌘V هناك للصق." } },
+        "de": { "stringUnit": { "state": "translated", "value": "Kontext kopieren und zur ursprünglichen App zurückkehren. Dort mit ⌘V einfügen." } },
+        "en": { "stringUnit": { "state": "translated", "value": "Copy context and switch back to the original app. Press ⌘V there to paste." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Copia el contexto y vuelve a la app original. Pulsa ⌘V allí para pegarlo." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Copiez le contexte et revenez à l’app d’origine. Appuyez sur ⌘V pour l’y coller." } },
+        "it": { "stringUnit": { "state": "translated", "value": "Copia il contesto e torna all’app originale. Premi ⌘V per incollarlo." } },
+        "ja-JP": { "stringUnit": { "state": "translated", "value": "コンテキストをコピーして元のアプリに戻ります。そこで⌘Vを押してペーストしてください。" } },
+        "ko-KR": { "stringUnit": { "state": "translated", "value": "컨텍스트를 복사하고 원래 앱으로 돌아갑니다. 해당 앱에서 ⌘V를 눌러 붙여넣으십시오." } },
+        "pt-BR": { "stringUnit": { "state": "translated", "value": "Copie o contexto e volte ao app original. Pressione ⌘V nele para colar." } },
+        "ru": { "stringUnit": { "state": "translated", "value": "Скопируйте контекст и вернитесь в исходное приложение. Нажмите там ⌘V для вставки." } },
+        "tr": { "stringUnit": { "state": "translated", "value": "Bağlamı kopyalayıp önceki uygulamaya dönün. Yapıştırmak için orada ⌘V tuşlarına basın." } },
+        "vi": { "stringUnit": { "state": "translated", "value": "Sao chép ngữ cảnh và quay lại ứng dụng ban đầu. Nhấn ⌘V tại đó để dán." } },
+        "zh-CN": { "stringUnit": { "state": "translated", "value": "复制上下文并返回原来的应用。然后按 ⌘V 粘贴。" } },
+        "zh-TW": { "stringUnit": { "state": "translated", "value": "複製內容脈絡並返回原來的 App，然後按 ⌘V 貼上。" } }
+      }
+    },
+    "Couldn’t Copy Context": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "تعذر نسخ السياق" } },
+        "de": { "stringUnit": { "state": "translated", "value": "Kontext konnte nicht kopiert werden" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Couldn’t Copy Context" } },
+        "es": { "stringUnit": { "state": "translated", "value": "No se pudo copiar el contexto" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Impossible de copier le contexte" } },
+        "it": { "stringUnit": { "state": "translated", "value": "Impossibile copiare il contesto" } },
+        "ja-JP": { "stringUnit": { "state": "translated", "value": "コンテキストをコピーできませんでした" } },
+        "ko-KR": { "stringUnit": { "state": "translated", "value": "컨텍스트를 복사할 수 없음" } },
+        "pt-BR": { "stringUnit": { "state": "translated", "value": "Não foi possível copiar o contexto" } },
+        "ru": { "stringUnit": { "state": "translated", "value": "Не удалось скопировать контекст" } },
+        "tr": { "stringUnit": { "state": "translated", "value": "Bağlam kopyalanamadı" } },
+        "vi": { "stringUnit": { "state": "translated", "value": "Không thể sao chép ngữ cảnh" } },
+        "zh-CN": { "stringUnit": { "state": "translated", "value": "无法复制上下文" } },
+        "zh-TW": { "stringUnit": { "state": "translated", "value": "無法複製內容脈絡" } }
+      }
+    },
+    "Try copying the context again.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "حاول نسخ السياق مرة أخرى." } },
+        "de": { "stringUnit": { "state": "translated", "value": "Versuche erneut, den Kontext zu kopieren." } },
+        "en": { "stringUnit": { "state": "translated", "value": "Try copying the context again." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Intenta copiar el contexto de nuevo." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Réessayez de copier le contexte." } },
+        "it": { "stringUnit": { "state": "translated", "value": "Prova a copiare di nuovo il contesto." } },
+        "ja-JP": { "stringUnit": { "state": "translated", "value": "コンテキストのコピーをもう一度お試しください。" } },
+        "ko-KR": { "stringUnit": { "state": "translated", "value": "컨텍스트를 다시 복사해 보십시오." } },
+        "pt-BR": { "stringUnit": { "state": "translated", "value": "Tente copiar o contexto novamente." } },
+        "ru": { "stringUnit": { "state": "translated", "value": "Попробуйте скопировать контекст ещё раз." } },
+        "tr": { "stringUnit": { "state": "translated", "value": "Bağlamı kopyalamayı yeniden deneyin." } },
+        "vi": { "stringUnit": { "state": "translated", "value": "Hãy thử sao chép ngữ cảnh lần nữa." } },
+        "zh-CN": { "stringUnit": { "state": "translated", "value": "请重试复制上下文。" } },
+        "zh-TW": { "stringUnit": { "state": "translated", "value": "請重試複製內容脈絡。" } }
+      }
+    },
+    "Couldn’t return to the original app. Switch to your destination and press ⌘V to paste.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "تعذرت العودة إلى التطبيق الأصلي. انتقل إلى التطبيق المطلوب واضغط على ⌘V للصق." } },
+        "de": { "stringUnit": { "state": "translated", "value": "Die ursprüngliche App konnte nicht aktiviert werden. Wechsle zur gewünschten App und füge den Kontext mit ⌘V ein." } },
+        "en": { "stringUnit": { "state": "translated", "value": "Couldn’t return to the original app. Switch to your destination and press ⌘V to paste." } },
+        "es": { "stringUnit": { "state": "translated", "value": "No se pudo volver a la app original. Cambia al destino y pulsa ⌘V para pegar." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Impossible de revenir à l’app d’origine. Ouvrez l’app souhaitée et appuyez sur ⌘V pour coller." } },
+        "it": { "stringUnit": { "state": "translated", "value": "Impossibile tornare all’app originale. Passa alla destinazione e premi ⌘V per incollare." } },
+        "ja-JP": { "stringUnit": { "state": "translated", "value": "元のアプリに戻れませんでした。貼り付け先に切り替えて⌘Vを押してください。" } },
+        "ko-KR": { "stringUnit": { "state": "translated", "value": "원래 앱으로 돌아갈 수 없습니다. 대상 앱으로 전환하고 ⌘V를 눌러 붙여넣으십시오." } },
+        "pt-BR": { "stringUnit": { "state": "translated", "value": "Não foi possível voltar ao app original. Mude para o destino e pressione ⌘V para colar." } },
+        "ru": { "stringUnit": { "state": "translated", "value": "Не удалось вернуться в исходное приложение. Перейдите в нужное приложение и нажмите ⌘V для вставки." } },
+        "tr": { "stringUnit": { "state": "translated", "value": "Önceki uygulamaya dönülemedi. Hedef uygulamaya geçip yapıştırmak için ⌘V tuşlarına basın." } },
+        "vi": { "stringUnit": { "state": "translated", "value": "Không thể quay lại ứng dụng ban đầu. Chuyển đến ứng dụng đích và nhấn ⌘V để dán." } },
+        "zh-CN": { "stringUnit": { "state": "translated", "value": "无法返回原来的应用。请切换到目标应用并按 ⌘V 粘贴。" } },
+        "zh-TW": { "stringUnit": { "state": "translated", "value": "無法返回原來的 App。請切換到目標 App 並按 ⌘V 貼上。" } }
+      }
+    },
+    "Context copied": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "تم نسخ السياق" } },
+        "de": { "stringUnit": { "state": "translated", "value": "Kontext kopiert" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Context copied" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Contexto copiado" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Contexte copié" } },
+        "it": { "stringUnit": { "state": "translated", "value": "Contesto copiato" } },
+        "ja-JP": { "stringUnit": { "state": "translated", "value": "コンテキストをコピーしました" } },
+        "ko-KR": { "stringUnit": { "state": "translated", "value": "컨텍스트를 복사했습니다" } },
+        "pt-BR": { "stringUnit": { "state": "translated", "value": "Contexto copiado" } },
+        "ru": { "stringUnit": { "state": "translated", "value": "Контекст скопирован" } },
+        "tr": { "stringUnit": { "state": "translated", "value": "Bağlam kopyalandı" } },
+        "vi": { "stringUnit": { "state": "translated", "value": "Đã sao chép ngữ cảnh" } },
+        "zh-CN": { "stringUnit": { "state": "translated", "value": "上下文已复制" } },
+        "zh-TW": { "stringUnit": { "state": "translated", "value": "內容脈絡已複製" } }
+      }
+    },
+    "Delete Recording": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "حذف التسجيل" } },
+        "de": { "stringUnit": { "state": "translated", "value": "Aufnahme löschen" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Delete Recording" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Eliminar grabación" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Supprimer l’enregistrement" } },
+        "it": { "stringUnit": { "state": "translated", "value": "Elimina registrazione" } },
+        "ja-JP": { "stringUnit": { "state": "translated", "value": "録画を削除" } },
+        "ko-KR": { "stringUnit": { "state": "translated", "value": "녹화 삭제" } },
+        "pt-BR": { "stringUnit": { "state": "translated", "value": "Excluir gravação" } },
+        "ru": { "stringUnit": { "state": "translated", "value": "Удалить запись" } },
+        "tr": { "stringUnit": { "state": "translated", "value": "Kaydı Sil" } },
+        "vi": { "stringUnit": { "state": "translated", "value": "Xóa bản ghi" } },
+        "zh-CN": { "stringUnit": { "state": "translated", "value": "删除录制" } },
+        "zh-TW": { "stringUnit": { "state": "translated", "value": "刪除錄製" } }
+      }
+    },
+    "Delete Recording?": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "هل تريد حذف التسجيل؟" } },
+        "de": { "stringUnit": { "state": "translated", "value": "Aufnahme löschen?" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Delete Recording?" } },
+        "es": { "stringUnit": { "state": "translated", "value": "¿Eliminar la grabación?" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Supprimer l’enregistrement ?" } },
+        "it": { "stringUnit": { "state": "translated", "value": "Eliminare la registrazione?" } },
+        "ja-JP": { "stringUnit": { "state": "translated", "value": "録画を削除しますか？" } },
+        "ko-KR": { "stringUnit": { "state": "translated", "value": "녹화를 삭제하시겠습니까?" } },
+        "pt-BR": { "stringUnit": { "state": "translated", "value": "Excluir gravação?" } },
+        "ru": { "stringUnit": { "state": "translated", "value": "Удалить запись?" } },
+        "tr": { "stringUnit": { "state": "translated", "value": "Kayıt silinsin mi?" } },
+        "vi": { "stringUnit": { "state": "translated", "value": "Xóa bản ghi?" } },
+        "zh-CN": { "stringUnit": { "state": "translated", "value": "删除此录制？" } },
+        "zh-TW": { "stringUnit": { "state": "translated", "value": "刪除此錄製？" } }
+      }
+    },
+    "Allow Screen Recording…": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "السماح بتسجيل الشاشة…"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bildschirmaufnahme erlauben…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allow Screen Recording…"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permitir grabación de pantalla…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autoriser l’enregistrement de l’écran…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Consenti registrazione schermo…"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "画面収録を許可…"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "화면 기록 허용…"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permitir gravação da tela…"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Разрешить запись экрана…"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ekran Kaydına İzin Ver…"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cho phép ghi màn hình…"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "允许屏幕录制…"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "允許螢幕錄製…"
+          }
+        }
+      }
+    },
+    "Camera permission is unavailable. Enable it in Privacy & Security before recording.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إذن الكاميرا غير متاح. فعّله في الخصوصية والأمان قبل التسجيل."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Kameraberechtigung ist nicht verfügbar. Vor der Aufnahme unter „Datenschutz & Sicherheit“ aktivieren."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Camera permission is unavailable. Enable it in Privacy & Security before recording."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El permiso de la cámara no está disponible. Actívalo en Privacidad y seguridad antes de grabar."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’autorisation de la caméra n’est pas disponible. L’activer dans Confidentialité et sécurité avant l’enregistrement."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’autorizzazione per la fotocamera non è disponibile. Abilitala in Privacy e sicurezza prima di registrare."
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "カメラの権限がありません。収録前に「プライバシーとセキュリティ」で有効にしてください。"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "카메라 권한을 사용할 수 없습니다. 녹화 전에 개인정보 보호 및 보안에서 활성화하십시오."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A permissão da câmera não está disponível. Ative-a em Privacidade e Segurança antes de gravar."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Разрешение на камеру недоступно. Включите его в разделе «Конфиденциальность и безопасность» перед записью."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kamera izni kullanılamıyor. Kaydetmeden önce Gizlilik ve Güvenlik'te etkinleştirin."
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không có quyền camera. Hãy bật trong Quyền riêng tư & Bảo mật trước khi ghi."
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相机权限不可用。请在录制前前往“隐私与安全性”启用。"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相機權限無法使用。請在錄製前前往「隱私權與安全性」啟用。"
+          }
+        }
+      }
+    },
+    "Choose a screen or window": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اختر شاشة أو نافذة"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bildschirm oder Fenster auswählen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a screen or window"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elige una pantalla o ventana"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choisir un écran ou une fenêtre"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scegli uno schermo o una finestra"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "画面またはウインドウを選択"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "화면 또는 윈도우 선택"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Escolha uma tela ou janela"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выберите экран или окно"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir ekran veya pencere seçin"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chọn màn hình hoặc cửa sổ"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择屏幕或窗口"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "選擇螢幕或視窗"
+          }
+        }
+      }
+    },
+    "Choose webcam shape": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اختر شكل كاميرا الويب"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Webcam-Form auswählen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose webcam shape"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elige la forma de la cámara web"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choisir la forme de la webcam"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scegli la forma della webcam"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Webカメラの形状を選択"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "웹캠 모양 선택"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Escolha o formato da webcam"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выберите форму веб-камеры"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Web Kamerası Şeklini Seçin"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chọn hình dạng webcam"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择摄像头形状"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "選擇網路攝影機形狀"
+          }
+        }
+      }
+    },
+    "Circle": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "دائرة"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kreis"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Circle"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Círculo"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cercle"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cerchio"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "円"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "원"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Círculo"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Круг"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daire"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hình tròn"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "圆形"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "圓形"
+          }
+        }
+      }
+    },
+    "Copy the local video file": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نسخ ملف الفيديو المحلي"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lokale Videodatei kopieren"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy the local video file"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copiar el archivo de vídeo local"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copier le fichier vidéo local"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copia il file video locale"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ローカルビデオファイルをコピー"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "로컬 비디오 파일 복사"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copiar o arquivo de vídeo local"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Копировать локальный видеофайл"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yerel Video Dosyasını Kopyala"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sao chép tệp video cục bộ"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "复制本地视频文件"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "拷貝本機影片檔案"
+          }
+        }
+      }
+    },
+    "Deutsch": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deutsch"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deutsch"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deutsch"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deutsch"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deutsch"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deutsch"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deutsch"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deutsch"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deutsch"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deutsch"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deutsch"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deutsch"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deutsch"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deutsch"
+          }
+        }
+      }
+    },
+    "Dismiss": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إغلاق"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schließen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dismiss"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cerrar"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fermer"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chiudi"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "閉じる"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "닫기"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fechar"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Закрыть"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kapat"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đóng"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "关闭"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "關閉"
+          }
+        }
+      }
+    },
+    "Done": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تم"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fertig"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listo"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminé"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fine"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "完了"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "완료"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Concluído"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Готово"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bitti"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xong"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "完成"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "完成"
+          }
+        }
+      }
+    },
+    "English": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
+          }
+        }
+      }
+    },
+    "Español": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Español"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Español"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Español"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Español"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Español"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Español"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Español"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Español"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Español"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Español"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Español"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Español"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Español"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Español"
+          }
+        }
+      }
+    },
+    "Finalizing Recording…": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جارٍ إنهاء التسجيل…"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufnahme wird abgeschlossen…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finalizing Recording…"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finalizando grabación…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finalisation de l’enregistrement…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finalizzazione della registrazione…"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "収録を完了中…"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "녹화를 마무리하는 중…"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finalizando gravação…"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Завершение записи…"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kayıt Sonlandırılıyor…"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang hoàn tất bản ghi…"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在完成录制…"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在完成錄製…"
+          }
+        }
+      }
+    },
+    "Follow System": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اتباع النظام"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Systemeinstellung übernehmen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Follow System"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seguir el sistema"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suivre le système"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Segui sistema"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "システム設定に従う"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "시스템 설정 따르기"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seguir o sistema"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Как в системе"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sistemi İzle"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Theo hệ thống"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "跟随系统"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "跟隨系統"
+          }
+        }
+      }
+    },
+    "Français": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Français"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Français"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Français"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Français"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Français"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Français"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Français"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Français"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Français"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Français"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Français"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Français"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Français"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Français"
+          }
+        }
+      }
+    },
+    "General": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "عام"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allgemein"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "General"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "General"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Général"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Generali"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "一般"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "일반"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geral"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Основные"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Genel"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chung"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通用"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "一般"
+          }
+        }
+      }
+    },
+    "Italiano": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Italiano"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Italiano"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Italiano"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Italiano"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Italiano"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Italiano"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Italiano"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Italiano"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Italiano"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Italiano"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Italiano"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Italiano"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Italiano"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Italiano"
+          }
+        }
+      }
+    },
+    "Language": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اللغة"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprache"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Language"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Idioma"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Langue"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lingua"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "言語"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "언어"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Idioma"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Язык"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dil"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ngôn ngữ"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "语言"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "語言"
+          }
+        }
+      }
+    },
+    "Microphone": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الميكروفون"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mikrofon"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Microphone"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Micrófono"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Microphone"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Microfono"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "マイク"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "마이크"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Microfone"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Микрофон"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mikrofon"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Micrô"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "麦克风"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "麥克風"
+          }
+        }
+      }
+    },
+    "Microphone disconnected. The recording is continuing without it.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تم فصل الميكروفون. يستمر التسجيل بدونه."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mikrofon wurde getrennt. Die Aufnahme wird ohne es fortgesetzt."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Microphone disconnected. The recording is continuing without it."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El micrófono se desconectó. La grabación continúa sin él."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le microphone a été déconnecté. L’enregistrement continue sans lui."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il microfono è stato disconnesso. La registrazione continua senza di esso."
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "マイクが接続解除されました。マイクなしで収録を続けます。"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "마이크 연결이 해제되었습니다. 마이크 없이 녹화를 계속합니다."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O microfone foi desconectado. A gravação continuará sem ele."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Микрофон отключён. Запись продолжается без него."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mikrofon bağlantısı kesildi. Kayıt onsuz devam ediyor."
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Micrô đã bị ngắt kết nối. Bản ghi vẫn tiếp tục mà không có micrô."
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "麦克风已断开连接。录制将在没有麦克风的情况下继续。"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "麥克風已中斷連線。錄製將在沒有麥克風的情況下繼續。"
+          }
+        }
+      }
+    },
+    "Microphone permission is unavailable. Enable it in Privacy & Security before recording.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إذن الميكروفون غير متاح. فعّله في الخصوصية والأمان قبل التسجيل."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Mikrofonberechtigung ist nicht verfügbar. Vor der Aufnahme unter „Datenschutz & Sicherheit“ aktivieren."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Microphone permission is unavailable. Enable it in Privacy & Security before recording."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El permiso del micrófono no está disponible. Actívalo en Privacidad y seguridad antes de grabar."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’autorisation du microphone n’est pas disponible. L’activer dans Confidentialité et sécurité avant l’enregistrement."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’autorizzazione per il microfono non è disponibile. Abilitala in Privacy e sicurezza prima di registrare."
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "マイクの権限がありません。収録前に「プライバシーとセキュリティ」で有効にしてください。"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "마이크 권한을 사용할 수 없습니다. 녹화 전에 개인정보 보호 및 보안에서 활성화하십시오."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A permissão do microfone não está disponível. Ative-a em Privacidade e Segurança antes de gravar."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Разрешение на микрофон недоступно. Включите его в разделе «Конфиденциальность и безопасность» перед записью."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mikrofon izni kullanılamıyor. Kaydetmeden önce Gizlilik ve Güvenlik'te etkinleştirin."
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không có quyền micrô. Hãy bật trong Quyền riêng tư & Bảo mật trước khi ghi."
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "麦克风权限不可用。请在录制前前往“隐私与安全性”启用。"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "麥克風權限無法使用。請在錄製前前往「隱私權與安全性」啟用。"
+          }
+        }
+      }
+    },
+    "No screen or window is available. Check Screen Recording permission and refresh sources.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "لا توجد شاشة أو نافذة متاحة. تحقق من إذن تسجيل الشاشة وحدّث المصادر."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kein Bildschirm oder Fenster verfügbar. Berechtigung für Bildschirmaufnahme prüfen und Quellen aktualisieren."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No screen or window is available. Check Screen Recording permission and refresh sources."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No hay ninguna pantalla o ventana disponible. Comprueba el permiso de grabación de pantalla y actualiza las fuentes."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun écran ni aucune fenêtre n’est disponible. Vérifier l’autorisation d’enregistrement de l’écran et actualiser les sources."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nessuno schermo o finestra disponibile. Controlla l’autorizzazione alla registrazione schermo e aggiorna le sorgenti."
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "利用可能な画面またはウインドウがありません。画面収録の権限を確認してソースを更新してください。"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "사용 가능한 화면 또는 창이 없습니다. 화면 기록 권한을 확인하고 소스를 새로 고치십시오."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nenhuma tela ou janela está disponível. Verifique a permissão de gravação da tela e atualize as fontes."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Нет доступного экрана или окна. Проверьте разрешение на запись экрана и обновите источники."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kullanılabilir ekran veya pencere yok. Ekran Kaydı iznini kontrol edin ve kaynakları yenileyin."
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không có màn hình hoặc cửa sổ. Hãy kiểm tra quyền Ghi màn hình và làm mới nguồn."
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有可用的屏幕或窗口。请检查屏幕录制权限并刷新来源。"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "沒有可用的螢幕或視窗。請檢查螢幕錄製權限並重新整理來源。"
+          }
+        }
+      }
+    },
+    "No windows available": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "لا توجد نوافذ متاحة"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Fenster verfügbar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No windows available"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No hay ventanas disponibles"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune fenêtre disponible"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nessuna finestra disponibile"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "利用可能なウインドウはありません"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "사용 가능한 창 없음"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nenhuma janela disponível"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Нет доступных окон"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kullanılabilir pencere yok"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không có cửa sổ khả dụng"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无可用窗口"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "沒有可用的視窗"
+          }
+        }
+      }
+    },
+    "Português (Brasil)": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Português (Brasil)"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Português (Brasil)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Português (Brasil)"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Português (Brasil)"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Português (Brasil)"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Português (Brasil)"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Português (Brasil)"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Português (Brasil)"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Português (Brasil)"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Português (Brasil)"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Português (Brasil)"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Português (Brasil)"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Português (Brasil)"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Português (Brasil)"
+          }
+        }
+      }
+    },
+    "Quit Behavio Context": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إنهاء Behavio Context"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Behavio Context beenden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quit Behavio Context"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salir de Behavio Context"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quitter Behavio Context"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esci da Behavio Context"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Behavio Contextを終了"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Behavio Context 종료"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sair do Behavio Context"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выйти из Behavio Context"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Behavio Context'dan Çık"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thoát Behavio Context"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "退出 Behavio Context"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "結束 Behavio Context"
+          }
+        }
+      }
+    },
+    "Recordings": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "التسجيلات"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufnahmen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recordings"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grabaciones"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enregistrements"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registrazioni"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "録画"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "녹화물"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gravações"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Записи"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kayıtlar"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bản ghi"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "录制内容"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "錄製內容"
+          }
+        }
+      }
+    },
+    "Recording Couldn’t Be Saved": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "تعذّر حفظ التسجيل" } },
+        "de": { "stringUnit": { "state": "translated", "value": "Aufnahme konnte nicht gespeichert werden" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Recording Couldn’t Be Saved" } },
+        "es": { "stringUnit": { "state": "translated", "value": "No se pudo guardar la grabación" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Impossible d’enregistrer la capture" } },
+        "it": { "stringUnit": { "state": "translated", "value": "Impossibile salvare la registrazione" } },
+        "ja-JP": { "stringUnit": { "state": "translated", "value": "録画を保存できませんでした" } },
+        "ko-KR": { "stringUnit": { "state": "translated", "value": "녹화를 저장할 수 없음" } },
+        "pt-BR": { "stringUnit": { "state": "translated", "value": "Não foi possível salvar a gravação" } },
+        "ru": { "stringUnit": { "state": "translated", "value": "Не удалось сохранить запись" } },
+        "tr": { "stringUnit": { "state": "translated", "value": "Kayıt kaydedilemedi" } },
+        "vi": { "stringUnit": { "state": "translated", "value": "Không thể lưu bản ghi" } },
+        "zh-CN": { "stringUnit": { "state": "translated", "value": "无法保存录制内容" } },
+        "zh-TW": { "stringUnit": { "state": "translated", "value": "無法儲存錄製內容" } }
+      }
+    },
+    "Show in Finder": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "إظهار في Finder" } },
+        "de": { "stringUnit": { "state": "translated", "value": "Im Finder zeigen" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Show in Finder" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Mostrar en el Finder" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Afficher dans le Finder" } },
+        "it": { "stringUnit": { "state": "translated", "value": "Mostra nel Finder" } },
+        "ja-JP": { "stringUnit": { "state": "translated", "value": "Finderに表示" } },
+        "ko-KR": { "stringUnit": { "state": "translated", "value": "Finder에서 보기" } },
+        "pt-BR": { "stringUnit": { "state": "translated", "value": "Mostrar no Finder" } },
+        "ru": { "stringUnit": { "state": "translated", "value": "Показать в Finder" } },
+        "tr": { "stringUnit": { "state": "translated", "value": "Finder’da Göster" } },
+        "vi": { "stringUnit": { "state": "translated", "value": "Hiển thị trong Finder" } },
+        "zh-CN": { "stringUnit": { "state": "translated", "value": "在访达中显示" } },
+        "zh-TW": { "stringUnit": { "state": "translated", "value": "在 Finder 中顯示" } }
+      }
+    },
+    "Behavio Context preserved the partial recording. Show it in Finder to see whether it can be played.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "احتفظ Behavio Context بالتسجيل الجزئي. اعرضه في Finder للتحقق مما إذا كان قابلاً للتشغيل." } },
+        "de": { "stringUnit": { "state": "translated", "value": "Behavio Context hat die Teilaufnahme erhalten. Zeige sie im Finder, um zu prüfen, ob sie abgespielt werden kann." } },
+        "en": { "stringUnit": { "state": "translated", "value": "Behavio Context preserved the partial recording. Show it in Finder to see whether it can be played." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Behavio Context conservó la grabación parcial. Muéstrala en el Finder para comprobar si se puede reproducir." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Behavio Context a conservé l’enregistrement partiel. Affichez-le dans le Finder pour vérifier s’il peut être lu." } },
+        "it": { "stringUnit": { "state": "translated", "value": "Behavio Context ha conservato la registrazione parziale. Mostrala nel Finder per verificare se può essere riprodotta." } },
+        "ja-JP": { "stringUnit": { "state": "translated", "value": "Behavio Contextは録画の一部を保持しました。再生できるか確認するにはFinderに表示してください。" } },
+        "ko-KR": { "stringUnit": { "state": "translated", "value": "Behavio Context가 부분 녹화를 보존했습니다. 재생할 수 있는지 확인하려면 Finder에서 보십시오." } },
+        "pt-BR": { "stringUnit": { "state": "translated", "value": "O Behavio Context preservou a gravação parcial. Mostre-a no Finder para verificar se ela pode ser reproduzida." } },
+        "ru": { "stringUnit": { "state": "translated", "value": "Behavio Context сохранил частичную запись. Откройте её в Finder, чтобы проверить воспроизведение." } },
+        "tr": { "stringUnit": { "state": "translated", "value": "Behavio Context kısmi kaydı korudu. Oynatılıp oynatılamadığını görmek için Finder’da gösterin." } },
+        "vi": { "stringUnit": { "state": "translated", "value": "Behavio Context đã giữ lại bản ghi một phần. Hiển thị bản ghi trong Finder để xem có thể phát hay không." } },
+        "zh-CN": { "stringUnit": { "state": "translated", "value": "Behavio Context 已保留部分录制内容。请在访达中显示，以检查它能否播放。" } },
+        "zh-TW": { "stringUnit": { "state": "translated", "value": "Behavio Context 已保留部分錄製內容。請在 Finder 中顯示，以檢查它能否播放。" } }
+      }
+    },
+    "No usable recording was produced. Check your recording settings and try again.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "لم يتم إنشاء تسجيل قابل للاستخدام. تحقق من إعدادات التسجيل وحاول مرة أخرى." } },
+        "de": { "stringUnit": { "state": "translated", "value": "Es wurde keine verwendbare Aufnahme erstellt. Prüfe die Aufnahmeeinstellungen und versuche es erneut." } },
+        "en": { "stringUnit": { "state": "translated", "value": "No usable recording was produced. Check your recording settings and try again." } },
+        "es": { "stringUnit": { "state": "translated", "value": "No se produjo una grabación utilizable. Comprueba los ajustes de grabación e inténtalo de nuevo." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Aucun enregistrement utilisable n’a été produit. Vérifiez les réglages d’enregistrement et réessayez." } },
+        "it": { "stringUnit": { "state": "translated", "value": "Non è stata prodotta una registrazione utilizzabile. Controlla le impostazioni di registrazione e riprova." } },
+        "ja-JP": { "stringUnit": { "state": "translated", "value": "使用できる録画を作成できませんでした。録画設定を確認して、もう一度お試しください。" } },
+        "ko-KR": { "stringUnit": { "state": "translated", "value": "사용 가능한 녹화가 생성되지 않았습니다. 녹화 설정을 확인하고 다시 시도하십시오." } },
+        "pt-BR": { "stringUnit": { "state": "translated", "value": "Nenhuma gravação utilizável foi produzida. Verifique os ajustes de gravação e tente novamente." } },
+        "ru": { "stringUnit": { "state": "translated", "value": "Не удалось создать пригодную запись. Проверьте настройки записи и повторите попытку." } },
+        "tr": { "stringUnit": { "state": "translated", "value": "Kullanılabilir bir kayıt oluşturulamadı. Kayıt ayarlarını denetleyip yeniden deneyin." } },
+        "vi": { "stringUnit": { "state": "translated", "value": "Không tạo được bản ghi có thể sử dụng. Hãy kiểm tra cài đặt ghi và thử lại." } },
+        "zh-CN": { "stringUnit": { "state": "translated", "value": "未生成可用的录制内容。请检查录制设置，然后重试。" } },
+        "zh-TW": { "stringUnit": { "state": "translated", "value": "未產生可用的錄製內容。請檢查錄製設定，然後再試一次。" } }
+      }
+    },
+    "Recording source": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مصدر التسجيل"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufnahmequelle"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recording source"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fuente de grabación"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Source d’enregistrement"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sorgente di registrazione"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "収録ソース"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "녹화 소스"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fonte da gravação"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Источник записи"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kayıt Kaynağı"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nguồn ghi"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "录制来源"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "錄製來源"
+          }
+        }
+      }
+    },
+    "Recording stopped because the Mac went to sleep.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "توقف التسجيل لأن Mac دخل في وضع السكون."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufnahme wurde beendet, weil der Mac in den Ruhezustand gewechselt ist."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recording stopped because the Mac went to sleep."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La grabación se detuvo porque el Mac entró en reposo."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’enregistrement s’est arrêté car le Mac s’est mis en veille."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La registrazione è stata interrotta perché il Mac è entrato in stop."
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Macがスリープしたため収録を停止しました。"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac이 잠자기 상태가 되어 녹화를 중지했습니다."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A gravação parou porque o Mac entrou em repouso."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Запись остановлена, потому что Mac перешёл в режим сна."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac uyku moduna geçtiği için kayıt durdu."
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã dừng ghi vì máy Mac chuyển sang chế độ ngủ."
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "由于 Mac 进入睡眠状态，录制已停止。"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "由於 Mac 進入睡眠狀態，錄製已停止。"
+          }
+        }
+      }
+    },
+    "Rectangle": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مستطيل"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechteck"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rectangle"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rectángulo"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rectangle"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rettangolo"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "長方形"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "직사각형"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retângulo"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Прямоугольник"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dikdörtgen"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hình chữ nhật"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "矩形"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "矩形"
+          }
+        }
+      }
+    },
+    "Refresh Sources": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تحديث المصادر"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quellen aktualisieren"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Refresh Sources"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actualizar fuentes"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actualiser les sources"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aggiorna sorgenti"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ソースを更新"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "소스 새로 고침"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Atualizar fontes"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обновить источники"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kaynakları Yenile"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Làm mới nguồn"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "刷新来源"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重新整理來源"
+          }
+        }
+      }
+    },
+    "Rounded": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مستطيل مستدير"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abgerundet"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rounded"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Redondeado"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arrondi"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arrotondato"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "角丸"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "둥근 모서리"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arredondado"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Скруглённый"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yuvarlatılmış"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bo góc"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "圆角"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "圓角"
+          }
+        }
+      }
+    },
+    "Screens": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الشاشات"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bildschirme"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Screens"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pantallas"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Écrans"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schermi"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "画面"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "화면"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telas"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Экраны"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ekranlar"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Màn hình"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "屏幕"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "螢幕"
+          }
+        }
+      }
+    },
+    "Settings…": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الإعدادات…"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einstellungen…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings…"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajustes…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réglages…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impostazioni…"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "設定…"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "설정…"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajustes…"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Настройки…"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ayarlar…"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cài đặt…"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "设置…"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "設定…"
+          }
+        }
+      }
+    },
+    "Square": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مربع"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quadrat"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Square"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuadrado"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Carré"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quadrato"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正方形"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "정사각형"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quadrado"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Квадрат"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kare"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hình vuông"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正方形"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正方形"
+          }
+        }
+      }
+    },
+    "Stop Recording": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إيقاف التسجيل"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufnahme stoppen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop Recording"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Detener grabación"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arrêter l’enregistrement"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Interrompi registrazione"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "収録を停止"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "녹화 중지"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parar gravação"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Остановить запись"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kaydı Durdur"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dừng ghi"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "停止录制"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "停止錄製"
+          }
+        }
+      }
+    },
+    "System Audio": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "صوت النظام"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Systemaudio"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "System Audio"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Audio del sistema"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Audio système"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Audio di sistema"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "システムオーディオ"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "시스템 오디오"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Áudio do sistema"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Системный звук"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sistem Sesi"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Âm thanh hệ thống"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "系统音频"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "系統音訊"
+          }
+        }
+      }
+    },
+    "System Audio permission is unavailable. Enable it in Privacy & Security before recording.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إذن صوت النظام غير متاح. فعّله في الخصوصية والأمان قبل التسجيل."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Berechtigung für Systemaudio ist nicht verfügbar. Vor der Aufnahme unter „Datenschutz & Sicherheit“ aktivieren."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "System Audio permission is unavailable. Enable it in Privacy & Security before recording."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El permiso de audio del sistema no está disponible. Actívalo en Privacidad y seguridad antes de grabar."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’autorisation de l’audio système n’est pas disponible. L’activer dans Confidentialité et sécurité avant l’enregistrement."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’autorizzazione per l’audio di sistema non è disponibile. Abilitala in Privacy e sicurezza prima di registrare."
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "システムオーディオの権限がありません。収録前に「プライバシーとセキュリティ」で有効にしてください。"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "시스템 오디오 권한을 사용할 수 없습니다. 녹화 전에 개인정보 보호 및 보안에서 활성화하십시오."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A permissão de áudio do sistema não está disponível. Ative-a em Privacidade e Segurança antes de gravar."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Разрешение на системный звук недоступно. Включите его в разделе «Конфиденциальность и безопасность» перед записью."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sistem sesi izni kullanılamıyor. Kaydetmeden önce Gizlilik ve Güvenlik'te etkinleştirin."
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không có quyền Âm thanh hệ thống. Hãy bật trong Quyền riêng tư & Bảo mật trước khi ghi."
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "系统音频权限不可用。请在录制前前往“隐私与安全性”启用。"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "系統音訊權限無法使用。請在錄製前前往「隱私權與安全性」啟用。"
+          }
+        }
+      }
+    },
+    "The selected screen or window is no longer available. Choose another source and try again.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "لم تعد الشاشة أو النافذة المحددة متاحة. اختر مصدرًا آخر وحاول مرة أخرى."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der ausgewählte Bildschirm oder das Fenster ist nicht mehr verfügbar. Eine andere Quelle auswählen und erneut versuchen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The selected screen or window is no longer available. Choose another source and try again."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La pantalla o ventana seleccionada ya no está disponible. Elige otra fuente e inténtalo de nuevo."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’écran ou la fenêtre sélectionné n’est plus disponible. Choisir une autre source et réessayer."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lo schermo o la finestra selezionata non è più disponibile. Scegli un’altra sorgente e riprova."
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "選択した画面またはウインドウは利用できなくなりました。別のソースを選択して再試行してください。"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "선택한 화면 또는 창을 더 이상 사용할 수 없습니다. 다른 소스를 선택하고 다시 시도하십시오."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A tela ou janela selecionada não está mais disponível. Escolha outra fonte e tente novamente."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выбранный экран или окно больше недоступны. Выберите другой источник и повторите попытку."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seçilen ekran veya pencere artık kullanılamıyor. Başka bir kaynak seçip yeniden deneyin."
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Màn hình hoặc cửa sổ đã chọn không còn khả dụng. Hãy chọn nguồn khác và thử lại."
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "所选屏幕或窗口已不可用。请选择其他来源并重试。"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "所選螢幕或視窗已無法使用。請選擇其他來源並再試一次。"
+          }
+        }
+      }
+    },
+    "Tiếng Việt": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiếng Việt"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiếng Việt"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiếng Việt"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiếng Việt"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiếng Việt"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiếng Việt"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiếng Việt"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiếng Việt"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiếng Việt"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiếng Việt"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiếng Việt"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiếng Việt"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiếng Việt"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiếng Việt"
+          }
+        }
+      }
+    },
+    "Türkçe": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Türkçe"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Türkçe"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Türkçe"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Türkçe"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Türkçe"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Türkçe"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Türkçe"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Türkçe"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Türkçe"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Türkçe"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Türkçe"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Türkçe"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Türkçe"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Türkçe"
+          }
+        }
+      }
+    },
+    "Video copied": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تم نسخ الفيديو"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Video kopiert"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Video copied"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vídeo copiado"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vidéo copiée"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Video copiato"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ビデオをコピーしました"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "비디오 복사됨"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vídeo copiado"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Видео скопировано"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Video Kopyalandı"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã sao chép video"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "视频已复制"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "影片已拷貝"
+          }
+        }
+      }
+    },
+    "Webcam": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "كاميرا الويب"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Webcam"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Webcam"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cámara web"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Webcam"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Webcam"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ウェブカメラ"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "웹캠"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Webcam"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Веб-камера"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Web kamerası"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Webcam"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "摄像头"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "網路攝影機"
+          }
+        }
+      }
+    },
+    "Webcam disconnected. The recording is continuing without it.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تم فصل كاميرا الويب. يستمر التسجيل بدونها."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Webcam wurde getrennt. Die Aufnahme wird ohne sie fortgesetzt."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Webcam disconnected. The recording is continuing without it."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La cámara web se desconectó. La grabación continúa sin ella."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La webcam a été déconnectée. L’enregistrement continue sans elle."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La webcam è stata disconnessa. La registrazione continua senza di essa."
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Webカメラが接続解除されました。Webカメラなしで収録を続けます。"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "웹캠 연결이 해제되었습니다. 웹캠 없이 녹화를 계속합니다."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A webcam foi desconectada. A gravação continuará sem ela."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Веб-камера отключена. Запись продолжается без неё."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Web kamerası bağlantısı kesildi. Kayıt onsuz devam ediyor."
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Webcam đã bị ngắt kết nối. Bản ghi vẫn tiếp tục mà không có webcam."
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "摄像头已断开连接。录制将在没有摄像头的情况下继续。"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "網路攝影機已中斷連線。錄製將在沒有網路攝影機的情況下繼續。"
+          }
+        }
+      }
+    },
+    "Webcam overlay; drag to move or drag its border to resize": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تراكب كاميرا الويب؛ اسحب للنقل أو اسحب الحافة لتغيير الحجم"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Webcam-Überlagerung; zum Verschieben ziehen oder den Rand zum Ändern der Größe ziehen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Webcam overlay; drag to move or drag its border to resize"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Superposición de cámara web; arrastra para mover o arrastra el borde para cambiar el tamaño"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Superposition de webcam ; faire glisser pour déplacer ou faire glisser le bord pour redimensionner"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sovrapposizione webcam; trascina per spostare o trascina il bordo per ridimensionare"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Webカメラオーバーレイ。ドラッグで移動、境界線をドラッグしてサイズ変更"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "웹캠 오버레이. 드래그하여 이동하거나 테두리를 드래그하여 크기 조절"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sobreposição da webcam; arraste para mover ou arraste a borda para redimensionar"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Наложение веб-камеры; перетащите для перемещения или границу для изменения размера"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Web kamerası katmanı; taşımak için sürükleyin veya boyutlandırmak için kenarını sürükleyin"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lớp phủ webcam; kéo để di chuyển hoặc kéo viền để đổi kích thước"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "摄像头叠加层；拖动以移动，或拖动边框以调整大小"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "網路攝影機疊加層；拖移以移動，或拖移邊框以調整大小"
+          }
+        }
+      }
+    },
+    "Webcam shape": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "شكل كاميرا الويب"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Webcam-Form"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Webcam shape"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Forma de la cámara web"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Forme de la webcam"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Forma webcam"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Webカメラの形状"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "웹캠 모양"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formato da webcam"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Форма веб-камеры"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Web Kamerası Şekli"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hình dạng webcam"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "摄像头形状"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "網路攝影機形狀"
+          }
+        }
+      }
+    },
+    "Windows": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "النوافذ"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fenster"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Windows"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ventanas"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fenêtres"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finestre"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ウインドウ"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "창"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Janelas"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Окна"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pencereler"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cửa sổ"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "窗口"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "視窗"
+          }
+        }
+      }
+    },
+    "Русский": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Русский"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Русский"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Русский"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Русский"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Русский"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Русский"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Русский"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Русский"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Русский"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Русский"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Русский"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Русский"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Русский"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Русский"
+          }
+        }
+      }
+    },
+    "العربية": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "العربية"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "العربية"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "العربية"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "العربية"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "العربية"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "العربية"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "العربية"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "العربية"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "العربية"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "العربية"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "العربية"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "العربية"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "العربية"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "العربية"
+          }
+        }
+      }
+    },
+    "한국어": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "한국어"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "한국어"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "한국어"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "한국어"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "한국어"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "한국어"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "한국어"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "한국어"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "한국어"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "한국어"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "한국어"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "한국어"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "한국어"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "한국어"
+          }
+        }
+      }
+    },
+    "日本語": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日本語"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日本語"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日本語"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日本語"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日本語"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日本語"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日本語"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日本語"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日本語"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日本語"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日本語"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日本語"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日本語"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日本語"
+          }
+        }
+      }
+    },
+    "简体中文": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "简体中文"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "简体中文"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "简体中文"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "简体中文"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "简体中文"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "简体中文"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "简体中文"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "简体中文"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "简体中文"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "简体中文"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "简体中文"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "简体中文"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "简体中文"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "简体中文"
+          }
+        }
+      }
+    },
+    "繁體中文": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "繁體中文"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "繁體中文"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "繁體中文"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "繁體中文"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "繁體中文"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "繁體中文"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "繁體中文"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "繁體中文"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "繁體中文"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "繁體中文"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "繁體中文"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "繁體中文"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "繁體中文"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "繁體中文"
+          }
+        }
+      }
+    },
+    "Privacy Policy": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Privacy Policy"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سياسة الخصوصية"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datenschutzerklärung"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Política de privacidad"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Politique de confidentialité"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Informativa sulla privacy"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Política de Privacidade"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Политика конфиденциальности"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gizlilik Politikası"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chính sách quyền riêng tư"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "プライバシーポリシー"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "개인정보 처리방침"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "隐私政策"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "隱私權政策"
+          }
+        }
+      }
+    },
+    "Support": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Support"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الدعم"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Support"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soporte"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Assistance"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Assistenza"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suporte"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Поддержка"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Destek"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hỗ trợ"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サポート"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "지원"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "支持"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "支援"
+          }
+        }
+      }
+    },
+    "Start Recording": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {"stringUnit": {"state": "translated", "value": "بدء التسجيل"}},
+        "de": {"stringUnit": {"state": "translated", "value": "Aufnahme starten"}},
+        "en": {"stringUnit": {"state": "translated", "value": "Start recording"}},
+        "es": {"stringUnit": {"state": "translated", "value": "Iniciar grabación"}},
+        "fr": {"stringUnit": {"state": "translated", "value": "Démarrer l’enregistrement"}},
+        "it": {"stringUnit": {"state": "translated", "value": "Avvia registrazione"}},
+        "ja-JP": {"stringUnit": {"state": "translated", "value": "収録を開始"}},
+        "ko-KR": {"stringUnit": {"state": "translated", "value": "녹화 시작"}},
+        "pt-BR": {"stringUnit": {"state": "translated", "value": "Iniciar gravação"}},
+        "ru": {"stringUnit": {"state": "translated", "value": "Начать запись"}},
+        "tr": {"stringUnit": {"state": "translated", "value": "Kaydı başlat"}},
+        "vi": {"stringUnit": {"state": "translated", "value": "Bắt đầu ghi"}},
+        "zh-CN": {"stringUnit": {"state": "translated", "value": "开始录制"}},
+        "zh-TW": {"stringUnit": {"state": "translated", "value": "開始錄製"}}
+      }
+    },
+    "Preparing…": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {"stringUnit": {"state": "translated", "value": "جارٍ التحضير…"}},
+        "de": {"stringUnit": {"state": "translated", "value": "Vorbereiten…"}},
+        "en": {"stringUnit": {"state": "translated", "value": "Preparing…"}},
+        "es": {"stringUnit": {"state": "translated", "value": "Preparando…"}},
+        "fr": {"stringUnit": {"state": "translated", "value": "Préparation…"}},
+        "it": {"stringUnit": {"state": "translated", "value": "Preparazione…"}},
+        "ja-JP": {"stringUnit": {"state": "translated", "value": "準備中…"}},
+        "ko-KR": {"stringUnit": {"state": "translated", "value": "준비 중…"}},
+        "pt-BR": {"stringUnit": {"state": "translated", "value": "Preparando…"}},
+        "ru": {"stringUnit": {"state": "translated", "value": "Подготовка…"}},
+        "tr": {"stringUnit": {"state": "translated", "value": "Hazırlanıyor…"}},
+        "vi": {"stringUnit": {"state": "translated", "value": "Đang chuẩn bị…"}},
+        "zh-CN": {"stringUnit": {"state": "translated", "value": "正在准备…"}},
+        "zh-TW": {"stringUnit": {"state": "translated", "value": "正在準備…"}}
+      }
+    },
+    "Audio": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {"stringUnit": {"state": "translated", "value": "الصوت"}},
+        "de": {"stringUnit": {"state": "translated", "value": "Audio"}},
+        "en": {"stringUnit": {"state": "translated", "value": "Audio"}},
+        "es": {"stringUnit": {"state": "translated", "value": "Audio"}},
+        "fr": {"stringUnit": {"state": "translated", "value": "Audio"}},
+        "it": {"stringUnit": {"state": "translated", "value": "Audio"}},
+        "ja-JP": {"stringUnit": {"state": "translated", "value": "オーディオ"}},
+        "ko-KR": {"stringUnit": {"state": "translated", "value": "오디오"}},
+        "pt-BR": {"stringUnit": {"state": "translated", "value": "Áudio"}},
+        "ru": {"stringUnit": {"state": "translated", "value": "Аудио"}},
+        "tr": {"stringUnit": {"state": "translated", "value": "Ses"}},
+        "vi": {"stringUnit": {"state": "translated", "value": "Âm thanh"}},
+        "zh-CN": {"stringUnit": {"state": "translated", "value": "音频"}},
+        "zh-TW": {"stringUnit": {"state": "translated", "value": "音訊"}}
+      }
+    },
+    "Recording started": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {"stringUnit": {"state": "translated", "value": "بدأ التسجيل"}},
+        "de": {"stringUnit": {"state": "translated", "value": "Aufnahme gestartet"}},
+        "en": {"stringUnit": {"state": "translated", "value": "Recording started"}},
+        "es": {"stringUnit": {"state": "translated", "value": "Grabación iniciada"}},
+        "fr": {"stringUnit": {"state": "translated", "value": "Enregistrement démarré"}},
+        "it": {"stringUnit": {"state": "translated", "value": "Registrazione avviata"}},
+        "ja-JP": {"stringUnit": {"state": "translated", "value": "録画を開始しました"}},
+        "ko-KR": {"stringUnit": {"state": "translated", "value": "녹화 시작됨"}},
+        "pt-BR": {"stringUnit": {"state": "translated", "value": "Gravação iniciada"}},
+        "ru": {"stringUnit": {"state": "translated", "value": "Запись началась"}},
+        "tr": {"stringUnit": {"state": "translated", "value": "Kayıt başladı"}},
+        "vi": {"stringUnit": {"state": "translated", "value": "Đã bắt đầu ghi"}},
+        "zh-CN": {"stringUnit": {"state": "translated", "value": "录制已开始"}},
+        "zh-TW": {"stringUnit": {"state": "translated", "value": "錄製已開始"}}
+      }
+    },
+    "Recording stopped": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {"stringUnit": {"state": "translated", "value": "توقف التسجيل"}},
+        "de": {"stringUnit": {"state": "translated", "value": "Aufnahme gestoppt"}},
+        "en": {"stringUnit": {"state": "translated", "value": "Recording stopped"}},
+        "es": {"stringUnit": {"state": "translated", "value": "Grabación detenida"}},
+        "fr": {"stringUnit": {"state": "translated", "value": "Enregistrement arrêté"}},
+        "it": {"stringUnit": {"state": "translated", "value": "Registrazione interrotta"}},
+        "ja-JP": {"stringUnit": {"state": "translated", "value": "録画を停止しました"}},
+        "ko-KR": {"stringUnit": {"state": "translated", "value": "녹화 중지됨"}},
+        "pt-BR": {"stringUnit": {"state": "translated", "value": "Gravação interrompida"}},
+        "ru": {"stringUnit": {"state": "translated", "value": "Запись остановлена"}},
+        "tr": {"stringUnit": {"state": "translated", "value": "Kayıt durduruldu"}},
+        "vi": {"stringUnit": {"state": "translated", "value": "Đã dừng ghi"}},
+        "zh-CN": {"stringUnit": {"state": "translated", "value": "录制已停止"}},
+        "zh-TW": {"stringUnit": {"state": "translated", "value": "錄製已停止"}}
+      }
+    },
+    "Edit Webcam Layout…": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {"stringUnit": {"state": "translated", "value": "تعديل تخطيط كاميرا الويب…"}},
+        "de": {"stringUnit": {"state": "translated", "value": "Webcam-Layout bearbeiten…"}},
+        "en": {"stringUnit": {"state": "translated", "value": "Edit Webcam Layout…"}},
+        "es": {"stringUnit": {"state": "translated", "value": "Editar diseño de cámara…"}},
+        "fr": {"stringUnit": {"state": "translated", "value": "Modifier la disposition de la webcam…"}},
+        "it": {"stringUnit": {"state": "translated", "value": "Modifica layout webcam…"}},
+        "ja-JP": {"stringUnit": {"state": "translated", "value": "Webカメラのレイアウトを編集…"}},
+        "ko-KR": {"stringUnit": {"state": "translated", "value": "웹캠 레이아웃 편집…"}},
+        "pt-BR": {"stringUnit": {"state": "translated", "value": "Editar layout da webcam…"}},
+        "ru": {"stringUnit": {"state": "translated", "value": "Изменить расположение веб-камеры…"}},
+        "tr": {"stringUnit": {"state": "translated", "value": "Web kamerası düzenini değiştir…"}},
+        "vi": {"stringUnit": {"state": "translated", "value": "Chỉnh sửa bố cục webcam…"}},
+        "zh-CN": {"stringUnit": {"state": "translated", "value": "编辑摄像头布局…"}},
+        "zh-TW": {"stringUnit": {"state": "translated", "value": "編輯攝影機配置…"}}
+      }
+    },
+    "Press %@ to start recording. Press it again to stop.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {"stringUnit": {"state": "translated", "value": "اضغط %@ لبدء التسجيل. اضغط مرة أخرى لإيقافه."}},
+        "de": {"stringUnit": {"state": "translated", "value": "Drücke %@, um die Aufnahme zu starten. Drücke erneut, um sie zu stoppen."}},
+        "en": {"stringUnit": {"state": "translated", "value": "Press %@ to start recording. Press it again to stop."}},
+        "es": {"stringUnit": {"state": "translated", "value": "Pulsa %@ para iniciar la grabación. Vuelve a pulsarlo para detenerla."}},
+        "fr": {"stringUnit": {"state": "translated", "value": "Appuyez sur %@ pour démarrer l’enregistrement, puis à nouveau pour l’arrêter."}},
+        "it": {"stringUnit": {"state": "translated", "value": "Premi %@ per avviare la registrazione. Premi di nuovo per interromperla."}},
+        "ja-JP": {"stringUnit": {"state": "translated", "value": "%@で録画を開始します。もう一度押すと停止します。"}},
+        "ko-KR": {"stringUnit": {"state": "translated", "value": "%@를 눌러 녹화를 시작하세요. 다시 누르면 중지됩니다."}},
+        "pt-BR": {"stringUnit": {"state": "translated", "value": "Pressione %@ para iniciar a gravação. Pressione novamente para parar."}},
+        "ru": {"stringUnit": {"state": "translated", "value": "Нажмите %@, чтобы начать запись. Нажмите ещё раз, чтобы остановить."}},
+        "tr": {"stringUnit": {"state": "translated", "value": "Kaydı başlatmak için %@ tuşlarına basın. Durdurmak için tekrar basın."}},
+        "vi": {"stringUnit": {"state": "translated", "value": "Nhấn %@ để bắt đầu ghi. Nhấn lại để dừng."}},
+        "zh-CN": {"stringUnit": {"state": "translated", "value": "按 %@ 开始录制，再按一次停止。"}},
+        "zh-TW": {"stringUnit": {"state": "translated", "value": "按 %@ 開始錄製，再按一次停止。"}}
+      }
+    },
+    "Global shortcut": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {"stringUnit": {"state": "translated", "value": "Global shortcut"}},
+        "ar": {"stringUnit": {"state": "translated", "value": "الاختصار العام"}},
+        "de": {"stringUnit": {"state": "translated", "value": "Globales Tastenkürzel"}},
+        "es": {"stringUnit": {"state": "translated", "value": "Atajo global"}},
+        "fr": {"stringUnit": {"state": "translated", "value": "Raccourci global"}},
+        "it": {"stringUnit": {"state": "translated", "value": "Scorciatoia globale"}},
+        "ja-JP": {"stringUnit": {"state": "translated", "value": "グローバルショートカット"}},
+        "ko-KR": {"stringUnit": {"state": "translated", "value": "전역 단축키"}},
+        "pt-BR": {"stringUnit": {"state": "translated", "value": "Atalho global"}},
+        "ru": {"stringUnit": {"state": "translated", "value": "Глобальное сочетание клавиш"}},
+        "tr": {"stringUnit": {"state": "translated", "value": "Genel kısayol"}},
+        "vi": {"stringUnit": {"state": "translated", "value": "Phím tắt toàn cục"}},
+        "zh-CN": {"stringUnit": {"state": "translated", "value": "全局快捷键"}},
+        "zh-TW": {"stringUnit": {"state": "translated", "value": "全域快速鍵"}}
+      }
+    },
+    "Change shortcut": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {"stringUnit": {"state": "translated", "value": "Change shortcut"}},
+        "ar": {"stringUnit": {"state": "translated", "value": "تغيير الاختصار"}},
+        "de": {"stringUnit": {"state": "translated", "value": "Tastenkürzel ändern"}},
+        "es": {"stringUnit": {"state": "translated", "value": "Cambiar atajo"}},
+        "fr": {"stringUnit": {"state": "translated", "value": "Modifier le raccourci"}},
+        "it": {"stringUnit": {"state": "translated", "value": "Modifica scorciatoia"}},
+        "ja-JP": {"stringUnit": {"state": "translated", "value": "ショートカットを変更"}},
+        "ko-KR": {"stringUnit": {"state": "translated", "value": "단축키 변경"}},
+        "pt-BR": {"stringUnit": {"state": "translated", "value": "Alterar atalho"}},
+        "ru": {"stringUnit": {"state": "translated", "value": "Изменить сочетание клавиш"}},
+        "tr": {"stringUnit": {"state": "translated", "value": "Kısayolu değiştir"}},
+        "vi": {"stringUnit": {"state": "translated", "value": "Đổi phím tắt"}},
+        "zh-CN": {"stringUnit": {"state": "translated", "value": "更改快捷键"}},
+        "zh-TW": {"stringUnit": {"state": "translated", "value": "更改快速鍵"}}
+      }
+    },
+    "Click to record a new shortcut.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {"stringUnit": {"state": "translated", "value": "Click to record a new shortcut."}},
+        "ar": {"stringUnit": {"state": "translated", "value": "انقر لتسجيل اختصار جديد."}},
+        "de": {"stringUnit": {"state": "translated", "value": "Klicke, um ein neues Tastenkürzel aufzunehmen."}},
+        "es": {"stringUnit": {"state": "translated", "value": "Haz clic para grabar un nuevo atajo."}},
+        "fr": {"stringUnit": {"state": "translated", "value": "Cliquez pour enregistrer un nouveau raccourci."}},
+        "it": {"stringUnit": {"state": "translated", "value": "Fai clic per registrare una nuova scorciatoia."}},
+        "ja-JP": {"stringUnit": {"state": "translated", "value": "クリックして新しいショートカットを入力します。"}},
+        "ko-KR": {"stringUnit": {"state": "translated", "value": "클릭하여 새 단축키를 입력하세요."}},
+        "pt-BR": {"stringUnit": {"state": "translated", "value": "Clique para gravar um novo atalho."}},
+        "ru": {"stringUnit": {"state": "translated", "value": "Нажмите, чтобы задать новое сочетание клавиш."}},
+        "tr": {"stringUnit": {"state": "translated", "value": "Yeni bir kısayol kaydetmek için tıklayın."}},
+        "vi": {"stringUnit": {"state": "translated", "value": "Nhấp để ghi phím tắt mới."}},
+        "zh-CN": {"stringUnit": {"state": "translated", "value": "点击以录入新快捷键。"}},
+        "zh-TW": {"stringUnit": {"state": "translated", "value": "點按以錄入新的快速鍵。"}}
+      }
+    },
+    "Press a key with ⌘, ⌃, or ⌥. Press Esc to cancel.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {"stringUnit": {"state": "translated", "value": "Press a key with ⌘, ⌃, or ⌥. Press Esc to cancel."}},
+        "ar": {"stringUnit": {"state": "translated", "value": "اضغط على مفتاح مع ⌘ أو ⌃ أو ⌥. اضغط Esc للإلغاء."}},
+        "de": {"stringUnit": {"state": "translated", "value": "Drücke eine Taste mit ⌘, ⌃ oder ⌥. Mit Esc brichst du ab."}},
+        "es": {"stringUnit": {"state": "translated", "value": "Pulsa una tecla con ⌘, ⌃ u ⌥. Pulsa Esc para cancelar."}},
+        "fr": {"stringUnit": {"state": "translated", "value": "Appuyez sur une touche avec ⌘, ⌃ ou ⌥. Appuyez sur Échap pour annuler."}},
+        "it": {"stringUnit": {"state": "translated", "value": "Premi un tasto con ⌘, ⌃ o ⌥. Premi Esc per annullare."}},
+        "ja-JP": {"stringUnit": {"state": "translated", "value": "⌘、⌃、または⌥と一緒にキーを押してください。Escでキャンセルします。"}},
+        "ko-KR": {"stringUnit": {"state": "translated", "value": "⌘, ⌃ 또는 ⌥와 함께 키를 누르세요. 취소하려면 Esc를 누르세요."}},
+        "pt-BR": {"stringUnit": {"state": "translated", "value": "Pressione uma tecla com ⌘, ⌃ ou ⌥. Pressione Esc para cancelar."}},
+        "ru": {"stringUnit": {"state": "translated", "value": "Нажмите клавишу вместе с ⌘, ⌃ или ⌥. Нажмите Esc для отмены."}},
+        "tr": {"stringUnit": {"state": "translated", "value": "⌘, ⌃ veya ⌥ ile bir tuşa basın. İptal etmek için Esc tuşuna basın."}},
+        "vi": {"stringUnit": {"state": "translated", "value": "Nhấn một phím cùng với ⌘, ⌃ hoặc ⌥. Nhấn Esc để hủy."}},
+        "zh-CN": {"stringUnit": {"state": "translated", "value": "按住 ⌘、⌃ 或 ⌥ 并按下一个键。按 Esc 取消。"}},
+        "zh-TW": {"stringUnit": {"state": "translated", "value": "按住 ⌘、⌃ 或 ⌥ 並按下一個鍵。按 Esc 取消。"}}
+      }
+    },
+    "This shortcut is unavailable. Choose a different combination.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {"stringUnit": {"state": "translated", "value": "This shortcut is unavailable. Choose a different combination."}},
+        "ar": {"stringUnit": {"state": "translated", "value": "هذا الاختصار غير متاح. اختر مجموعة مفاتيح أخرى."}},
+        "de": {"stringUnit": {"state": "translated", "value": "Dieses Tastenkürzel ist nicht verfügbar. Wähle eine andere Kombination."}},
+        "es": {"stringUnit": {"state": "translated", "value": "Este atajo no está disponible. Elige otra combinación."}},
+        "fr": {"stringUnit": {"state": "translated", "value": "Ce raccourci est indisponible. Choisissez une autre combinaison."}},
+        "it": {"stringUnit": {"state": "translated", "value": "Questa scorciatoia non è disponibile. Scegli un’altra combinazione."}},
+        "ja-JP": {"stringUnit": {"state": "translated", "value": "このショートカットは使用できません。別の組み合わせを選んでください。"}},
+        "ko-KR": {"stringUnit": {"state": "translated", "value": "이 단축키는 사용할 수 없습니다. 다른 조합을 선택하세요."}},
+        "pt-BR": {"stringUnit": {"state": "translated", "value": "Este atalho não está disponível. Escolha outra combinação."}},
+        "ru": {"stringUnit": {"state": "translated", "value": "Это сочетание клавиш недоступно. Выберите другое."}},
+        "tr": {"stringUnit": {"state": "translated", "value": "Bu kısayol kullanılamıyor. Farklı bir kombinasyon seçin."}},
+        "vi": {"stringUnit": {"state": "translated", "value": "Phím tắt này không khả dụng. Hãy chọn tổ hợp khác."}},
+        "zh-CN": {"stringUnit": {"state": "translated", "value": "此快捷键不可用。请选择其他组合。"}},
+        "zh-TW": {"stringUnit": {"state": "translated", "value": "此快速鍵無法使用。請選擇其他組合。"}}
+      }
+    },
+    "Reset": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {"stringUnit": {"state": "translated", "value": "Reset"}},
+        "ar": {"stringUnit": {"state": "translated", "value": "إعادة تعيين"}},
+        "de": {"stringUnit": {"state": "translated", "value": "Zurücksetzen"}},
+        "es": {"stringUnit": {"state": "translated", "value": "Restablecer"}},
+        "fr": {"stringUnit": {"state": "translated", "value": "Réinitialiser"}},
+        "it": {"stringUnit": {"state": "translated", "value": "Ripristina"}},
+        "ja-JP": {"stringUnit": {"state": "translated", "value": "リセット"}},
+        "ko-KR": {"stringUnit": {"state": "translated", "value": "재설정"}},
+        "pt-BR": {"stringUnit": {"state": "translated", "value": "Redefinir"}},
+        "ru": {"stringUnit": {"state": "translated", "value": "Сбросить"}},
+        "tr": {"stringUnit": {"state": "translated", "value": "Sıfırla"}},
+        "vi": {"stringUnit": {"state": "translated", "value": "Đặt lại"}},
+        "zh-CN": {"stringUnit": {"state": "translated", "value": "重置"}},
+        "zh-TW": {"stringUnit": {"state": "translated", "value": "重設"}}
+      }
+    },
+    "Cancel": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {"stringUnit": {"state": "translated", "value": "Cancel"}},
+        "ar": {"stringUnit": {"state": "translated", "value": "إلغاء"}},
+        "de": {"stringUnit": {"state": "translated", "value": "Abbrechen"}},
+        "es": {"stringUnit": {"state": "translated", "value": "Cancelar"}},
+        "fr": {"stringUnit": {"state": "translated", "value": "Annuler"}},
+        "it": {"stringUnit": {"state": "translated", "value": "Annulla"}},
+        "ja-JP": {"stringUnit": {"state": "translated", "value": "キャンセル"}},
+        "ko-KR": {"stringUnit": {"state": "translated", "value": "취소"}},
+        "pt-BR": {"stringUnit": {"state": "translated", "value": "Cancelar"}},
+        "ru": {"stringUnit": {"state": "translated", "value": "Отмена"}},
+        "tr": {"stringUnit": {"state": "translated", "value": "İptal"}},
+        "vi": {"stringUnit": {"state": "translated", "value": "Hủy"}},
+        "zh-CN": {"stringUnit": {"state": "translated", "value": "取消"}},
+        "zh-TW": {"stringUnit": {"state": "translated", "value": "取消"}}
+      }
+    },
+    "Copy context": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy context"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نسخ السياق"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kontext kopieren"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copiar contexto"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copier le contexte"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copia contesto"
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "コンテキストをコピー"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "컨텍스트 복사"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Копировать контекст"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bağlamı kopyala"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sao chép ngữ cảnh"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copiar contexto"
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "复制上下文"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "複製情境"
+          }
+        }
+      }
+    },
+    "This permanently deletes the recording.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This permanently deletes the recording."
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سيؤدي هذا إلى حذف التسجيل نهائيًا."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Aufnahme wird dadurch dauerhaft gelöscht."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esto elimina la grabación de forma permanente."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cela supprime définitivement l’enregistrement."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La registrazione verrà eliminata definitivamente."
+          }
+        },
+        "ja-JP": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "録画は完全に削除されます。"
+          }
+        },
+        "ko-KR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "녹화가 영구적으로 삭제됩니다."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Запись будет удалена без возможности восстановления."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu işlem kaydı kalıcı olarak siler."
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thao tác này sẽ xóa vĩnh viễn bản ghi."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Isso exclui permanentemente a gravação."
+          }
+        },
+        "zh-CN": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "这将永久删除录制内容。"
+          }
+        },
+        "zh-TW": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "這將永久刪除錄製內容。"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
