@@ -88,6 +88,6 @@ Or open `BehavioContext.xcodeproj` in Xcode and select the `BehavioContext` sche
 
 The implementation design and requirement mapping live in [docs/smart-agent-context-design.md](docs/smart-agent-context-design.md).
 
-## License and attribution
+## License
 
-Apache-2.0. Behavio Context is a modified derivative of [ScreenContext](https://github.com/marcusschiesser/screencontext). The original copyright and required notices are preserved in [NOTICE](NOTICE). Behavio Context does not use the ScreenContext name or branding.
+Apache-2.0.
