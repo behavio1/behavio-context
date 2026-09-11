@@ -9,26 +9,136 @@ struct MenuBarContentView: View {
     let openSettings: () -> Void
 
     var body: some View {
+        VStack(spacing: 14) {
+            header
+
+            primaryAction
+
+            HStack(spacing: 8) {
+                Button(action: openRecordings) {
+                    Label("Recordings", systemImage: "rectangle.stack")
+                        .frame(maxWidth: .infinity)
+                }
+                .disabled(store.recordingResults.isEmpty)
+
+                Button(action: openSettings) {
+                    Label("Settings…", systemImage: "slider.horizontal.3")
+                        .frame(maxWidth: .infinity)
+                }
+            }
+            .buttonStyle(.bordered)
+
+            Divider()
+
+            footer
+        }
+        .padding(16)
+        .frame(width: 310)
+    }
+
+    private var header: some View {
+        HStack(spacing: 11) {
+            Image(nsImage: NSApp.applicationIconImage)
+                .resizable()
+                .interpolation(.high)
+                .frame(width: 36, height: 36)
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(verbatim: productName) // localization: allow-verbatim bundle display name
+                    .font(.headline)
+                Text(verbatim: statusSummary) // localization: allow-verbatim runtime status
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+            }
+
+            Spacer(minLength: 0)
+
+            if store.phase.isRecording {
+                Circle()
+                    .fill(.red)
+                    .frame(width: 9, height: 9)
+                    .shadow(color: .red.opacity(0.65), radius: 4)
+                    .accessibilityHidden(true)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var primaryAction: some View {
         if store.phase == .finalizing {
-            Text("Finalizing Recording…")
+            HStack(spacing: 9) {
+                ProgressView().controlSize(.small)
+                Text("Finalizing Recording…")
+                    .fontWeight(.medium)
+                Spacer(minLength: 0)
+            }
+            .padding(.horizontal, 13)
+            .frame(height: 42)
+            .background(Color.accentColor.opacity(0.10), in: RoundedRectangle(cornerRadius: 11))
         } else {
             Button(action: toggleRecording) {
-                Text(store.phase.isRecording || store.phase == .preparing ? "Stop Recording" : "Start Recording")
+                HStack(spacing: 9) {
+                    Image(systemName: store.phase.isRecording ? "stop.fill" : "record.circle")
+                    Text(store.phase.isRecording || store.phase == .preparing ? "Stop Recording" : "Start Recording")
+                        .fontWeight(.semibold)
+                    Spacer(minLength: 0)
+                    Text(verbatim: store.globalShortcut.displayName) // localization: allow-verbatim shortcut glyphs
+                        .font(.caption.monospaced().weight(.medium))
+                        .foregroundStyle(.secondary)
+                }
+                .padding(.horizontal, 6)
+                .frame(maxWidth: .infinity, minHeight: 34)
             }
+            .buttonStyle(.borderedProminent)
+            .tint(store.phase.isRecording || store.phase == .preparing ? .red : .accentColor)
+            .controlSize(.large)
             .disabled(!store.isInitialized)
         }
-        Text(store.globalShortcut.displayName)
-
-        Button("Recordings", action: openRecordings)
-            .disabled(store.recordingResults.isEmpty)
-
-        Divider()
-        Button("Settings…", action: openSettings)
-            .keyboardShortcut(",", modifiers: .command)
-        Divider()
-        Button("Quit Behavio Context") { NSApp.terminate(nil) }
-            .keyboardShortcut("q")
     }
+
+    private var footer: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "mic.fill")
+                .foregroundStyle(.secondary)
+            Text(verbatim: store.selectedMicrophoneName) // localization: allow-verbatim runtime device name
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .truncationMode(.middle)
+
+            Spacer(minLength: 0)
+
+            Menu {
+                Button("Quit Behavio Context") { NSApp.terminate(nil) }
+                    .keyboardShortcut("q")
+            } label: {
+                Image(systemName: "ellipsis.circle")
+                    .foregroundStyle(.secondary)
+            }
+            .menuStyle(.borderlessButton)
+            .fixedSize()
+            .accessibilityLabel(Text(verbatim: overflowAccessibilityLabel)) // localization: allow-verbatim Polish v1 overflow label
+        }
+    }
+
+    private var statusSummary: String {
+        if store.phase.isRecording || store.phase == .finalizing {
+            return store.elapsedSeconds.recordingDuration
+        }
+        if store.phase == .preparing {
+            return String(localized: "Preparing…", locale: store.effectiveLocale)
+        }
+        return store.globalShortcut.displayName
+    }
+
+    private var productName: String {
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
+            ?? "Behavio Context"
+    }
+
+    private var overflowAccessibilityLabel: String { "Więcej" }
 }
 
 struct RecordingStatusLabel: View {
@@ -52,6 +162,9 @@ struct RecordingStatusLabel: View {
 extension TimeInterval {
     var recordingDuration: String {
         let seconds = max(0, Int(self))
+        if seconds < 3_600 {
+            return String(format: "%02d:%02d", seconds / 60, seconds % 60)
+        }
         return String(format: "%02d:%02d:%02d", seconds / 3600, (seconds / 60) % 60, seconds % 60)
     }
 }

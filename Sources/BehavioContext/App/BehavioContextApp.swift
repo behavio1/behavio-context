@@ -21,13 +21,13 @@ struct BehavioContextApp: App {
         } label: {
             RecordingStatusLabel(store: appDelegate.store)
         }
+        .menuBarExtraStyle(.window)
 
         Settings {
             SettingsView(
                 store: appDelegate.store,
                 analytics: appDelegate.analytics,
-                shortcutRecorder: appDelegate.shortcutRecorder,
-                editWebcamLayout: appDelegate.editWebcamLayout
+                shortcutRecorder: appDelegate.shortcutRecorder
             )
             .background(WindowAccessor(onWindowAttached: appDelegate.registerSettingsWindow))
         }

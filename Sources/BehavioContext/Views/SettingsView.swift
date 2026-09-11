@@ -6,26 +6,24 @@ struct SettingsView: View {
     @Bindable var store: RecordingSessionStore
     @Bindable var analytics: AnalyticsConsentController
     let shortcutRecorder: ShortcutRecorder
-    let editWebcamLayout: @MainActor () -> Void
 
     var body: some View {
-        TabView {
+        VStack(spacing: 0) {
+            header
+
+            Divider()
+
             CaptureSettingsView(
                 store: store,
-                shortcutRecorder: shortcutRecorder,
-                editWebcamLayout: editWebcamLayout
+                shortcutRecorder: shortcutRecorder
             )
-                .tabItem {
-                    Label("Recordings", systemImage: "record.circle")
-                }
 
-            GeneralSettingsView(store: store)
-                .tabItem {
-                    Label("General", systemImage: "gearshape")
-                }
+            Divider()
+
+            footer
         }
-        .frame(width: 620, height: 600)
-        .padding()
+        .frame(width: 540, height: 370)
+        .background(Color(nsColor: .windowBackgroundColor))
         .environment(\.locale, store.effectiveLocale)
         .environment(\.layoutDirection, store.usesRightToLeftLayout ? .rightToLeft : .leftToRight)
         .alert(
@@ -54,27 +52,60 @@ struct SettingsView: View {
             analytics.capture(.settingsOpened)
         }
     }
-}
 
-private struct GeneralSettingsView: View {
-    @Bindable var store: RecordingSessionStore
+    private var header: some View {
+        HStack(spacing: 14) {
+            Image(nsImage: NSApp.applicationIconImage)
+                .resizable()
+                .interpolation(.high)
+                .frame(width: 48, height: 48)
+                .accessibilityHidden(true)
 
-    var body: some View {
-        Form {
+            VStack(alignment: .leading, spacing: 3) {
+                Text(verbatim: productName) // localization: allow-verbatim bundle display name
+                    .font(.title2.weight(.semibold))
+                Text("Press \(store.globalShortcut.displayName) to start recording. Press it again to stop.")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+            }
+
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, 22)
+        .padding(.vertical, 18)
+    }
+
+    private var footer: some View {
+        HStack(spacing: 16) {
             Picker("Language", selection: $store.language) {
                 ForEach(AppLanguage.allCases) { language in
                     Text(language.title).tag(language)
                 }
             }
-            Section {
-                HStack {
-                    Link(destination: AppLinks.privacyPolicy) { Text("Privacy Policy") }
-                    Spacer()
-                    Link(destination: AppLinks.support) { Text("Support") }
-                }
+            .labelsHidden()
+            .frame(width: 170)
+            .accessibilityLabel("Language")
+
+            Spacer(minLength: 0)
+
+            Link(destination: AppLinks.privacyPolicy) {
+                Text("Privacy Policy")
+            }
+            Link(destination: AppLinks.support) {
+                Text("Support")
             }
         }
-        .formStyle(.grouped)
+        .font(.caption)
+        .buttonStyle(.plain)
+        .foregroundStyle(.secondary)
+        .padding(.horizontal, 22)
+        .frame(height: 48)
+    }
+
+    private var productName: String {
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
+            ?? "Behavio Context"
     }
 }
 

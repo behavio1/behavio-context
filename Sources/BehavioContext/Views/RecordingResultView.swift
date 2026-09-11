@@ -27,12 +27,12 @@ struct RecordingResultView: View {
         NavigationSplitView {
             recordingSidebar
                 .disabled(isReturningToApplication)
-                .navigationSplitViewColumnWidth(min: 190, ideal: 220, max: 260)
+                .navigationSplitViewColumnWidth(min: 168, ideal: 184, max: 210)
         } detail: {
             recordingDetail
         }
         .navigationSplitViewStyle(.balanced)
-        .frame(width: 860)
+        .frame(width: 820)
         .overlay(alignment: .top) {
             if let copyToastMessage {
                 Label(copyToastMessage, systemImage: "checkmark.circle.fill")
@@ -100,75 +100,36 @@ struct RecordingResultView: View {
     }
 
     private var recordingDetail: some View {
-        VStack(spacing: 0) {
-            VStack(alignment: .leading, spacing: 20) {
-                recordingHeader
+        VStack(alignment: .leading, spacing: 18) {
+            recordingHeader
 
-                RecordingPlayerView(fileURL: result.fileURL)
-                    .frame(width: 572, height: mediaHeight)
-                    .background(.black)
-                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 14, style: .continuous)
-                            .strokeBorder(
-                                Color.primary.opacity(colorScheme == .dark ? 0.22 : 0.10),
-                                lineWidth: 1
-                            )
-                    }
-                    .shadow(
-                        color: .black.opacity(colorScheme == .dark ? 0.30 : 0.12),
-                        radius: 16,
-                        y: 8
-                    )
-
-                copyActions(for: .video)
-
-                VStack(alignment: .leading, spacing: 10) {
-                    Label {
-                        Text(verbatim: contextLabel) // localization: allow-verbatim Polish v1 context result label
-                    } icon: {
-                        Image(systemName: result.contextDirectoryURL == nil ? "doc" : "folder")
-                    }
-                    .font(.headline)
-
-                    ReadOnlyContextTextView(
-                        text: result.context,
-                        accessibilityLabel: String(localized: "Recording file", locale: locale)
-                    )
-                    .frame(maxHeight: .infinity)
-                    .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
-                    copyActions(for: .context)
-                }
-                .padding(14)
-                .frame(height: 180)
-                .background {
-                    RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .fill(.regularMaterial)
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                .fill(Color.white.opacity(colorScheme == .light ? 0.28 : 0.025))
-                        }
-                }
+            RecordingPlayerView(fileURL: result.fileURL)
+                .frame(width: 588, height: mediaHeight)
+                .background(.black)
+                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                 .overlay {
-                    RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .strokeBorder(Color.primary.opacity(0.08), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .strokeBorder(
+                            Color.primary.opacity(colorScheme == .dark ? 0.22 : 0.10),
+                            lineWidth: 1
+                        )
                 }
-            }
-            .padding(.horizontal, 24)
-            .padding(.top, 22)
-            .padding(.bottom, 20)
+                .shadow(
+                    color: .black.opacity(colorScheme == .dark ? 0.24 : 0.10),
+                    radius: 14,
+                    y: 7
+                )
 
-            Divider()
-
-            recordingActions
+            contextCard
         }
-        .frame(width: 620)
+        .padding(20)
+        .frame(width: 636)
         .background(Color(nsColor: .windowBackgroundColor))
     }
 
     private var recordingHeader: some View {
-        HStack(alignment: .firstTextBaseline) {
-            VStack(alignment: .leading, spacing: 5) {
+        HStack(alignment: .center) {
+            VStack(alignment: .leading, spacing: 3) {
                 Text(
                     result.recordedAt,
                     format: .dateTime
@@ -176,38 +137,118 @@ struct RecordingResultView: View {
                         .month(.wide)
                         .day()
                 )
-                .font(.title2.weight(.semibold))
+                .font(.title3.weight(.semibold))
 
-                Label {
-                    Text(result.recordedAt, format: .dateTime.hour().minute())
-                } icon: {
-                    Image(systemName: "clock")
-                }
-                .font(.subheadline)
+                Text(result.recordedAt, format: .dateTime.hour().minute())
+                .font(.caption)
                 .foregroundStyle(.secondary)
             }
 
             Spacer()
 
+            Menu {
+                Button {
+                    copyVideoToPasteboard(result.fileURL)
+                } label: {
+                    Label("Copy Video", systemImage: "doc.on.doc")
+                }
+
+                if let application = contextReturnController.destination(for: result.id) {
+                    Button {
+                        copyAndReturn(.video, to: application)
+                    } label: {
+                        Label(copyAndReturnTitle(for: application, content: .video), systemImage: "arrow.uturn.backward")
+                    }
+                    .keyboardShortcut("c", modifiers: [.command, .option, .shift])
+                }
+
+                Button {
+                    NSWorkspace.shared.activateFileViewerSelecting([result.fileURL])
+                } label: {
+                    Label("Show in Finder", systemImage: "folder")
+                }
+
+                Divider()
+
+                Button(role: .destructive) {
+                    isConfirmingDeletion = true
+                } label: {
+                    Label("Delete Recording", systemImage: "trash")
+                }
+                .disabled(isDeletingRecording || isReturningToApplication)
+            } label: {
+                Image(systemName: "ellipsis.circle")
+                    .font(.title3)
+                    .foregroundStyle(.secondary)
+            }
+            .menuStyle(.borderlessButton)
+            .fixedSize()
+            .accessibilityLabel(Text(verbatim: overflowAccessibilityLabel)) // localization: allow-verbatim Polish v1 overflow label
         }
     }
 
-    private var recordingActions: some View {
-        HStack {
-            Button(role: .destructive) {
-                isConfirmingDeletion = true
-            } label: {
-                Label("Delete Recording", systemImage: "trash")
-            }
-            .disabled(isDeletingRecording || isReturningToApplication)
+    private var contextCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 10) {
+                Image(systemName: result.contextDirectoryURL == nil ? "doc.fill" : "checkmark.circle.fill")
+                    .font(.title3)
+                    .foregroundStyle(result.contextDirectoryURL == nil ? Color.secondary : Color.green)
 
-            Spacer()
-            Button("Done", action: dismiss)
-                .keyboardShortcut(.defaultAction)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(verbatim: contextLabel) // localization: allow-verbatim Polish v1 context result label
+                        .font(.headline)
+                    Text(verbatim: result.context) // localization: allow-verbatim local file path
+                        .font(.caption.monospaced())
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                        .accessibilityLabel(String(localized: "Recording file", locale: locale))
+                }
+
+                Spacer(minLength: 0)
+            }
+
+            contextActions
         }
-        .padding(.horizontal, 24)
-        .frame(height: 56)
-        .background(.bar)
+        .padding(14)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .strokeBorder(Color.primary.opacity(0.08), lineWidth: 1)
+        }
+    }
+
+    @ViewBuilder
+    private var contextActions: some View {
+        if let application = contextReturnController.destination(for: result.id) {
+            HStack(spacing: 8) {
+                Button {
+                    copyAndReturn(.context, to: application)
+                } label: {
+                    Label(copyAndReturnTitle(for: application, content: .context), systemImage: "arrow.uturn.backward")
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                }
+                .buttonStyle(.borderedProminent)
+                .keyboardShortcut("c", modifiers: [.command, .shift])
+
+                Button {
+                    copyContextToPasteboard()
+                } label: {
+                    Label("Copy File Path", systemImage: "doc.on.doc")
+                }
+                .buttonStyle(.bordered)
+            }
+            .disabled(isReturningToApplication)
+        } else {
+            Button {
+                copyContextToPasteboard()
+            } label: {
+                Label("Copy File Path", systemImage: "doc.on.doc")
+            }
+            .buttonStyle(.borderedProminent)
+            .disabled(isReturningToApplication)
+        }
     }
 
     private var result: RecordingResult {
@@ -219,6 +260,8 @@ struct RecordingResultView: View {
     private var contextLabel: String {
         result.contextDirectoryURL == nil ? "Plik nagrania" : "Folder kontekstu dla agenta"
     }
+
+    private var overflowAccessibilityLabel: String { "Więcej" }
 
     @discardableResult
     private func copyVideoToPasteboard(_ fileURL: URL, showConfirmation: Bool = true) -> Bool {
@@ -265,45 +308,6 @@ struct RecordingResultView: View {
             showCopyToast(String(localized: "Context copied", locale: locale))
         }
         return true
-    }
-
-    private func copyActions(for content: CopyContent) -> some View {
-        HStack(spacing: 8) {
-            Button {
-                switch content {
-                case .video:
-                    copyVideoToPasteboard(result.fileURL)
-                case .context:
-                    copyContextToPasteboard()
-                }
-            } label: {
-                if content == .video {
-                    Text("Copy Video")
-                } else {
-                    Text("Copy File Path")
-                }
-            }
-            .fixedSize()
-
-            if let application = contextReturnController.destination(for: result.id) {
-                Button {
-                    copyAndReturn(content, to: application)
-                } label: {
-                    Label(copyAndReturnTitle(for: application, content: content), systemImage: "arrow.uturn.backward")
-                        .lineLimit(1)
-                        .truncationMode(.middle)
-                }
-                .accessibilityLabel(copyAndReturnTitle(for: application, content: content))
-                .keyboardShortcut("c", modifiers: content == .video ? [.command, .option, .shift] : [.command, .shift])
-                .help(content == .video
-                    ? Text("Copy the video file and switch back to the original app. Press ⌘V there to paste.")
-                    : Text("Copy context and switch back to the original app. Press ⌘V there to paste."))
-            }
-
-            Spacer(minLength: 0)
-        }
-        .buttonStyle(.bordered)
-        .disabled(isReturningToApplication)
     }
 
     private func copyAndReturnTitle(for application: NSRunningApplication, content: CopyContent) -> String {

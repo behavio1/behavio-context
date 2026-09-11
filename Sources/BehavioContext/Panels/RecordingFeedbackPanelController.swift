@@ -18,7 +18,7 @@ final class RecordingFeedbackPanelController {
         self.store = store
         self.stopRecording = stopRecording
         panel = NSPanel(
-            contentRect: NSRect(x: 0, y: 0, width: 1_180, height: 76),
+            contentRect: NSRect(x: 0, y: 0, width: 940, height: 68),
             styleMask: [.borderless, .nonactivatingPanel],
             backing: .buffered,
             defer: false
@@ -53,8 +53,8 @@ final class RecordingFeedbackPanelController {
         }
 
         guard let screen = targetScreen else { return }
-        let width = min(1_180, max(760, screen.visibleFrame.width - 32))
-        panel.setContentSize(NSSize(width: width, height: 76))
+        let width = min(940, max(680, screen.visibleFrame.width - 32))
+        panel.setContentSize(NSSize(width: width, height: 68))
         position(on: screen)
         panel.ignoresMouseEvents = store.phase == .preparing || store.phase == .finalizing
         panel.contentView = NSHostingView(rootView: RecordingCapsuleView(
@@ -164,25 +164,26 @@ private struct RecordingCapsuleView: View {
                 statusContent
             }
         }
-        .padding(.horizontal, 14)
+        .padding(.horizontal, 12)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.ultraThickMaterial, in: Capsule())
+        .background(.thickMaterial, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
         .overlay {
-            Capsule().strokeBorder(Color.white.opacity(0.14), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .strokeBorder(Color.white.opacity(0.14), lineWidth: 1)
         }
         .environment(\.locale, locale)
         .environment(\.layoutDirection, isRightToLeft ? .rightToLeft : .leftToRight)
     }
 
     private var recordingContent: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 10) {
             Circle()
                 .fill(.red)
-                .frame(width: 12, height: 12)
+                .frame(width: 10, height: 10)
                 .shadow(color: .red.opacity(0.75), radius: reduceMotion ? 3 : 7)
 
             Text(verbatim: elapsedSeconds.recordingDuration) // localization: allow-verbatim numeric timer
-                .font(.system(.title3, design: .rounded, weight: .semibold))
+                .font(.system(.body, design: .rounded, weight: .semibold))
                 .monospacedDigit()
                 .accessibilityLabel("Recording started")
 
@@ -193,8 +194,8 @@ private struct RecordingCapsuleView: View {
                     Image(systemName: "stop.fill")
                 }
                     .font(.callout.weight(.semibold))
-                    .padding(.horizontal, 11)
-                    .padding(.vertical, 7)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
             }
             .buttonStyle(.plain)
             .foregroundStyle(Color.red)
@@ -205,14 +206,7 @@ private struct RecordingCapsuleView: View {
             }
             .accessibilityLabel("Stop Recording")
 
-            Text(verbatim: escapeLabel) // localization: allow-verbatim keyboard key label
-                .font(.caption.monospaced().weight(.medium))
-                .foregroundStyle(.secondary)
-                .padding(.horizontal, 7)
-                .padding(.vertical, 5)
-                .background(Color.primary.opacity(0.08), in: RoundedRectangle(cornerRadius: 6))
-
-            Divider().frame(height: 32).opacity(0.45)
+            Divider().frame(height: 28).opacity(0.40)
 
             Menu {
                 ForEach(microphones) { microphone in
@@ -231,22 +225,22 @@ private struct RecordingCapsuleView: View {
                     .font(.caption.weight(.medium))
                     .lineLimit(1)
                     .truncationMode(.middle)
-                    .padding(.horizontal, 9)
-                    .padding(.vertical, 7)
-                    .background(Color.primary.opacity(0.07), in: Capsule())
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 6)
+                    .background(Color.primary.opacity(0.07), in: RoundedRectangle(cornerRadius: 8))
             }
             .menuStyle(.borderlessButton)
-            .frame(maxWidth: 185)
+            .frame(maxWidth: 170)
             .accessibilityLabel(Text(verbatim: microphoneAccessibilityLabel)) // localization: allow-verbatim runtime device name
             .accessibilityHint("Choose a microphone")
 
             LevelWaveform(level: microphoneLevel)
-                .frame(width: 92, height: 28)
+                .frame(width: 64, height: 24)
 
             Text(transcript.isEmpty ? "Mów i wskazuj elementy w aktywnym oknie…" : transcript)
                 .font(.callout.weight(transcriptIsFinal ? .medium : .regular))
                 .foregroundStyle(transcript.isEmpty || !transcriptIsFinal ? .secondary : .primary)
-                .lineLimit(2)
+                .lineLimit(1)
                 .truncationMode(.head)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .accessibilityLabel(transcript.isEmpty ? "Oczekiwanie na mowę" : transcript)
@@ -256,10 +250,10 @@ private struct RecordingCapsuleView: View {
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
                 .truncationMode(.middle)
-                .padding(.horizontal, 10)
-                .padding(.vertical, 7)
-                .background(Color.primary.opacity(0.07), in: Capsule())
-                .frame(maxWidth: 190)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 6)
+                .background(Color.primary.opacity(0.07), in: RoundedRectangle(cornerRadius: 8))
+                .frame(maxWidth: 150)
         }
     }
 
@@ -311,7 +305,6 @@ private struct RecordingCapsuleView: View {
     }
 
     private var stopLabel: String { "Stop" }
-    private var escapeLabel: String { "Esc" }
     private var microphoneAccessibilityLabel: String { "Microphone: \(microphoneName)" }
 }
 
@@ -320,7 +313,7 @@ private struct LevelWaveform: View {
 
     var body: some View {
         HStack(alignment: .center, spacing: 2) {
-            ForEach(0..<15, id: \.self) { index in
+            ForEach(0..<11, id: \.self) { index in
                 Capsule()
                     .fill(index <= activeBars ? Color.accentColor : Color.secondary.opacity(0.28))
                     .frame(width: 3, height: barHeight(index))
@@ -330,11 +323,11 @@ private struct LevelWaveform: View {
     }
 
     private var activeBars: Int {
-        Int((min(1, max(0, level)) * 14).rounded())
+        Int((min(1, max(0, level)) * 10).rounded())
     }
 
     private func barHeight(_ index: Int) -> CGFloat {
-        let pattern: [CGFloat] = [7, 11, 16, 22, 15, 10, 18, 26, 18, 12, 20, 15, 10, 7, 5]
+        let pattern: [CGFloat] = [7, 11, 16, 22, 15, 10, 18, 24, 18, 12, 8]
         return pattern[index]
     }
 }

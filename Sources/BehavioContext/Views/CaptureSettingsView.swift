@@ -5,86 +5,37 @@ struct CaptureSettingsView: View {
     @Bindable var store: RecordingSessionStore
 
     let shortcutRecorder: ShortcutRecorder
-    let editWebcamLayout: @MainActor () -> Void
 
     var body: some View {
-        Form {
-            ShortcutSettingsView(store: store, recorder: shortcutRecorder)
+        VStack(spacing: 14) {
+            VStack(spacing: 0) {
+                sourceRow
 
-            if store.phase.locksConfiguration {
-                Section {
-                    if store.phase == .preparing {
-                        ProgressView("Preparing…")
-                    } else {
-                        HStack {
-                            Text(store.phase.isRecording ? "Stop Recording" : "Finalizing Recording…")
-                            Spacer()
-                            Text(store.elapsedSeconds.recordingDuration).monospacedDigit()
-                        }
-                    }
-                }
+                Divider().padding(.leading, 48)
+
+                microphoneRow
+
+                Divider().padding(.leading, 48)
+
+                ShortcutSettingsView(store: store, recorder: shortcutRecorder)
+            }
+            .padding(.horizontal, 16)
+            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .strokeBorder(Color.primary.opacity(0.08), lineWidth: 1)
             }
 
-            Section("Recording source") {
-                HStack(alignment: .top, spacing: 12) {
-                    Label("Windows", systemImage: "macwindow")
-                        .labelStyle(.iconOnly)
-                        .font(.title2)
-                        .foregroundStyle(.secondary)
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(verbatim: activeWindowTitle) // localization: allow-verbatim Polish v1 active-window title
-                            .font(.headline)
-                            .lineLimit(1)
-                            .truncationMode(.middle)
-                        Text(verbatim: activeWindowHelp) // localization: allow-verbatim Polish v1 active-window explanation
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-
-                HStack(alignment: .center, spacing: 12) {
-                    Label("Screens", systemImage: "display")
-                        .labelStyle(.iconOnly)
-                        .foregroundStyle(.secondary)
-                    Text(verbatim: screensExcludedHelp) // localization: allow-verbatim Polish v1 full-screen privacy explanation
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-
-                if store.screenCaptureAccessDenied {
-                    Button("Allow Screen Recording…", action: store.requestScreenCaptureAccess)
-                }
+            if store.screenCaptureAccessDenied {
+                permissionCallout
+            } else if let message = store.hudMessage {
+                warningCallout(message)
             }
-            .disabled(store.configurationIsLocked)
 
-            Section("Audio") {
-                Toggle("Microphone", isOn: Binding(
-                    get: { store.capturesMicrophone },
-                    set: { enabled in Task { await store.setMicrophoneEnabled(enabled) } }
-                ))
-                if store.capturesMicrophone {
-                    Picker("Microphone", selection: Binding(
-                        get: { store.microphoneDeviceID },
-                        set: { id in Task { await store.selectMicrophoneDevice(id) } }
-                    )) {
-                        ForEach(store.microphones) { Text($0.name).tag(Optional($0.id)) }
-                    }
-                }
-            }
-            .disabled(store.configurationIsLocked)
-
-            if let message = store.hudMessage {
-                Section {
-                    Label {
-                        Text(verbatim: message) // localization: allow-verbatim runtime error description
-                    } icon: {
-                        Image(systemName: "exclamationmark.triangle")
-                    }
-                    Button("Dismiss", action: store.clearWarning)
-                }
-            }
+            Spacer(minLength: 0)
         }
-        .formStyle(.grouped)
+        .padding(.horizontal, 22)
+        .padding(.top, 18)
         .disabled(!store.isInitialized)
         .task {
             guard !store.configurationIsLocked else { return }
@@ -92,18 +43,129 @@ struct CaptureSettingsView: View {
         }
     }
 
+    private var sourceRow: some View {
+        HStack(spacing: 14) {
+            settingIcon("macwindow", color: .accentColor)
+
+            VStack(alignment: .leading, spacing: 3) {
+                Text("Recording source")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Text(verbatim: activeWindowTitle) // localization: allow-verbatim runtime active-window title
+                    .font(.body.weight(.medium))
+                    .lineLimit(1)
+                Text(verbatim: activeWindowHelp) // localization: allow-verbatim Polish v1 active-window explanation
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
+                    .lineLimit(2)
+            }
+
+            Spacer(minLength: 0)
+
+            Image(systemName: "checkmark.circle.fill")
+                .foregroundStyle(.green)
+                .opacity(store.screenCaptureAccessDenied ? 0 : 1)
+                .accessibilityHidden(true)
+        }
+        .padding(.vertical, 14)
+    }
+
+    private var microphoneRow: some View {
+        HStack(spacing: 14) {
+            settingIcon("mic.fill", color: .purple)
+
+            Text("Microphone")
+                .font(.body.weight(.medium))
+
+            Spacer(minLength: 8)
+
+            if store.capturesMicrophone {
+                Picker("Microphone", selection: Binding(
+                    get: { store.microphoneDeviceID },
+                    set: { id in Task { await store.selectMicrophoneDevice(id) } }
+                )) {
+                    ForEach(store.microphones) { microphone in
+                        Text(microphone.name).tag(Optional(microphone.id))
+                    }
+                }
+                .labelsHidden()
+                .frame(maxWidth: 220)
+            }
+
+            Toggle("Microphone", isOn: Binding(
+                get: { store.capturesMicrophone },
+                set: { enabled in Task { await store.setMicrophoneEnabled(enabled) } }
+            ))
+            .labelsHidden()
+            .toggleStyle(.switch)
+            .controlSize(.small)
+        }
+        .padding(.vertical, 12)
+        .disabled(store.configurationIsLocked)
+    }
+
+    private var permissionCallout: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "rectangle.on.rectangle.badge.exclamationmark")
+                .font(.title3)
+                .foregroundStyle(.orange)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Recording source")
+                    .font(.callout.weight(.semibold))
+                Text(verbatim: permissionSummary) // localization: allow-verbatim Polish v1 permission explanation
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer(minLength: 0)
+
+            Button("Allow Screen Recording…", action: store.requestScreenCaptureAccess)
+                .buttonStyle(.borderedProminent)
+        }
+        .padding(14)
+        .background(Color.orange.opacity(0.10), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+    }
+
+    private func warningCallout(_ message: String) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundStyle(.orange)
+            Text(verbatim: message) // localization: allow-verbatim runtime error description
+                .font(.caption)
+                .lineLimit(2)
+            Spacer(minLength: 0)
+            Button(action: store.clearWarning) {
+                Image(systemName: "xmark")
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Dismiss")
+        }
+        .padding(12)
+        .background(Color.orange.opacity(0.10), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+
+    private func settingIcon(_ name: String, color: Color) -> some View {
+        Image(systemName: name)
+            .font(.system(size: 15, weight: .semibold))
+            .foregroundStyle(color)
+            .frame(width: 30, height: 30)
+            .background(color.opacity(0.12), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+            .accessibilityHidden(true)
+    }
+
     private var activeWindowTitle: String {
         if store.phase.locksConfiguration, let source = store.selectedCaptureSource {
             return source.displayName
         }
-        return "Aktywne okno przy starcie"
+        return "Aktywne okno"
     }
 
     private var activeWindowHelp: String {
-        "Behavio Context zamraża okno, które jest na wierzchu po naciśnięciu ⌃⌘R. Nigdy nie przełącza się na cały monitor."
+        "Okno na wierzchu po naciśnięciu ⌃⌘R. Cały monitor nigdy nie jest nagrywany."
     }
 
-    private var screensExcludedHelp: String {
-        "Cały monitor nie jest przechwytywany ani zapisywany w pakiecie agenta."
+    private var permissionSummary: String {
+        "Wymaga dostępu do aktywnego okna."
     }
 }

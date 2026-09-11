@@ -6,53 +6,61 @@ struct ShortcutSettingsView: View {
     let recorder: ShortcutRecorder
 
     var body: some View {
-        Section {
-            LabeledContent {
-                HStack {
-                    Button {
-                        if recorder.isRecording {
-                            recorder.stop()
-                        } else {
-                            recorder.start(completion: store.updateGlobalShortcut)
-                        }
-                    } label: {
-                        if recorder.isRecording {
-                            Text("Cancel")
-                        } else {
-                            Text(store.globalShortcut.displayName)
-                                .monospaced()
-                        }
-                    }
-                    .accessibilityLabel(recorder.isRecording ? "Cancel" : "Change shortcut")
-                    .accessibilityValue(store.globalShortcut.displayName)
-                    .help("Click to record a new shortcut.")
+        HStack(spacing: 14) {
+            Image(systemName: "keyboard")
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(.blue)
+                .frame(width: 30, height: 30)
+                .background(Color.blue.opacity(0.12), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+                .accessibilityHidden(true)
 
-                    Button("Reset") {
-                        recorder.stop()
-                        store.updateGlobalShortcut(.defaultShortcut)
-                    }
-                    .disabled(store.globalShortcut == .defaultShortcut || recorder.isRecording)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Global shortcut")
+                    .font(.body.weight(.medium))
+                if recorder.isRecording {
+                    Text("Press a key with ⌘, ⌃, or ⌥. Press Esc to cancel.")
+                        .font(.caption)
+                        .foregroundStyle(recorder.needsModifier ? Color.orange : .secondary)
+                } else if store.shortcutRegistrationFailed {
+                    Text("This shortcut is unavailable. Choose a different combination.")
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+            }
+
+            Spacer(minLength: 8)
+
+            Button {
+                if recorder.isRecording {
+                    recorder.stop()
+                } else {
+                    recorder.start(completion: store.updateGlobalShortcut)
                 }
             } label: {
-                Text("Global shortcut")
+                Text(recorder.isRecording ? "Cancel" : store.globalShortcut.displayName)
+                    .font(.system(.body, design: .rounded, weight: .medium))
+                    .monospaced()
+                    .padding(.horizontal, 4)
             }
+            .buttonStyle(.bordered)
+            .accessibilityLabel(recorder.isRecording ? "Cancel" : "Change shortcut")
+            .accessibilityValue(store.globalShortcut.displayName)
+            .help("Click to record a new shortcut.")
 
-            if recorder.isRecording {
-                Text("Press a key with ⌘, ⌃, or ⌥. Press Esc to cancel.")
-                    .font(.caption)
-                    .foregroundStyle(recorder.needsModifier ? Color.orange : .secondary)
-            } else {
-                Text("Press \(store.globalShortcut.displayName) to start recording. Press it again to stop.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-
-            if store.shortcutRegistrationFailed {
-                Text("This shortcut is unavailable. Choose a different combination.")
-                    .font(.caption)
-                    .foregroundStyle(.red)
+            if store.globalShortcut != .defaultShortcut || recorder.isRecording {
+                Button {
+                    recorder.stop()
+                    store.updateGlobalShortcut(.defaultShortcut)
+                } label: {
+                    Image(systemName: "arrow.counterclockwise")
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(.secondary)
+                .disabled(recorder.isRecording)
+                .accessibilityLabel("Reset")
             }
         }
+        .padding(.vertical, 12)
         .disabled(!store.isInitialized)
         .onDisappear { recorder.stop() }
     }

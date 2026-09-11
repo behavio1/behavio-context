@@ -33,9 +33,10 @@ final class RepositoryContractTests: XCTestCase {
 
         let hudURL = repositoryRoot.appendingPathComponent("Sources/BehavioContext/Views/CaptureSettingsView.swift")
         let hudSource = try String(contentsOf: hudURL, encoding: .utf8)
-        XCTAssertTrue(hudSource.contains("Section(\"Recording source\")"))
+        XCTAssertTrue(hudSource.contains("Text(\"Recording source\")"))
         XCTAssertTrue(hudSource.contains("activeWindowTitle"))
-        XCTAssertTrue(hudSource.contains("screensExcludedHelp"))
+        XCTAssertTrue(hudSource.contains("activeWindowHelp"))
+        XCTAssertTrue(hudSource.contains("Cały monitor nigdy nie jest nagrywany"))
     }
 
     func testWindowSelectionIsTransientAndRecordingUsesLiveGeometry() throws {
@@ -63,7 +64,7 @@ final class RepositoryContractTests: XCTestCase {
 
         let hudURL = repositoryRoot.appendingPathComponent("Sources/BehavioContext/Views/CaptureSettingsView.swift")
         let hudSource = try String(contentsOf: hudURL, encoding: .utf8)
-        XCTAssertTrue(hudSource.contains("Aktywne okno przy starcie"))
+        XCTAssertTrue(hudSource.contains("Aktywne okno"))
         XCTAssertTrue(hudSource.contains(".disabled(store.configurationIsLocked)"))
     }
 
@@ -88,17 +89,31 @@ final class RepositoryContractTests: XCTestCase {
         XCTAssertTrue(source.contains(".defaultLaunchBehavior(.suppressed)"))
     }
 
+    func testSettingsUseOneCompactConfigurationSurface() throws {
+        let settingsURL = repositoryRoot
+            .appendingPathComponent("Sources/BehavioContext/Views/SettingsView.swift")
+        let settingsSource = try String(contentsOf: settingsURL, encoding: .utf8)
+        XCTAssertFalse(settingsSource.contains("TabView"))
+        XCTAssertTrue(settingsSource.contains(".frame(width: 540, height: 370)"))
+
+        let captureURL = repositoryRoot
+            .appendingPathComponent("Sources/BehavioContext/Views/CaptureSettingsView.swift")
+        let captureSource = try String(contentsOf: captureURL, encoding: .utf8)
+        XCTAssertTrue(captureSource.contains(".toggleStyle(.switch)"))
+        XCTAssertFalse(captureSource.contains("Label(\"Screens\""))
+    }
+
     func testRecordingPlaybackStartsAutomatically() throws {
         let playbackURL = repositoryRoot
             .appendingPathComponent("Sources/BehavioContext/Views/RecordingResultView.swift")
         let source = try String(contentsOf: playbackURL, encoding: .utf8)
         XCTAssertTrue(source.contains("RecordingPlayerView(fileURL: result.fileURL)"))
-        XCTAssertTrue(source.contains(".frame(width: 572, height: mediaHeight)"))
-        XCTAssertTrue(source.contains("accessibilityLabel: String(localized: \"Recording file\""))
+        XCTAssertTrue(source.contains(".frame(width: 588, height: mediaHeight)"))
+        XCTAssertTrue(source.contains("accessibilityLabel(String(localized: \"Recording file\""))
         XCTAssertTrue(source.contains("player.play()"))
         XCTAssertTrue(source.contains("controlsStyle = .minimal"))
         XCTAssertTrue(source.contains("controlsStyle = .none"))
-        XCTAssertTrue(source.contains("Text(\"Copy Video\")"))
+        XCTAssertTrue(source.contains("Label(\"Copy Video\""))
         XCTAssertFalse(source.contains("SystemRequestExtractor"))
         XCTAssertFalse(source.contains("Apple Intelligence"))
         XCTAssertTrue(source.contains("@Bindable var store: RecordingSessionStore"))
@@ -107,8 +122,8 @@ final class RepositoryContractTests: XCTestCase {
         XCTAssertTrue(source.contains("List(selection: recordingSelection)"))
         XCTAssertTrue(source.contains("ForEach(store.recordingResults.reversed())"))
         XCTAssertTrue(source.contains("Image(systemName: \"video.fill\")"))
-        XCTAssertTrue(source.contains(".fill(.regularMaterial)"))
-        XCTAssertTrue(source.contains(".background(.bar)"))
+        XCTAssertTrue(source.contains("private var contextCard"))
+        XCTAssertTrue(source.contains(".background(.regularMaterial"))
         XCTAssertTrue(source.contains("store.selectRecording(id)"))
         XCTAssertFalse(source.contains("Button(action: store.selectPreviousRecording)"))
         XCTAssertFalse(source.contains("Button(action: store.selectNextRecording)"))
@@ -138,7 +153,8 @@ final class RepositoryContractTests: XCTestCase {
         let menuURL = repositoryRoot
             .appendingPathComponent("Sources/BehavioContext/Views/MenuBarContentView.swift")
         let menuSource = try String(contentsOf: menuURL, encoding: .utf8)
-        XCTAssertTrue(menuSource.contains("Button(\"Recordings\", action: openRecordings)"))
+        XCTAssertTrue(menuSource.contains("Button(action: openRecordings)"))
+        XCTAssertTrue(menuSource.contains("Label(\"Recordings\""))
 
         let appDelegateURL = repositoryRoot
             .appendingPathComponent("Sources/BehavioContext/App/AppDelegate.swift")
@@ -157,7 +173,7 @@ final class RepositoryContractTests: XCTestCase {
         XCTAssertTrue(source.contains("func present(_ result: RecordingResult)"))
         XCTAssertTrue(source.contains("func presentSelectedRecording()"))
         XCTAssertTrue(source.contains("localized: \"Recordings\""))
-        XCTAssertTrue(source.contains("contentWidth: CGFloat = 860"))
+        XCTAssertTrue(source.contains("contentWidth: CGFloat = 820"))
         XCTAssertTrue(source.contains("locale: store.effectiveLocale"))
         XCTAssertTrue(source.contains("WindowPresentation.afterMenuDismissal"))
         XCTAssertTrue(source.contains("visibleFrame.height"))

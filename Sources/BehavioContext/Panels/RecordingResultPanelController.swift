@@ -4,8 +4,8 @@ import SwiftUI
 
 @MainActor
 final class RecordingResultPanelController {
-    private static let contentWidth: CGFloat = 860
-    private static let fallbackContentHeight: CGFloat = 650
+    private static let contentWidth: CGFloat = 820
+    private static let fallbackContentHeight: CGFloat = 570
     private static let defaultMediaHeight: CGFloat = 322
     private static let minimumMediaHeight: CGFloat = 160
     private static let verticalScreenMargin: CGFloat = 80
