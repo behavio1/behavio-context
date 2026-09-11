@@ -135,7 +135,7 @@ final class RepositoryContractTests: XCTestCase {
         XCTAssertTrue(source.contains("NavigationSplitView"))
         XCTAssertTrue(source.contains("List(selection: recordingSelection)"))
         XCTAssertTrue(source.contains("ForEach(store.recordingResults.reversed())"))
-        XCTAssertTrue(source.contains("Image(systemName: \"video.fill\")"))
+        XCTAssertTrue(source.contains("AppResourceBundle.image(named: \"CaptureGlyph\")"))
         XCTAssertTrue(source.contains("private var contextCard"))
         XCTAssertTrue(source.contains(".background(.regularMaterial"))
         XCTAssertTrue(source.contains("store.selectRecording(id)"))
