@@ -13,8 +13,8 @@ final class PersistenceAndStoreTests: XCTestCase {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("behaviocontext-history-\(UUID().uuidString)", isDirectory: true)
         defer { try? FileManager.default.removeItem(at: root) }
-        let firstDirectory = root.appendingPathComponent("BehavioContext 2026-09-01 10-00-00")
-        let secondDirectory = root.appendingPathComponent("BehavioContext 2026-09-01 11-00-00")
+        let firstDirectory = root.appendingPathComponent("Behavio Context 2026-09-01 10-00-00")
+        let secondDirectory = root.appendingPathComponent("Behavio Context 2026-09-01 11-00-00")
         try FileManager.default.createDirectory(at: firstDirectory, withIntermediateDirectories: true)
         try FileManager.default.createDirectory(at: secondDirectory, withIntermediateDirectories: true)
         let firstVideo = firstDirectory.appendingPathComponent("recording.mp4")
@@ -56,7 +56,7 @@ final class PersistenceAndStoreTests: XCTestCase {
             let root = FileManager.default.temporaryDirectory
                 .appendingPathComponent("behaviocontext-discovery-\(UUID().uuidString)", isDirectory: true)
             defer { try? FileManager.default.removeItem(at: root) }
-            let recordingDirectory = root.appendingPathComponent("BehavioContext 2026-09-01 12-00-00\(suffix)")
+            let recordingDirectory = root.appendingPathComponent("Behavio Context 2026-09-01 12-00-00\(suffix)")
             try FileManager.default.createDirectory(
                 at: recordingDirectory,
                 withIntermediateDirectories: true
@@ -89,7 +89,7 @@ final class PersistenceAndStoreTests: XCTestCase {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("behaviocontext-delete-\(UUID().uuidString)", isDirectory: true)
         defer { try? FileManager.default.removeItem(at: root) }
-        let directory = root.appendingPathComponent("BehavioContext 2026-09-01 13-00-00")
+        let directory = root.appendingPathComponent("Behavio Context 2026-09-01 13-00-00")
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         let videoURL = directory.appendingPathComponent("recording.mp4")
         try Data([1]).write(to: videoURL)
@@ -1002,7 +1002,7 @@ final class PersistenceAndStoreTests: XCTestCase {
             recordingsDirectory.standardizedFileURL
         )
         XCTAssertEqual(outputURL.lastPathComponent, "recording.mp4")
-        XCTAssertTrue(outputURL.deletingLastPathComponent().lastPathComponent.hasPrefix("BehavioContext "))
+        XCTAssertTrue(outputURL.deletingLastPathComponent().lastPathComponent.hasPrefix("Behavio Context "))
         let files = try FileManager.default.contentsOfDirectory(
             at: outputURL.deletingLastPathComponent(), includingPropertiesForKeys: nil
         )

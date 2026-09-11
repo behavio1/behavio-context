@@ -33,9 +33,9 @@ final class RepositoryContractTests: XCTestCase {
 
         let hudURL = repositoryRoot.appendingPathComponent("Sources/BehavioContext/Views/CaptureSettingsView.swift")
         let hudSource = try String(contentsOf: hudURL, encoding: .utf8)
-        XCTAssertTrue(hudSource.contains("Section(\"Screens\")"))
-        XCTAssertTrue(hudSource.contains("Section(\"Windows\")"))
-        XCTAssertTrue(hudSource.contains("selectCaptureSource(source.id)"))
+        XCTAssertTrue(hudSource.contains("Section(\"Recording source\")"))
+        XCTAssertTrue(hudSource.contains("activeWindowTitle"))
+        XCTAssertTrue(hudSource.contains("screensExcludedHelp"))
     }
 
     func testWindowSelectionIsTransientAndRecordingUsesLiveGeometry() throws {
@@ -63,7 +63,7 @@ final class RepositoryContractTests: XCTestCase {
 
         let hudURL = repositoryRoot.appendingPathComponent("Sources/BehavioContext/Views/CaptureSettingsView.swift")
         let hudSource = try String(contentsOf: hudURL, encoding: .utf8)
-        XCTAssertTrue(hudSource.contains("Choose a screen or window"))
+        XCTAssertTrue(hudSource.contains("Aktywne okno przy starcie"))
         XCTAssertTrue(hudSource.contains(".disabled(store.configurationIsLocked)"))
     }
 
@@ -94,7 +94,7 @@ final class RepositoryContractTests: XCTestCase {
         let source = try String(contentsOf: playbackURL, encoding: .utf8)
         XCTAssertTrue(source.contains("RecordingPlayerView(fileURL: result.fileURL)"))
         XCTAssertTrue(source.contains(".frame(width: 572, height: mediaHeight)"))
-        XCTAssertTrue(source.contains("Label(\"Recording file\", systemImage: \"doc\")"))
+        XCTAssertTrue(source.contains("accessibilityLabel: String(localized: \"Recording file\""))
         XCTAssertTrue(source.contains("player.play()"))
         XCTAssertTrue(source.contains("controlsStyle = .minimal"))
         XCTAssertTrue(source.contains("controlsStyle = .none"))
@@ -195,13 +195,13 @@ final class RepositoryContractTests: XCTestCase {
         }
     }
 
-    func testRepositoryGuidanceReferencesMacOSUISkills() throws {
+    func testRepositoryGuidancePreservesProductConstraints() throws {
         let source = try String(
             contentsOf: repositoryRoot.appendingPathComponent("AGENTS.md"),
             encoding: .utf8
         )
-        XCTAssertTrue(source.contains("build-macos-apps:swiftui-patterns"))
-        XCTAssertTrue(source.contains("build-macos-apps:appkit-interop"))
+        XCTAssertTrue(source.contains("active-window, text-first workflow"))
+        XCTAssertTrue(source.contains("Prefer native SwiftUI controls"))
     }
 
     func testRTMPPublishingSupportIsAbsent() throws {

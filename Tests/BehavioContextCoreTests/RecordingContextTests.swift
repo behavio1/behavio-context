@@ -15,7 +15,7 @@ final class RecordingContextTests: XCTestCase {
             let root = FileManager.default.temporaryDirectory
                 .appendingPathComponent("behaviocontext-legacy-\(UUID())", isDirectory: true)
             defer { try? FileManager.default.removeItem(at: root) }
-            let directory = root.appendingPathComponent("BehavioContext 2026-09-01 12-00-00")
+            let directory = root.appendingPathComponent("Behavio Context 2026-09-01 12-00-00")
             try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
             let video = directory.appendingPathComponent("recording.mp4")
             try Data([1]).write(to: video)
