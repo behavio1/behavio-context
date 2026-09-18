@@ -17,10 +17,10 @@ for language in ('en', 'pl', 'es', 'de'):
         lines.append(f'{json.dumps(key, ensure_ascii=False)} = {json.dumps(value, ensure_ascii=False)};')
     (directory / 'Localizable.strings').write_text('\n'.join(lines) + '\n')
 permissions = {
-    'en': ['Behavio Context uses the microphone for local transcription.', 'Behavio Context follows the active window when you switch apps or windows.', 'Behavio Context transcribes speech locally to create context for your agent.'],
-    'pl': ['Behavio Context używa mikrofonu do lokalnej transkrypcji.', 'Behavio Context nagrywa aktywne okno podczas przełączania aplikacji i okien.', 'Behavio Context transkrybuje mowę lokalnie, aby utworzyć kontekst dla agenta.'],
-    'es': ['Behavio Context usa el micrófono para la transcripción local.', 'Behavio Context sigue la ventana activa al cambiar de aplicación o ventana.', 'Behavio Context transcribe la voz localmente para crear contexto para tu agente.'],
-    'de': ['Behavio Context verwendet das Mikrofon für die lokale Transkription.', 'Behavio Context folgt dem aktiven Fenster beim Wechseln von Apps oder Fenstern.', 'Behavio Context transkribiert Sprache lokal, um Kontext für deinen Agenten zu erstellen.'],
+    'en': ['UI Screen Context uses the microphone for local transcription.', 'UI Screen Context follows the active window when you switch apps or windows.', 'UI Screen Context transcribes speech locally to create context for your agent.'],
+    'pl': ['UI Screen Context używa mikrofonu do lokalnej transkrypcji.', 'UI Screen Context nagrywa aktywne okno podczas przełączania aplikacji i okien.', 'UI Screen Context transkrybuje mowę lokalnie, aby utworzyć kontekst dla agenta.'],
+    'es': ['UI Screen Context usa el micrófono para la transcripción local.', 'UI Screen Context sigue la ventana activa al cambiar de aplicación o ventana.', 'UI Screen Context transcribe la voz localmente para crear contexto para tu agente.'],
+    'de': ['UI Screen Context verwendet das Mikrofon für die lokale Transkription.', 'UI Screen Context folgt dem aktiven Fenster beim Wechseln von Apps oder Fenstern.', 'UI Screen Context transkribiert Sprache lokal, um Kontext für deinen Agenten zu erstellen.'],
 }
 for language, values in permissions.items():
     keys = ['NSMicrophoneUsageDescription', 'NSScreenCaptureUsageDescription', 'NSSpeechRecognitionUsageDescription']

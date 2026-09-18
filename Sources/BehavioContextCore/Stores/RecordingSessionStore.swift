@@ -382,7 +382,7 @@ public final class RecordingSessionStore {
                 warningMessage = nil
                 await refreshSources()
             } else {
-                warningMessage = "Allow Screen Recording for Behavio Context, then reopen or refresh sources."
+                warningMessage = "Allow Screen Recording for UI Screen Context, then reopen or refresh sources."
                 requestScreenRecordingSettings?()
             }
         }

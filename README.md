@@ -1,8 +1,10 @@
-# Behavio Context
+# UI Screen Context
+
+by Behavio
 
 Talk to the active window, point with the cursor, and give an AI agent a compact folder instead of a full screen recording.
 
-Behavio Context is a native macOS utility built for bug reports, UI feedback, and agent-assisted work. It follows the active window as you switch apps and windows, transcribes Polish speech locally, tracks relevant pointer activity, detects visual changes, and compiles the result into a small text-first package.
+UI Screen Context is a native macOS utility built for bug reports, UI feedback, and agent-assisted work. It follows the active window as you switch apps and windows, transcribes Polish speech locally, tracks relevant pointer activity, detects visual changes, and compiles the result into a small text-first package.
 
 ## How it works
 
@@ -71,7 +73,7 @@ Create an app bundle with the command-line toolchain:
 
 ```sh
 ./script/build_app.sh
-open ".build/app/Behavio Context.app"
+open ".build/app/UI Screen Context.app"
 ```
 
 The script uses `BEHAVIO_CONTEXT_SIGNING_IDENTITY` when supplied, or the local

@@ -131,7 +131,7 @@ struct MenuBarContentView: View {
             Spacer(minLength: 0)
 
             Menu {
-                Button("Quit Behavio Context") { NSApp.terminate(nil) }
+                Button("Quit UI Screen Context") { NSApp.terminate(nil) }
                     .keyboardShortcut("q")
             } label: {
                 Image(systemName: "ellipsis.circle")
@@ -155,7 +155,7 @@ struct MenuBarContentView: View {
 
     private var productName: String {
         Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
-            ?? "Behavio Context"
+            ?? "UI Screen Context"
     }
 
     private var overflowAccessibilityLabel: String { AppLocalization.text("More", locale: store.effectiveLocale) }
@@ -174,7 +174,7 @@ struct RecordingStatusLabel: View {
                 Text("Preparing…")
             }
         }
-        .accessibilityLabel("Behavio Context menu")
+        .accessibilityLabel("UI Screen Context menu")
         .accessibilityValue(store.phase.isRecording ? "Recording started" : (store.phase == .finalizing ? "Finalizing Recording…" : "Ready"))
     }
 }

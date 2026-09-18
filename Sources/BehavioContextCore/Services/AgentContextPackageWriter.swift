@@ -13,7 +13,7 @@ public enum AgentContextWriterError: Error, LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .sourceMustBeWindow:
-            "Behavio Context can create agent context only from a window."
+            "UI Screen Context can create agent context only from a window."
         case .recordingHasNoVideo:
             "The recording has no readable video track."
         case let .frameExtractionFailed(timeMs):
@@ -364,7 +364,7 @@ public actor AgentContextPackageWriter {
     private static func contextMarkdown(manifest: AgentContextManifest) -> String {
         let pointedMoments = deduplicatedPointedMoments(manifest.visualMoments)
         var lines = [
-            "# Behavio Context",
+            "# UI Screen Context",
             "",
             "Source: \(manifest.source.applicationName) — \(manifest.source.windowTitle)",
             "Duration: \(displayTimestamp(manifest.durationMs))",

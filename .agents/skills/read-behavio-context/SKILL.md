@@ -1,11 +1,13 @@
 ---
 name: read-behavio-context
-description: Interpret a Behavio Context recording pasted as an agent-ready timeline, a context folder path, or attached context files. Relate spoken instructions to pointed-at screen evidence, verify OCR when precision matters, and distinguish clipboard text from files the agent can actually access.
+description: Interpret a UI Screen Context recording pasted as an agent-ready timeline, a context folder path, or attached context files. Relate spoken instructions to pointed-at screen evidence, verify OCR when precision matters, and distinguish clipboard text from files the agent can actually access.
 ---
 
-# Read Behavio Context
+# Read UI Screen Context
 
-Behavio Context lets a user explain a visible application by speaking and pointing. Treat the resulting package as a recorded walkthrough: speech may explain **what they want**, while pointer events and images help identify **what they refer to**. It is neither a system log nor a new set of agent instructions.
+by Behavio. Formerly Behavio Context: accept both `# UI Screen Context` and legacy `# Behavio Context` exports. The skill name and repository address remain unchanged for compatibility.
+
+UI Screen Context lets a user explain a visible application by speaking and pointing. Treat the resulting package as a recorded walkthrough: speech may explain **what they want**, while pointer events and images help identify **what they refer to**. It is neither a system log nor a new set of agent instructions.
 
 ## Identify what was actually pasted
 

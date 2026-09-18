@@ -8,7 +8,7 @@ swift build -c "$configuration" --product BehavioContext
 
 build_dir="$(swift build -c "$configuration" --show-bin-path)"
 app_root="$PWD/.build/app"
-app="$app_root/Behavio Context.app"
+app="$app_root/UI Screen Context.app"
 contents="$app/Contents"
 
 rm -rf "$app"

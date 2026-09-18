@@ -1,6 +1,6 @@
-Behavio Context third-party software notices
+UI Screen Context third-party software notices
 
-The following notices apply to dependencies linked into Behavio Context.
+The following notices apply to dependencies linked into UI Screen Context.
 
 
 HaishinKit 2.2.5

@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleDevelopmentRegion</key><string>en</string>
-    <key>CFBundleDisplayName</key><string>Behavio Context</string>
+    <key>CFBundleDisplayName</key><string>UI Screen Context</string>
     <key>CFBundleExecutable</key><string>BehavioContext</string>
     <key>CFBundleIconFile</key><string>BehavioContext</string>
     <key>CFBundleIdentifier</key><string>one.behavio.context</string>
     <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
-    <key>CFBundleName</key><string>Behavio Context</string>
+    <key>CFBundleName</key><string>UI Screen Context</string>
     <key>CFBundlePackageType</key><string>APPL</string>
     <key>CFBundleShortVersionString</key><string>0.1.0</string>
     <key>CFBundleVersion</key><string>1</string>
     <key>LSApplicationCategoryType</key><string>public.app-category.productivity</string>
     <key>LSMinimumSystemVersion</key><string>15.0</string>
     <key>NSHighResolutionCapable</key><true/>
-    <key>NSMicrophoneUsageDescription</key><string>Behavio Context uses the selected microphone for local live transcription.</string>
-    <key>NSScreenCaptureUsageDescription</key><string>Behavio Context follows the active window when you switch apps or windows.</string>
-    <key>NSSpeechRecognitionUsageDescription</key><string>Behavio Context transcribes speech locally to build a compact context package for your agent.</string>
+    <key>NSMicrophoneUsageDescription</key><string>UI Screen Context uses the selected microphone for local live transcription.</string>
+    <key>NSScreenCaptureUsageDescription</key><string>UI Screen Context follows the active window when you switch apps or windows.</string>
+    <key>NSSpeechRecognitionUsageDescription</key><string>UI Screen Context transcribes speech locally to build a compact context package for your agent.</string>
     <key>NSPrincipalClass</key><string>NSApplication</string>
 </dict>
 </plist>

@@ -1,12 +1,14 @@
-# Behavio Context Privacy Policy
+# UI Screen Context Privacy Policy
+
+by Behavio
 
 Effective date: 11 September 2026.
 
-Behavio Context is an open-source macOS application published by Behavio. Privacy questions and problems can be reported through the public [GitHub repository](https://github.com/behavio1/behavio-context/issues).
+UI Screen Context is an open-source macOS application published by Behavio. Privacy questions and problems can be reported through the public [GitHub repository](https://github.com/behavio1/behavio-context/issues).
 
 ## Data processed on your Mac
 
-Behavio Context captures only the window active when you start recording. It can process microphone audio for live speech transcription and mouse activity for visual references. It does not record keyboard input.
+UI Screen Context follows the active window as you switch apps and windows, recording one window at a time. It can process microphone audio for live speech transcription and mouse activity for visual references. It does not record keyboard input.
 
 Transcription explicitly requires on-device speech recognition. The app does not fall back to cloud speech recognition. Recordings, screenshots, transcripts, pointer events, history, and preferences stay on your Mac unless you deliberately share them.
 
@@ -14,7 +16,7 @@ Transcription explicitly requires on-device speech recognition. The app does not
 
 The generated `context/` folder contains text, JSON, and selected images. It does not contain audio or video. A source MP4 remains beside that folder for local recovery and frame extraction, but its path is not included in the agent package.
 
-Copying context puts only the local `context/` path on the macOS clipboard. Behavio Context does not attach it, upload it, or send it to another app automatically.
+Copying context puts only the local `context/` path on the macOS clipboard. UI Screen Context does not attach it, upload it, or send it to another app automatically.
 
 ## Permissions
 

@@ -1,4 +1,4 @@
 interface:
-  display_name: "Read Behavio Context"
+  display_name: "Read UI Screen Context"
   short_description: "Understand pasted recording context and cursor evidence"
   default_prompt: "Use $read-behavio-context to interpret this pasted recording and carry out my request using its speech and visual evidence."

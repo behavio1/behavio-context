@@ -233,7 +233,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func updateSettingsTitle() {
-        settingsWindow?.title = AppLocalization.text("Behavio Context Settings", locale: store.effectiveLocale)
+        settingsWindow?.title = AppLocalization.text("UI Screen Context Settings", locale: store.effectiveLocale)
     }
 
     private func presentSettings() {

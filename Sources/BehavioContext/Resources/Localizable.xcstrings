@@ -784,31 +784,31 @@
         }
       }
     },
-    "Quit Behavio Context": {
+    "Quit UI Screen Context": {
       "extractionState": "manual",
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Behavio Context beenden"
+            "value": "UI Screen Context beenden"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Quit Behavio Context"
+            "value": "Quit UI Screen Context"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Salir de Behavio Context"
+            "value": "Salir de UI Screen Context"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zakończ Behavio Context"
+            "value": "Zakończ UI Screen Context"
           }
         }
       }
@@ -900,25 +900,25 @@
         }
       }
     },
-    "Behavio Context preserved the partial recording. Show it in Finder to see whether it can be played.": {
+    "UI Screen Context preserved the partial recording. Show it in Finder to see whether it can be played.": {
       "extractionState": "manual",
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Behavio Context hat die Teilaufnahme erhalten. Zeige sie im Finder, um zu prüfen, ob sie abgespielt werden kann."
+            "value": "UI Screen Context hat die Teilaufnahme erhalten. Zeige sie im Finder, um zu prüfen, ob sie abgespielt werden kann."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Behavio Context preserved the partial recording. Show it in Finder to see whether it can be played."
+            "value": "UI Screen Context preserved the partial recording. Show it in Finder to see whether it can be played."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Behavio Context conservó la grabación parcial. Muéstrala en el Finder para comprobar si se puede reproducir."
+            "value": "UI Screen Context conservó la grabación parcial. Muéstrala en el Finder para comprobar si se puede reproducir."
           }
         },
         "pl": {
@@ -2756,24 +2756,24 @@
         }
       }
     },
-    "Behavio Context menu": {
+    "UI Screen Context menu": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Behavio Context menu"
+            "value": "UI Screen Context menu"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Menu Behavio Context"
+            "value": "Menu UI Screen Context"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Menú de Behavio Context"
+            "value": "Menú de UI Screen Context"
           }
         },
         "de": {
@@ -2953,30 +2953,30 @@
         }
       }
     },
-    "Behavio Context Settings": {
+    "UI Screen Context Settings": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Behavio Context Settings"
+            "value": "UI Screen Context Settings"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ustawienia Behavio Context"
+            "value": "Ustawienia UI Screen Context"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ajustes de Behavio Context"
+            "value": "Ajustes de UI Screen Context"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Behavio Context – Einstellungen"
+            "value": "UI Screen Context – Einstellungen"
           }
         }
       }

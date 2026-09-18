@@ -34,7 +34,7 @@ final class RecordingFeedbackPanelController {
         panel.acceptsMouseMovedEvents = true
         panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
         panel.animationBehavior = .utilityWindow
-        let accessibilityLabel = "Behavio Context recording controls"
+        let accessibilityLabel = "UI Screen Context recording controls"
         panel.setAccessibilityLabel(accessibilityLabel)
         panel.contentView = NSHostingView(rootView: RecordingCapsuleView(
             store: store,
@@ -337,7 +337,7 @@ private struct RecordingCapsuleView: View {
         case .preparing: AppLocalization.text("Preparing the active window…", locale: store.effectiveLocale)
         case .finalizing: AppLocalization.text("Creating agent context…", locale: store.effectiveLocale)
         case .failed: AppLocalization.text("Couldn’t start recording", locale: store.effectiveLocale)
-        default: "Behavio Context"
+        default: "UI Screen Context"
         }
     }
 

@@ -48,7 +48,7 @@ struct SettingsView: View {
             if notice.kind == .contextUnavailable {
                 Text("The video was saved and is available in Recordings. Creating the agent context failed. Open the video in Finder.")
             } else if notice.kind == .partialRecordingPreserved {
-                Text("Behavio Context preserved the partial recording. Show it in Finder to see whether it can be played.")
+                Text("UI Screen Context preserved the partial recording. Show it in Finder to see whether it can be played.")
             } else {
                 Text("No usable recording was produced. Check your recording settings and try again.")
             }
@@ -185,7 +185,7 @@ struct SettingsView: View {
 
     private var productName: String {
         Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
-            ?? "Behavio Context"
+            ?? "UI Screen Context"
     }
 }
 
