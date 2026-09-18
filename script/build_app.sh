@@ -15,6 +15,7 @@ rm -rf "$app"
 mkdir -p "$contents/MacOS" "$contents/Resources"
 cp "$build_dir/BehavioContext" "$contents/MacOS/BehavioContext"
 cp Configuration/BehavioContextApp.plist "$contents/Info.plist"
+cp LICENSE NOTICE "$contents/Resources/"
 cp -R "$build_dir/BehavioContext_BehavioContext.bundle" "$contents/Resources/"
 cp -R "$build_dir/BehavioContext_BehavioContextCore.bundle" "$contents/Resources/"
 

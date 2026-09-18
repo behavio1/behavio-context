@@ -108,4 +108,8 @@ The implementation design and requirement mapping live in [docs/smart-agent-cont
 
 ## License
 
-Apache-2.0.
+UI Screen Context by Behavio is open-source software licensed under the [Apache License 2.0](LICENSE).
+
+Anyone may download, use, modify, fork, and redistribute the software, including for commercial purposes. You do not have to publish your modifications. When redistributing it, include the license, preserve applicable copyright and attribution notices (including [NOTICE](NOTICE)), and clearly mark modified files.
+
+The software is provided without warranties. Third-party components retain their own licenses; the license does not grant rights to use trademarks. See [LICENSE](LICENSE) for the full terms.
