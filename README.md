@@ -2,7 +2,7 @@
 
 Talk to the active window, point with the cursor, and give an AI agent a compact folder instead of a full screen recording.
 
-Behavio Context is a native macOS utility built for bug reports, UI feedback, and agent-assisted work. It records one active window, transcribes Polish speech locally, tracks relevant pointer activity, detects visual changes, and compiles the result into a small text-first package.
+Behavio Context is a native macOS utility built for bug reports, UI feedback, and agent-assisted work. It follows the active window as you switch apps and windows, transcribes Polish speech locally, tracks relevant pointer activity, detects visual changes, and compiles the result into a small text-first package.
 
 ## How it works
 
@@ -13,7 +13,7 @@ Behavio Context is a native macOS utility built for bug reports, UI feedback, an
 5. Stop with **Esc**, **⌃⌘R**, or the Stop button beside the timer.
 6. Paste the resulting `context/` folder path into your agent. Post-processing is already complete.
 
-The floating Recording Capsule stays outside the captured window and shows elapsed time, the selected microphone with a live device picker, microphone level, live transcription, the selected window, and a clear Stop action. Changing the microphone while recording switches the live input and persists the choice for the next session.
+The floating Recording Capsule shows elapsed time, a microphone picker, microphone level, live transcription, the current window, and a Stop action. Use its collapse/expand button to switch to a compact 300 × 44 pt bar with the timer, Stop, audio level, and a warning indicator. The compact view hides transcription and window/device names without changing what is recorded. The app remembers the selected view; hover over a warning indicator for details. Changing the microphone while recording switches the live input and persists the choice for the next session.
 
 ## Agent package
 
@@ -28,11 +28,27 @@ Behavio Context YYYY-MM-DD HH-MM-SS/
     └── on-demand/             # additional indexed evidence when needed
 ```
 
-After Stop, the app retries missing speech against the finalized local recording, detects pointer dwell as well as clicks, and runs Apple Vision OCR near the pointer. `context.md` is an agent-ready timeline that joins speech with the visible text being indicated. Images are selected from clicks, pointer dwell, pointing language, transcript boundaries, visual changes, and sparse coverage. Near-duplicate OCR targets are collapsed. The first pass is capped at eight images with a 1280 px long edge; pointer-focused crops are capped at 768 px. No audio or video is written inside `context/`.
+After Stop, the app retries missing speech against the finalized local recording, detects pointer dwell as well as clicks, and runs Apple Vision OCR near the pointer. `context.md` is an agent-ready timeline that joins speech with the visible text being indicated. Images are selected from clicks, pointer dwell, pointing language, transcript boundaries, visual changes, and sparse coverage. Near-duplicate OCR targets within the same window are collapsed. Schema 3 includes `window_timeline` with app, window ID, title and time intervals, plus window attribution for images and pointer events. Transitions are sampled; short visits and gaps are explicitly not evidence of continuous interaction. The first pass is capped at eight images with a 1280 px long edge; pointer-focused crops are capped at 768 px. No audio or video is written inside `context/`.
+
+## Using the output with an AI agent
+
+This repository includes the [read-behavio-context skill](.agents/skills/read-behavio-context/SKILL.md). It teaches an agent how to interpret speech, cursor targets, OCR uncertainty, missing images, and the difference between copied text and a local folder path. Agents in this project can discover it under `.agents/skills/`; using it in another project requires making the skill available there. Pasting the recording alone does not install the skill.
+
+**Copy Path** and **Copy Path & Return** copy the local context folder path; **Copy Context Text** copies the Markdown text. If context compilation fails, the path can instead point to the saved MP4. **Copy Video & Return** places a video file URL on the clipboard. “Return” brings the previous app forward; it does not send a message. The latter does not attach the referenced images. For an agent without access to your Mac's files, attach the relevant context files explicitly.
+
+In Settings, **Recordings and contexts folder** controls where new recordings are saved. Earlier recordings remain in their original folders and stay available in the recording list. **Show icon in menu bar** controls the menu containing start/stop, recordings, the recording folder, and settings.
+
+## Language and settings
+
+The interface supports English, Polish, Spanish, and German. **Follow System** matches the preferred languages and falls back to English. This selection does not change speech recognition: local transcription currently requires the Polish on-device model. An unavailable model can leave visual context usable while the transcript reports failure. The audio meter indicates input level independently of transcription.
+
+**More Settings** expands by clicking its entire header. It contains the recording folder and menu-bar icon toggle with a matching icon preview. The menu provides Start/Stop, Recordings, Open Recordings Folder, and Settings. The app uses a simplified template version of its logo for the menu bar and its full icon in the Dock.
+
+If context compilation fails after video capture succeeds, the saved MP4 remains available in Recordings with a separate context error.
 
 ## Privacy
 
-- Captures only the window that was active when recording started.
+- Follows the active window sequentially as you switch apps or windows; never falls back to capturing the whole display.
 - Polish transcription requests on-device recognition and never falls back to cloud recognition.
 - Does not record keystrokes. Escape exists only as a temporary stop hotkey while recording.
 - Does not upload recordings, transcripts, screenshots, or analytics.
@@ -80,7 +96,7 @@ Or open `BehavioContext.xcodeproj` in Xcode and select the `BehavioContext` sche
 ## Architecture
 
 - SwiftUI and AppKit provide the menu bar app and nonactivating Recording Capsule.
-- ScreenCaptureKit captures a frozen `SCWindow` through `desktopIndependentWindow`.
+- ScreenCaptureKit captures one `SCWindow` at a time through `desktopIndependentWindow`, replacing the stream when the active window changes. Source intervals identify each recorded window; transitions can contain gaps.
 - Speech performs local Polish partial/final transcription, with a local finalized-file retry when live recognition has no result.
 - A short-lived global pointer monitor records normalized mouse events only during recording.
 - AVFoundation extracts and downsizes selected frames after the MP4 is finalized; Vision resolves nearby text at pointer dwell and click moments.

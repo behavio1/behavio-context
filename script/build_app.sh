@@ -18,13 +18,15 @@ cp Configuration/BehavioContextApp.plist "$contents/Info.plist"
 cp -R "$build_dir/BehavioContext_BehavioContext.bundle" "$contents/Resources/"
 cp -R "$build_dir/BehavioContext_BehavioContextCore.bundle" "$contents/Resources/"
 
+python3 script/export_localizations.py "$contents/Resources"
+
 iconset="$app_root/BehavioContext.iconset"
 rm -rf "$iconset"
 mkdir -p "$iconset"
 for size in 16 32 128 256 512; do
-    magick Assets/BehavioContextIcon.png -filter Lanczos -resize "${size}x${size}" "$iconset/icon_${size}x${size}.png"
+    magick Assets/BehavioContextIcon-v2.png -filter Lanczos -resize "${size}x${size}" "$iconset/icon_${size}x${size}.png"
     doubled=$((size * 2))
-    magick Assets/BehavioContextIcon.png -filter Lanczos -resize "${doubled}x${doubled}" "$iconset/icon_${size}x${size}@2x.png"
+    magick Assets/BehavioContextIcon-v2.png -filter Lanczos -resize "${doubled}x${doubled}" "$iconset/icon_${size}x${size}@2x.png"
 done
 iconutil -c icns "$iconset" -o "$contents/Resources/BehavioContext.icns"
 rm -rf "$iconset"

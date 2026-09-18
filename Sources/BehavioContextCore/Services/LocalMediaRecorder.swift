@@ -6,6 +6,7 @@ import OSLog
 
 public actor LocalMediaRecorder: MediaSampleSink {
     private let recordingsDirectory: URL
+    private let directoryProvider: (@Sendable () async throws -> URL)?
     private let logger = Logger(
         subsystem: "one.behavio.context",
         category: "recorder"
@@ -23,12 +24,17 @@ public actor LocalMediaRecorder: MediaSampleSink {
     private var lastVideoTime = CMTime.invalid
     private var lastAudioTime = CMTime.invalid
     private var writerError: (any Error)?
+    private var mediaStartHostTime: Double?
     private var hasReceivedScreenFrame = false
 
     public nonisolated let videoTrackId: UInt8? = UInt8.max
     public nonisolated let audioTrackId: UInt8? = UInt8.max
 
-    public init(recordingsDirectory: URL? = nil) {
+    public init(
+        recordingsDirectory: URL? = nil,
+        directoryProvider: (@Sendable () async throws -> URL)? = nil
+    ) {
+        self.directoryProvider = directoryProvider
         self.recordingsDirectory = recordingsDirectory ?? RecordingStorage.recordingsDirectory()
     }
 
@@ -67,7 +73,8 @@ public actor LocalMediaRecorder: MediaSampleSink {
             layout: webcamLayout
         )
 
-        let outputURL = try Self.makeOutputURL(recordingsDirectory: recordingsDirectory)
+        let destination = try await directoryProvider?() ?? recordingsDirectory
+        let outputURL = try Self.makeOutputURL(recordingsDirectory: destination)
         let writer: AVAssetWriter
         do {
             writer = try AVAssetWriter(outputURL: outputURL, fileType: .mp4)
@@ -92,6 +99,7 @@ public actor LocalMediaRecorder: MediaSampleSink {
         lastAudioTime = .invalid
         writerError = nil
         hasReceivedScreenFrame = false
+        mediaStartHostTime = nil
         try addVideoInput(sourceFormatHint: nil)
         if capturesAudio {
             try addAudioInput(sourceFormatHint: nil)
@@ -143,11 +151,12 @@ public actor LocalMediaRecorder: MediaSampleSink {
             guard let size = attributes[.size] as? NSNumber, size.int64Value > 0 else {
                 throw LocalRecordingError.emptyRecording
             }
+            let origin = mediaStartHostTime
             resetWriterState()
             logger.info("Local recording finalized at \(outputURL.path, privacy: .private)")
-            return RecordingArtifacts(
-                recordingURL: outputURL
-            )
+            var artifacts = RecordingArtifacts(recordingURL: outputURL)
+            artifacts.mediaStartHostTime = origin
+            return artifacts
         } catch {
             let diagnosticDescription = String(reflecting: writer.error ?? error)
             logger.error(
@@ -322,6 +331,7 @@ public actor LocalMediaRecorder: MediaSampleSink {
         let firstTime = pendingAudio.first.map {
             CMTimeMinimum(firstVideo.presentationTimeStamp, $0.presentationTimeStamp)
         } ?? firstVideo.presentationTimeStamp
+        mediaStartHostTime = CMTimeGetSeconds(firstTime)
         writer.startSession(atSourceTime: firstTime)
         let video = pendingVideo
         let audio = pendingAudio
@@ -364,6 +374,7 @@ public actor LocalMediaRecorder: MediaSampleSink {
         lastAudioTime = .invalid
         writerError = nil
         hasReceivedScreenFrame = false
+        mediaStartHostTime = nil
     }
 
     private func discardRecording(
@@ -388,7 +399,7 @@ public actor LocalMediaRecorder: MediaSampleSink {
             return nil
         }
 
-        let recoveryDirectory = recordingsDirectory
+        let recoveryDirectory = recordingDirectory.deletingLastPathComponent()
             .appendingPathComponent("Recovery", isDirectory: true)
         var destination = recoveryDirectory.appendingPathComponent(
             recordingDirectory.lastPathComponent,

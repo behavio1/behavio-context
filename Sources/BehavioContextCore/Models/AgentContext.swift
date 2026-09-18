@@ -67,23 +67,27 @@ public struct PointerEvent: Codable, Equatable, Identifiable, Sendable {
     public let kind: PointerEventKind
     public let normalizedX: Double
     public let normalizedY: Double
+    public var windowID: UInt32? = nil
 
     public init(
         id: String = UUID().uuidString,
         timeMs: Int,
         kind: PointerEventKind,
         normalizedX: Double,
-        normalizedY: Double
+        normalizedY: Double,
+        windowID: UInt32? = nil
     ) {
         self.id = id
         self.timeMs = max(0, timeMs)
         self.kind = kind
+        self.windowID = windowID
         self.normalizedX = min(1, max(0, normalizedX))
         self.normalizedY = min(1, max(0, normalizedY))
     }
 
     enum CodingKeys: String, CodingKey {
         case id, kind
+        case windowID = "window_id"
         case timeMs = "time_ms"
         case normalizedX = "normalized_x"
         case normalizedY = "normalized_y"
@@ -97,6 +101,7 @@ public enum VisualMomentReason: String, Codable, Equatable, Sendable {
     case visualChange = "visual_change"
     case transcriptBoundary = "transcript_boundary"
     case coverage
+    case windowChange = "window_change"
 }
 
 public struct VisualMomentCandidate: Equatable, Sendable {
@@ -267,6 +272,26 @@ public struct ContextSource: Codable, Equatable, Sendable {
     }
 }
 
+public struct ContextWindowInterval: Codable, Equatable, Sendable {
+    public let windowID: UInt32
+    public let source: ContextSource
+    public let startMs: Int
+    public let endMs: Int
+
+    public init(window: WindowSource, startMs: Int, endMs: Int) {
+        windowID = window.windowID
+        source = ContextSource(bundleIdentifier: window.applicationBundleIdentifier,
+            applicationName: window.applicationName, windowTitle: window.title,
+            initialPixelWidth: window.pixelWidth, initialPixelHeight: window.pixelHeight)
+        self.startMs = startMs
+        self.endMs = endMs
+    }
+    enum CodingKeys: String, CodingKey {
+        case windowID = "window_id", source
+        case startMs = "start_ms", endMs = "end_ms"
+    }
+}
+
 public struct ContextMicrophone: Codable, Equatable, Sendable {
     public let deviceID: String
     public let name: String
@@ -297,9 +322,11 @@ public struct ContextVisualMoment: Codable, Equatable, Identifiable, Sendable {
     public let transcriptSegmentID: String?
     public let recognizedText: String?
     public let recognitionConfidence: Double?
+    public var windowID: UInt32? = nil
 
     enum CodingKeys: String, CodingKey {
         case id, reason, score, path, pointer
+        case windowID = "window_id"
         case timeMs = "time_ms"
         case transcriptSegmentID = "transcript_segment_id"
         case recognizedText = "recognized_text"
@@ -334,6 +361,7 @@ public struct AgentContextManifest: Codable, Equatable, Sendable {
     public let visualMoments: [ContextVisualMoment]
     public let recommendedInputs: [String]
     public let limits: ContextLimits
+    public var windowTimeline: [ContextWindowInterval]? = nil
 
     enum CodingKeys: String, CodingKey {
         case schemaVersion = "schema_version"
@@ -346,6 +374,7 @@ public struct AgentContextManifest: Codable, Equatable, Sendable {
         case visualMoments = "visual_moments"
         case recommendedInputs = "recommended_inputs"
         case limits
+        case windowTimeline = "window_timeline"
     }
 }
 

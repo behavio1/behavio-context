@@ -6,6 +6,7 @@ struct MenuBarContentView: View {
     @Bindable var store: RecordingSessionStore
     let toggleRecording: () -> Void
     let openRecordings: () -> Void
+    let recordingStorage: RecordingStorageController
     let openSettings: () -> Void
 
     var body: some View {
@@ -27,6 +28,13 @@ struct MenuBarContentView: View {
                 }
             }
             .buttonStyle(.bordered)
+
+            Button(action: recordingStorage.openFolder) {
+                Label("Open Recordings Folder", systemImage: "folder")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
+            .disabled(recordingStorage.directory == nil || recordingStorage.isChanging)
 
             Divider()
 
@@ -102,7 +110,7 @@ struct MenuBarContentView: View {
             .buttonStyle(.borderedProminent)
             .tint(store.phase.isRecording || store.phase == .preparing ? .red : .accentColor)
             .controlSize(.large)
-            .disabled(!store.isInitialized)
+            .disabled(!store.isInitialized || recordingStorage.isChanging)
         }
     }
 
@@ -131,7 +139,7 @@ struct MenuBarContentView: View {
             }
             .menuStyle(.borderlessButton)
             .fixedSize()
-            .accessibilityLabel(Text(verbatim: overflowAccessibilityLabel)) // localization: allow-verbatim Polish v1 overflow label
+            .accessibilityLabel(Text(verbatim: overflowAccessibilityLabel)) // localization: allow-verbatim localized overflow label
         }
     }
 
@@ -140,7 +148,7 @@ struct MenuBarContentView: View {
             return store.elapsedSeconds.recordingDuration
         }
         if store.phase == .preparing {
-            return String(localized: "Preparing…", locale: store.effectiveLocale)
+            return AppLocalization.text("Preparing…", locale: store.effectiveLocale)
         }
         return store.globalShortcut.displayName
     }
@@ -150,7 +158,7 @@ struct MenuBarContentView: View {
             ?? "Behavio Context"
     }
 
-    private var overflowAccessibilityLabel: String { "Więcej" }
+    private var overflowAccessibilityLabel: String { AppLocalization.text("More", locale: store.effectiveLocale) }
 }
 
 struct RecordingStatusLabel: View {
@@ -158,8 +166,7 @@ struct RecordingStatusLabel: View {
 
     var body: some View {
         HStack(spacing: 4) {
-            Image(systemName: store.phase.isRecording ? "record.circle.fill" : "record.circle")
-                .foregroundStyle(store.phase.isRecording ? Color.red : Color.primary)
+            MenuBarGlyph(isRecording: store.phase.isRecording)
             if store.phase.isRecording || store.phase == .finalizing {
                 Text(store.elapsedSeconds.recordingDuration)
                     .monospacedDigit()
@@ -167,7 +174,8 @@ struct RecordingStatusLabel: View {
                 Text("Preparing…")
             }
         }
-        .accessibilityLabel(store.phase.isRecording ? "Stop Recording" : "Start Recording")
+        .accessibilityLabel("Behavio Context menu")
+        .accessibilityValue(store.phase.isRecording ? "Recording started" : (store.phase == .finalizing ? "Finalizing Recording…" : "Ready"))
     }
 }
 

@@ -3,11 +3,10 @@ import XCTest
 
 final class RepositoryContractTests: XCTestCase {
     private let expectedLocales: Set<String> = [
-        "en", "ar", "de", "es", "fr", "it", "ja-JP", "ko-KR",
-        "ru", "tr", "vi", "pt-BR", "zh-CN", "zh-TW",
+        "en", "pl", "es", "de",
     ]
 
-    func testCatalogContainsAllFourteenLocalesForEveryLocalizedKey() throws {
+    func testCatalogContainsAllFourSupportedLocalesForEveryLocalizedKey() throws {
         let catalogURL = repositoryRoot
             .appendingPathComponent("Sources/BehavioContext/Resources/Localizable.xcstrings")
         let data = try Data(contentsOf: catalogURL)
@@ -125,8 +124,8 @@ final class RepositoryContractTests: XCTestCase {
         XCTAssertTrue(source.contains(".frame(width: 588, height: mediaHeight)"))
         XCTAssertTrue(source.contains("accessibilityLabel(String(localized: \"Recording file\""))
         XCTAssertTrue(source.contains("player.play()"))
-        XCTAssertTrue(source.contains("controlsStyle = .minimal"))
-        XCTAssertTrue(source.contains("controlsStyle = .none"))
+        XCTAssertTrue(source.contains("controlsStyle = .inline"))
+        XCTAssertFalse(source.contains("controlsStyle = .none"))
         XCTAssertTrue(source.contains("Label(\"Copy Video\""))
         XCTAssertFalse(source.contains("SystemRequestExtractor"))
         XCTAssertFalse(source.contains("Apple Intelligence"))

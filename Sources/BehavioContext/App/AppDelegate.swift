@@ -12,7 +12,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     )
     let analytics: AnalyticsConsentController
     let store: RecordingSessionStore
+    let recordingStorage: RecordingStorageController
     let shortcutRecorder = ShortcutRecorder()
+    private let recordingPipeline: ScreenCaptureRecordingPipeline
+    private var followTask: Task<Void, Never>?
     private let contextCapture: SmartContextCaptureCoordinator
     private let activeWindowResolver: ActiveWindowResolver
     private let pointerTimelineRecorder: PointerTimelineRecorder
@@ -36,12 +39,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         pointerTimelineRecorder = PointerTimelineRecorder(coordinator: contextCapture)
         analytics = AnalyticsConsentController(client: analyticsClient)
         analytics.setEnabled(false)
+        let library = RecordingLibrary()
+        recordingStorage = RecordingStorageController(library: library)
+        let pipeline = ScreenCaptureRecordingPipeline(
+            recorder: LocalMediaRecorder(directoryProvider: { try await library.recordingDirectory() }),
+            bundleIdentifier: Self.bundleIdentifier, contextCapture: contextCapture)
+        recordingPipeline = pipeline
         store = RecordingSessionStore(
             sourceCatalog: ScreenCaptureKitSourceCatalog(bundleIdentifier: Self.bundleIdentifier),
-            recordingPipeline: ScreenCaptureRecordingPipeline(
-                bundleIdentifier: Self.bundleIdentifier,
-                contextCapture: contextCapture
-            ),
+            historyStore: library,
+            recordingPipeline: pipeline,
             analyticsClient: analyticsClient
         )
         super.init()
@@ -50,6 +57,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         logger.info("BehavioContext launched")
         analytics.capture(.appLaunched)
+        // Load our packaged icon explicitly when Launch Services still caches a development build.
+        if let iconURL = Bundle.main.url(forResource: "BehavioContext", withExtension: "icns"),
+           let icon = NSImage(contentsOf: iconURL) {
+            NSApp.applicationIconImage = icon
+        }
         NSApp.setActivationPolicy(.regular)
         contextReturnController.startObserving()
         overlayController = WebcamOverlayPanelController(store: store) { [weak self] in
@@ -117,6 +129,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         observeSystemEvents()
 
         Task {
+            await recordingStorage.refresh()
             await store.initialize()
             openSettings()
         }
@@ -146,12 +159,24 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         recordingResultController?.presentSelectedRecording()
     }
 
+    func toggleRecordingFromAppMenu() {
+        if store.phase.isRecording || store.phase == .preparing { store.stopRecording(); return }
+        guard !store.configurationIsLocked, let application = contextReturnController.recordingApplication else { return }
+        WindowPresentation.afterMenuDismissal { [weak self] in
+            guard let self else { return }
+            Task {
+                guard await contextReturnController.activate(application) else { return }
+                toggleRecording()
+            }
+        }
+    }
+
     func toggleRecording() {
         if store.phase == .preparing || store.phase.isRecording {
             store.stopRecording()
             return
         }
-        guard !store.phase.locksConfiguration,
+        guard !recordingStorage.isChanging, !store.phase.locksConfiguration,
               activeWindowResolutionTask == nil else { return }
         let hint: ActiveWindowHint
         do {
@@ -198,12 +223,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func registerSettingsWindow(_ window: NSWindow) {
         settingsWindow = window
+        updateSettingsTitle()
         guard settingsPresentationPending else { return }
         settingsPresentationPending = false
         WindowPresentation.afterMenuDismissal { [weak window] in
             guard let window else { return }
             WindowPresentation.bringToFront(window)
         }
+    }
+
+    func updateSettingsTitle() {
+        settingsWindow?.title = AppLocalization.text("Behavio Context Settings", locale: store.effectiveLocale)
     }
 
     private func presentSettings() {
@@ -273,7 +303,41 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if store.phase.isRecording,
            case let .window(window) = store.selectedCaptureSource {
             pointerTimelineRecorder.start(window: window)
+            if followTask == nil {
+                store.activeWindowName = window.displayName
+                followTask = Task { [weak self] in
+                    guard let self else { return }
+                    var currentID: UInt32? = window.windowID
+                    while !Task.isCancelled && store.phase.isRecording {
+                        let hint = try? ActiveWindowResolver.captureHint(ownBundleIdentifier: Self.bundleIdentifier)
+                        if hint?.windowID != currentID {
+                            pointerTimelineRecorder.follow(window: nil)
+                            store.activeWindowName = AppLocalization.text("Waiting for an active window…", locale: store.effectiveLocale)
+                            do {
+                                // Stop the old window immediately, including on our own UI or the desktop.
+                                try await recordingPipeline.followWindow(nil)
+                                let source: CaptureSource?
+                                if let hint { source = try await activeWindowResolver.resolve(hint) } else { source = nil }
+                                guard !Task.isCancelled, store.phase.isRecording else { break }
+                                if let source {
+                                    try await recordingPipeline.followWindow(source)
+                                    if case let .window(next) = source {
+                                        pointerTimelineRecorder.follow(window: next)
+                                        store.activeWindowName = next.displayName
+                                    }
+                                }
+                                currentID = hint?.windowID
+                            } catch {
+                                currentID = nil // Retry; never fall back to a display or a different window.
+                            }
+                        }
+                        try? await Task.sleep(for: .milliseconds(200))
+                    }
+                }
+            }
         } else {
+            followTask?.cancel()
+            followTask = nil
             pointerTimelineRecorder.stop()
         }
     }

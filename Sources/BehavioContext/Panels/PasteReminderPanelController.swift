@@ -1,3 +1,4 @@
+import BehavioContextCore
 import AppKit
 import SwiftUI
 
@@ -27,7 +28,7 @@ final class PasteReminderPanelController {
     func show(title: String, locale: Locale, on screen: NSScreen?) {
         dismissalTask?.cancel()
         guard let screen = screen ?? NSScreen.main ?? NSScreen.screens.first else { return }
-        let instruction = String(localized: "Press ⌘V to paste.", locale: locale)
+        let instruction = AppLocalization.text("Press ⌘V to paste.", locale: locale)
         let width = min(360, screen.visibleFrame.width - 32)
         let hostingView = NSHostingView(rootView: PasteReminderView(
             title: title,

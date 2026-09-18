@@ -16,7 +16,7 @@
     <key>LSMinimumSystemVersion</key><string>15.0</string>
     <key>NSHighResolutionCapable</key><true/>
     <key>NSMicrophoneUsageDescription</key><string>Behavio Context uses the selected microphone for local live transcription.</string>
-    <key>NSScreenCaptureUsageDescription</key><string>Behavio Context captures only the active window you choose by starting a recording.</string>
+    <key>NSScreenCaptureUsageDescription</key><string>Behavio Context follows the active window when you switch apps or windows.</string>
     <key>NSSpeechRecognitionUsageDescription</key><string>Behavio Context transcribes speech locally to build a compact context package for your agent.</string>
     <key>NSPrincipalClass</key><string>NSApplication</string>
 </dict>

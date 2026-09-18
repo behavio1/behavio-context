@@ -2,6 +2,7 @@ import Foundation
 
 public struct RecordingFailureNotice: Identifiable, Equatable, Sendable {
     public enum Kind: Equatable, Sendable {
+        case contextUnavailable
         case partialRecordingPreserved
         case recordingNotSaved
     }

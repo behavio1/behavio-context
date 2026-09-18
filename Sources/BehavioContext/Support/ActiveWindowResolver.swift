@@ -15,9 +15,9 @@ enum ActiveWindowResolverError: Error, LocalizedError {
     var errorDescription: String? {
         switch self {
         case .noExternalApplication:
-            "Nie znaleziono aktywnej aplikacji do nagrania."
+            "No active application is available to record."
         case let .noRecordableWindow(applicationName):
-            "Aplikacja \(applicationName) nie ma widocznego okna, które można nagrać."
+            "No visible window is available to record: \(applicationName)"
         }
     }
 }
@@ -42,7 +42,7 @@ actor ActiveWindowResolver {
         return ActiveWindowHint(
             processIdentifier: processIdentifier,
             windowID: windowID,
-            applicationName: application.localizedName ?? "aktywna aplikacja"
+            applicationName: application.localizedName ?? "application"
         )
     }
 
@@ -54,7 +54,6 @@ actor ActiveWindowResolver {
             return window
         }
         let match = hint.windowID.flatMap { id in windows.first { $0.windowID == id } }
-            ?? windows.first
         guard let match else {
             throw ActiveWindowResolverError.noRecordableWindow(hint.applicationName)
         }

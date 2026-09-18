@@ -45,7 +45,7 @@ struct CaptureSettingsView: View {
 
     private var sourceRow: some View {
         HStack(spacing: 14) {
-            settingIcon("CaptureGlyph")
+            SettingsGlyph(symbol: "macwindow", tint: .cyan)
 
             VStack(alignment: .leading, spacing: 3) {
                 Text("Recording source")
@@ -54,10 +54,10 @@ struct CaptureSettingsView: View {
                 Text(verbatim: activeWindowTitle) // localization: allow-verbatim runtime active-window title
                     .font(.body.weight(.medium))
                     .lineLimit(1)
-                Text(verbatim: activeWindowHelp) // localization: allow-verbatim Polish v1 active-window explanation
+                Text(verbatim: activeWindowHelp) // localization: allow-verbatim localized active-window explanation
                     .font(.caption)
                     .foregroundStyle(.tertiary)
-                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
             }
 
             Spacer(minLength: 0)
@@ -72,7 +72,7 @@ struct CaptureSettingsView: View {
 
     private var microphoneRow: some View {
         HStack(spacing: 14) {
-            settingIcon("MicrophoneGlyph")
+            SettingsGlyph(symbol: "mic.fill", tint: .mint)
 
             Text("Microphone")
                 .font(.body.weight(.medium))
@@ -113,7 +113,7 @@ struct CaptureSettingsView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text("Recording source")
                     .font(.callout.weight(.semibold))
-                Text(verbatim: permissionSummary) // localization: allow-verbatim Polish v1 permission explanation
+                Text(verbatim: permissionSummary) // localization: allow-verbatim localized permission explanation
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -133,7 +133,7 @@ struct CaptureSettingsView: View {
                 .foregroundStyle(.orange)
             Text(verbatim: message) // localization: allow-verbatim runtime error description
                 .font(.caption)
-                .lineLimit(2)
+                .fixedSize(horizontal: false, vertical: true)
             Spacer(minLength: 0)
             Button(action: store.clearWarning) {
                 Image(systemName: "xmark")
@@ -145,28 +145,18 @@ struct CaptureSettingsView: View {
         .background(Color.orange.opacity(0.10), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 
-    private func settingIcon(_ name: String) -> some View {
-        Image(nsImage: AppResourceBundle.image(named: name))
-            .resizable()
-            .interpolation(.high)
-            .scaledToFit()
-            .frame(width: 34, height: 34)
-            .shadow(color: .cyan.opacity(0.18), radius: 5, y: 2)
-            .accessibilityHidden(true)
-    }
-
     private var activeWindowTitle: String {
         if store.phase.locksConfiguration, let source = store.selectedCaptureSource {
-            return source.displayName
+            return store.activeWindowName ?? source.displayName
         }
-        return "Aktywne okno"
+        return AppLocalization.text("Active window", locale: store.effectiveLocale)
     }
 
     private var activeWindowHelp: String {
-        "Okno na wierzchu po naciśnięciu ⌃⌘R. Cały monitor nigdy nie jest nagrywany."
+        AppLocalization.text("Follows the active window when you switch apps or windows. The whole display is never recorded.", locale: store.effectiveLocale)
     }
 
     private var permissionSummary: String {
-        "Wymaga dostępu do aktywnego okna."
+        AppLocalization.text("Requires Screen Recording permission.", locale: store.effectiveLocale)
     }
 }

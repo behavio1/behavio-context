@@ -33,6 +33,8 @@ public struct RecordingConfiguration: Equatable, Sendable {
 public struct RecordingArtifacts: Equatable, Sendable {
     public let recordingURL: URL
     public let contextDirectoryURL: URL?
+    public var mediaStartHostTime: Double? = nil
+    public var contextFailure: String? = nil
 
     public init(recordingURL: URL, contextDirectoryURL: URL? = nil) {
         self.recordingURL = recordingURL

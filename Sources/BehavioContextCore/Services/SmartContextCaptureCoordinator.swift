@@ -31,6 +31,9 @@ public actor SmartContextCaptureCoordinator {
     private var pointerEvents: [PointerEvent] = []
     private var visualChangeTimesMs: [Int] = []
     private var startedAt: Date?
+    private var startedHostTime = 0.0
+    private var windowClosed = false
+    private var windows: [(window: WindowSource, start: Double, end: Double)] = []
     private var transcriptStatus: TranscriptStatus = .failed
     private var update: (@Sendable (RecordingPipelineEvent) -> Void)?
 
@@ -51,6 +54,7 @@ public actor SmartContextCaptureCoordinator {
         self.microphone = microphone
         self.update = update
         startedAt = Date()
+        startedHostTime = ProcessInfo.processInfo.systemUptime
         pointerEvents = []
         visualChangeTimesMs = []
         transcriptStatus = .failed
@@ -71,6 +75,21 @@ public actor SmartContextCaptureCoordinator {
 
     public nonisolated func appendMicrophone(_ sampleBuffer: CMSampleBuffer) {
         Task { await self.transcriber?.append(sampleBuffer) }
+    }
+
+    public func recordWindowFrame(window: WindowSource, hostTime: Double) {
+        guard startedAt != nil else { return }
+        if let last = windows.last, last.window == window, !windowClosed {
+            windows[windows.count - 1].end = max(last.end, hostTime)
+        } else {
+            windows.append((window, hostTime, hostTime))
+            windowClosed = false
+        }
+    }
+
+    public func closeWindowCapture() {
+        if !windowClosed, !windows.isEmpty { windows[windows.count - 1].end = ProcessInfo.processInfo.systemUptime }
+        windowClosed = true
     }
 
     public func recordPointerEvent(_ event: PointerEvent) {
@@ -95,14 +114,14 @@ public actor SmartContextCaptureCoordinator {
         self.microphone = microphone
     }
 
-    public func stop(recordingURL: URL) async throws -> AgentContextCompilation {
+    public func stop(recordingURL: URL, mediaStartHostTime: Double? = nil) async throws -> AgentContextCompilation {
         guard let source else {
             throw SmartContextCoordinatorError.activeWindowRequired
         }
-        update?(.compilationProgress(message: "Finalizuję transkrypcję…"))
+        update?(.compilationProgress(message: "Finalizing transcript…"))
         var segments = await transcriber?.stop() ?? []
         if segments.isEmpty, microphone != nil {
-            update?(.compilationProgress(message: "Odzyskuję pełną transkrypcję lokalnie…"))
+            update?(.compilationProgress(message: "Recovering the transcript locally…"))
             segments = await RecordedPolishTranscriber().transcribe(recordingURL: recordingURL)
         }
         if !segments.isEmpty {
@@ -110,11 +129,16 @@ public actor SmartContextCaptureCoordinator {
         } else {
             transcriptStatus = .failed
         }
+        let origin = mediaStartHostTime ?? startedHostTime
+        let timeline = windows.map { ContextWindowInterval(window: $0.window, startMs: max(0, Int(($0.start - origin) * 1000)), endMs: max(0, Int(($0.end - origin) * 1000))) }
+        let mappedPointers = pointerEvents.map { PointerEvent(id: $0.id, timeMs: max(0, $0.timeMs - Int(origin * 1000)), kind: $0.kind, normalizedX: $0.normalizedX, normalizedY: $0.normalizedY, windowID: $0.windowID) }
+        let offset = Int((startedHostTime - origin) * 1000)
+        segments = segments.map { TranscriptSegment(id: $0.id, startMs: max(0, $0.startMs + offset), endMs: max(0, $0.endMs + offset), text: $0.text, words: $0.words.map { TranscriptWord(text: $0.text, startMs: max(0, $0.startMs + offset), endMs: max(0, $0.endMs + offset)) }) }
         let durationMs = max(
             1,
             Int((startedAt.map { Date().timeIntervalSince($0) } ?? 0) * 1_000)
         )
-        update?(.compilationProgress(message: "Wybieram kluczowe momenty…"))
+        update?(.compilationProgress(message: "Selecting key moments…"))
         let compilation = try await writer.compile(
             recordingURL: recordingURL,
             source: source,
@@ -122,10 +146,11 @@ public actor SmartContextCaptureCoordinator {
             microphone: microphone,
             transcriptStatus: transcriptStatus,
             transcript: segments,
-            pointerEvents: pointerEvents,
-            visualChangeTimesMs: visualChangeTimesMs
+            pointerEvents: mappedPointers,
+            visualChangeTimesMs: visualChangeTimesMs,
+            windowTimeline: timeline
         )
-        update?(.compilationProgress(message: "Kontekst gotowy"))
+        update?(.compilationProgress(message: "Context ready"))
         clear()
         return compilation
     }
@@ -142,6 +167,7 @@ public actor SmartContextCaptureCoordinator {
         pointerEvents = []
         visualChangeTimesMs = []
         startedAt = nil
+        windows = []
         update = nil
         transcriptStatus = .failed
     }

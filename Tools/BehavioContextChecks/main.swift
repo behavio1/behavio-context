@@ -14,6 +14,13 @@ enum BehavioContextChecks {
             )
             return
         }
+        try await checkRecordingFolders()
+        if CommandLine.arguments.contains("--check-storage") { return }
+        try await checkDelayedVideo()
+        if CommandLine.arguments.contains("--check-timing") { return }
+        try await checkPartialSuccess()
+        try checkLanguageSelection()
+        try await checkMultipleWindows()
         try checkMomentSelection()
         try await checkContextPackage()
         print("PASS: Behavio Context deterministic core and package checks")
@@ -27,7 +34,7 @@ enum BehavioContextChecks {
             from: Data(contentsOf: manifestURL)
         )
         let window = WindowSource(
-            windowID: 1,
+            windowID: previous.windowTimeline?.first?.windowID ?? 1,
             title: previous.source.windowTitle,
             applicationName: previous.source.applicationName,
             applicationBundleIdentifier: previous.source.bundleIdentifier,
@@ -53,9 +60,71 @@ enum BehavioContextChecks {
             transcriptStatus: previous.transcriptStatus,
             transcript: previous.transcriptSegments,
             pointerEvents: previous.pointerEvents,
-            visualChangeTimesMs: visualChanges
+            visualChangeTimesMs: visualChanges,
+            windowTimeline: previous.windowTimeline ?? []
         )
         print("PASS: reprocessed \(compilation.directoryURL.path)")
+    }
+
+    @MainActor
+    private static func checkPartialSuccess() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("behavio-partial-\(UUID().uuidString)")
+        let directory = root.appendingPathComponent("saved")
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let video = directory.appendingPathComponent("recording.mp4")
+        try await makeVideo(at: video)
+        let source = CaptureSource.window(WindowSource(windowID: 1, title: "Test", applicationName: "Test", applicationBundleIdentifier: "test", processIdentifier: 1, pixelWidth: 640, pixelHeight: 360, frame: CGRect(x: 0, y: 0, width: 640, height: 360), backingScaleFactor: 1))
+        let history = FileRecordingHistoryStore(recordingsDirectory: root)
+        let store = RecordingSessionStore(sourceCatalog: CheckCatalog(source: source), captureAuthorization: CheckAuthorization(), preferencesStore: CheckPreferences(), historyStore: history, recordingPipeline: PartialSuccessPipeline(video: video))
+        await store.initialize()
+        store.startRecording(with: source)
+        for _ in 0..<100 where !store.phase.isRecording { try await Task.sleep(for: .milliseconds(10)) }
+        try require(store.phase.isRecording, "partial success test did not start")
+        store.stopRecording()
+        for _ in 0..<200 where store.configurationIsLocked { try await Task.sleep(for: .milliseconds(10)) }
+        try require(store.phase == .idle, "saved MP4 incorrectly failed the entire session")
+        try require(store.recordingFailureNotice?.kind == .contextUnavailable, "context failure notice missing")
+        try require(store.recordingFailureNotice?.recoveryURL == video, "saved video inaccessible from notice")
+        try require(store.selectedRecordingResult?.fileURL == video, "saved video missing from library")
+        let persisted = try await history.load()
+        try require(persisted.recordings.contains { $0.fileURL == video }, "saved video missing after history reload")
+        print("PASS: context failure preserves saved MP4, visible result and durable history")
+    }
+
+    private static func checkLanguageSelection() throws {
+        for (preferences, expected) in [(["pl-PL"], "pl"), (["es-MX"], "es"), (["de-AT"], "de"), (["en-GB"], "en"), (["ja-JP"], "en"), (["fr-FR", "de-DE"], "de")] {
+            try require(AppLanguage.system.resolvedIdentifier(preferredLanguages: preferences) == expected, "language resolution failed")
+        }
+        try require(AppLanguage.polish.resolvedIdentifier(preferredLanguages: ["en"]) == "pl", "explicit language lost")
+        let legacy = try JSONDecoder().decode(AppLanguage.self, from: Data("\"fr\"".utf8))
+        try require(legacy == .system, "legacy preference should use automatic fallback")
+        print("PASS: PL/EN/ES/DE locale matching, English fallback and legacy preferences")
+    }
+
+    private static func checkMultipleWindows() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("behavio-windows-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let video = root.appendingPathComponent("recording.mp4")
+        try await makeVideo(at: video)
+        func window(_ id: UInt32, _ name: String) -> WindowSource {
+            WindowSource(windowID: id, title: name, applicationName: "Test App", applicationBundleIdentifier: "test", processIdentifier: 1, pixelWidth: 640, pixelHeight: 360, frame: CGRect(x: 0, y: 0, width: 640, height: 360), backingScaleFactor: 1)
+        }
+        let a = window(11, "Window A"), b = window(22, "Window B")
+        let timeline = [ContextWindowInterval(window: a, startMs: 0, endMs: 1400), ContextWindowInterval(window: b, startMs: 1800, endMs: 3200), ContextWindowInterval(window: a, startMs: 3600, endMs: 4800)]
+        let compilation = try await AgentContextPackageWriter().compile(recordingURL: video, source: .window(a), durationMs: 4800, transcriptStatus: .failed, transcript: [], pointerEvents: [PointerEvent(timeMs: 2000, kind: .click, normalizedX: 0.5, normalizedY: 0.5, windowID: 11)], visualChangeTimesMs: [1600, 3400], windowTimeline: timeline)
+        let manifest = compilation.manifest
+        try require(manifest.schemaVersion == 3, "multi-window schema missing")
+        try require(manifest.windowTimeline == timeline, "return to earlier window lost")
+        try require(Set(manifest.visualMoments.compactMap(\.windowID)) == Set([11,22]), "window attribution missing")
+        try require(manifest.visualMoments.allSatisfy { $0.pointer == nil }, "stale pointer crossed window boundary")
+        try require(manifest.visualMoments.allSatisfy { m in timeline.contains { m.timeMs >= $0.startMs && m.timeMs < $0.endMs && m.windowID == $0.windowID } }, "gap mislabeled as active capture")
+        let markdown = try String(contentsOf: compilation.directoryURL.appendingPathComponent("context.md"), encoding: .utf8)
+        try require(markdown.contains("## Recorded windows") && markdown.contains("Window A") && markdown.contains("Window B"), "agent-readable window history missing")
+        let decoded = try JSONDecoder().decode(AgentContextManifest.self, from: Data(contentsOf: compilation.directoryURL.appendingPathComponent("manifest.json")))
+        try require(decoded == manifest, "multi-window manifest roundtrip failed")
+        print("PASS: A→B→A attribution, gaps, stale pointer isolation and schema roundtrip")
     }
 
     private static func checkMomentSelection() throws {
@@ -211,7 +280,90 @@ enum BehavioContextChecks {
         )
     }
 
-    private static func makeVideo(at url: URL) async throws {
+    private static func checkRecordingFolders() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("behavio-storage-check-\(UUID().uuidString)", isDirectory: true)
+        let original = root.appendingPathComponent("original", isDirectory: true)
+        let selected = root.appendingPathComponent("selected", isDirectory: true)
+        let suite = "one.behavio.storage-check.\(UUID().uuidString)"
+        defer {
+            try? FileManager.default.removeItem(at: root)
+            UserDefaults(suiteName: suite)?.removePersistentDomain(forName: suite)
+        }
+        for folder in [original, selected] {
+            try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        }
+        func entry(in folder: URL, date: Date) throws -> RecordingHistoryEntry {
+            let directory = folder.appendingPathComponent("Behavio Context Test", isDirectory: true)
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: false)
+            let file = directory.appendingPathComponent("recording.mp4")
+            try Data("history fixture".utf8).write(to: file)
+            return RecordingHistoryEntry(id: UUID(), fileURL: file, recordedAt: date)
+        }
+        let old = try entry(in: original, date: Date(timeIntervalSince1970: 1))
+        let library = RecordingLibrary(defaults: UserDefaults(suiteName: suite)!, defaultDirectory: original)
+        try await library.save(RecordingHistorySnapshot(recordings: [old], selectedRecordingID: old.id))
+        try await library.selectDirectory(selected)
+        let destination = try await library.recordingDirectory()
+        try require(destination.standardizedFileURL == selected.standardizedFileURL, "destination not changed")
+        let recent = try entry(in: destination, date: Date(timeIntervalSince1970: 2))
+        try await library.save(RecordingHistorySnapshot(recordings: [old, recent], selectedRecordingID: old.id))
+        let reopened = RecordingLibrary(defaults: UserDefaults(suiteName: suite)!, defaultDirectory: original)
+        let restoredDestination = try await reopened.recordingDirectory()
+        try require(restoredDestination.standardizedFileURL == selected.standardizedFileURL, "destination lost on restart")
+        let history = try await reopened.load()
+        try require(Set(history.recordings.map(\.id)) == Set([old.id, recent.id]), "old or new history missing")
+        try require(history.selectedRecordingID == old.id, "selected recording lost on restart")
+        try require(FileManager.default.fileExists(atPath: old.fileURL.path), "old recording moved or deleted")
+        do {
+            try await reopened.selectDirectory(recent.fileURL)
+            throw CheckFailure("accepted a file as a recording folder")
+        } catch is CocoaError { }
+        let afterFailure = try await reopened.recordingDirectory()
+        try require(afterFailure.standardizedFileURL == selected.standardizedFileURL, "invalid choice changed destination")
+        try await reopened.useDefaultDirectory()
+        let restoredDefault = try await reopened.recordingDirectory()
+        try require(restoredDefault == original, "default not restored")
+        try await reopened.delete(recent)
+        let remaining = try await reopened.load()
+        try require(remaining.recordings.map(\.id) == [old.id], "deleting newer recording affected older folder")
+        print("PASS: selected recording folder, restart persistence, merged history, default restore, safe deletion")
+    }
+
+    private static func checkDelayedVideo() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("behavio-timing-check-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: false)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let recordingURL = root.appendingPathComponent("recording.mp4")
+        try await makeVideo(at: recordingURL, videoStartMs: 750)
+        let source = CaptureSource.window(WindowSource(
+            windowID: 42, title: "Timing fixture", applicationName: "Fixture",
+            applicationBundleIdentifier: "one.behavio.fixture", processIdentifier: 100,
+            pixelWidth: 640, pixelHeight: 360,
+            frame: CGRect(x: 0, y: 0, width: 640, height: 360), backingScaleFactor: 1
+        ))
+        let result = try await AgentContextPackageWriter().compile(
+            recordingURL: recordingURL, source: source, durationMs: 6_000,
+            transcriptStatus: .failed, transcript: [], pointerEvents: [],
+            visualChangeTimesMs: [2_100]
+        )
+        try require(!result.manifest.visualMoments.isEmpty, "delayed video has no moments")
+        try require(result.manifest.visualMoments.first?.timeMs == 750, "first frame not recovered")
+        try require(result.manifest.visualMoments.contains { $0.timeMs == 1_750 }, "sparse gap did not use preceding frame")
+        try require(result.manifest.visualMoments.last?.timeMs == 5_250, "last frame not recovered")
+        for moment in result.manifest.visualMoments {
+            try require(moment.timeMs >= 750, "timestamp precedes the first video frame")
+            let imageURL = result.directoryURL.appendingPathComponent(moment.path)
+            guard let image = CGImageSourceCreateWithURL(imageURL as CFURL, nil),
+                  CGImageSourceCreateImageAtIndex(image, 0, nil) != nil else {
+                throw CheckFailure("timing fixture image cannot be decoded")
+            }
+        }
+        print("PASS: delayed first frame, sparse frames, and final frame extraction")
+    }
+
+    private static func makeVideo(at url: URL, videoStartMs: Int = 0) async throws {
         let writer = try AVAssetWriter(outputURL: url, fileType: .mp4)
         let input = AVAssetWriterInput(
             mediaType: .video,
@@ -240,7 +392,7 @@ enum BehavioContextChecks {
             guard let pixelBuffer = makePixelBuffer(frame: frame) else {
                 throw CheckFailure("cannot create pixel buffer")
             }
-            let time = CMTime(value: CMTimeValue(frame), timescale: 2)
+            let time = CMTime(value: CMTimeValue(videoStartMs + frame * 500), timescale: 1_000)
             guard adaptor.append(pixelBuffer, withPresentationTime: time) else {
                 throw writer.error ?? CheckFailure("cannot append video frame")
             }
@@ -290,4 +442,28 @@ private struct CheckFailure: Error, LocalizedError {
     let message: String
     init(_ message: String) { self.message = message }
     var errorDescription: String? { message }
+}
+
+private struct CheckCatalog: CaptureSourceCatalog {
+    let source: CaptureSource
+    func sources() async throws -> [CaptureSource] { [source] }
+}
+private struct CheckAuthorization: CaptureAuthorization {
+    func requestCameraAccess() async -> Bool { true }
+    func requestMicrophoneAccess() async -> Bool { true }
+    func requestSystemAudioAccess(for source: CaptureSource) async -> Bool { true }
+}
+private actor CheckPreferences: PreferencesStore {
+    func load() async -> PreferencesSnapshot { PreferencesSnapshot(capturesMicrophone: false) }
+    func save(_ snapshot: PreferencesSnapshot) async {}
+}
+private struct PartialSuccessPipeline: RecordingPipeline {
+    let video: URL
+    func start(configuration: RecordingConfiguration) async throws -> AsyncStream<RecordingPipelineEvent> { AsyncStream { $0.finish() } }
+    func stop() async throws -> RecordingArtifacts {
+        var artifacts = RecordingArtifacts(recordingURL: video)
+        artifacts.contextFailure = "Fixture: frame extraction failed"
+        return artifacts
+    }
+    func cancel() async {}
 }

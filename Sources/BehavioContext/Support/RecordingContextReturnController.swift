@@ -33,6 +33,8 @@ final class RecordingContextReturnController {
         activationObserver = nil
     }
 
+    var recordingApplication: NSRunningApplication? { lastExternalApplication }
+
     func captureDestination() {
         // Read synchronously before preparation can bring BehavioContext forward.
         // Settings/menu starts use the last external app instead of BehavioContext.

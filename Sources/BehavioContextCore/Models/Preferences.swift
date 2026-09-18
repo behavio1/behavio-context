@@ -3,19 +3,23 @@ import Foundation
 public enum AppLanguage: String, Codable, CaseIterable, Identifiable, Sendable {
     case system
     case english = "en"
-    case arabic = "ar"
+    case polish = "pl"
     case spanish = "es"
-    case french = "fr"
     case german = "de"
-    case italian = "it"
-    case japanese = "ja-JP"
-    case korean = "ko-KR"
-    case russian = "ru"
-    case turkish = "tr"
-    case vietnamese = "vi"
-    case portugueseBrazil = "pt-BR"
-    case chineseSimplified = "zh-CN"
-    case chineseTraditional = "zh-TW"
+
+    public init(from decoder: any Decoder) throws {
+        let raw = try decoder.singleValueContainer().decode(String.self)
+        self = Self(rawValue: raw) ?? .system
+    }
+
+    public func resolvedIdentifier(preferredLanguages: [String] = Locale.preferredLanguages) -> String {
+        if self != .system { return rawValue }
+        for preference in preferredLanguages {
+            let code = Locale(identifier: preference).language.languageCode?.identifier ?? ""
+            if ["pl", "en", "es", "de"].contains(code) { return code }
+        }
+        return "en"
+    }
 
     public var id: String { rawValue }
     public var localeIdentifier: String? { self == .system ? nil : rawValue }

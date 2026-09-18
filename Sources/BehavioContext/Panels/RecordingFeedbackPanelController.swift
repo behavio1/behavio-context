@@ -7,6 +7,7 @@ final class RecordingFeedbackPanelController {
     private let store: RecordingSessionStore
     private let stopRecording: @MainActor () -> Void
     private let panel: NSPanel
+    private var compact = UserDefaults.standard.bool(forKey: "compactRecordingBar")
     private var previousPhase = RecordingPhase.idle
     private var previousWarning: String?
     private var dismissalTask: Task<Void, Never>?
@@ -41,6 +42,10 @@ final class RecordingFeedbackPanelController {
             dismissFeedback: { [weak store] in
                 store?.dismissFeedback()
             },
+            setCompact: { [weak self] compact in
+                self?.compact = compact
+                self?.synchronize()
+            },
             selectMicrophone: { [weak store] deviceID in
                 Task { await store?.selectMicrophoneDevice(deviceID) }
             }
@@ -65,8 +70,9 @@ final class RecordingFeedbackPanelController {
         }
 
         guard let screen = targetScreen else { return }
-        let width = min(940, max(680, screen.visibleFrame.width - 32))
-        panel.setContentSize(NSSize(width: width, height: 68))
+        let isCompact = compact && store.phase.isRecording
+        let width = min(isCompact ? 300 : 940, screen.visibleFrame.width - 32)
+        panel.setContentSize(NSSize(width: width, height: isCompact ? 44 : 60))
         position(on: screen)
         panel.ignoresMouseEvents = store.phase == .preparing || store.phase == .finalizing
         panel.orderFrontRegardless()
@@ -121,9 +127,9 @@ final class RecordingFeedbackPanelController {
     private var announcement: String {
         if let warning = store.hudMessage { return warning }
         return switch store.phase {
-        case .preparing: "Przygotowuję nagrywanie"
-        case .recording: "Nagrywanie rozpoczęte"
-        case .finalizing: "Nagrywanie zatrzymane. Tworzę kontekst."
+        case .preparing: AppLocalization.text("Preparing recording", locale: store.effectiveLocale)
+        case .recording: AppLocalization.text("Recording started", locale: store.effectiveLocale)
+        case .finalizing: AppLocalization.text("Recording stopped. Creating context.", locale: store.effectiveLocale)
         default: ""
         }
     }
@@ -135,9 +141,11 @@ private final class InteractiveRecordingPanel: NSPanel {
 }
 
 private struct RecordingCapsuleView: View {
+    @AppStorage("compactRecordingBar") private var compact = false
     @Bindable var store: RecordingSessionStore
     let stopRecording: @MainActor () -> Void
     let dismissFeedback: @MainActor () -> Void
+    let setCompact: @MainActor (Bool) -> Void
     let selectMicrophone: @MainActor (String) -> Void
 
     var body: some View {
@@ -189,7 +197,7 @@ private struct RecordingCapsuleView: View {
             Text(verbatim: store.elapsedSeconds.recordingDuration) // localization: allow-verbatim numeric timer
                 .font(.system(.body, design: .rounded, weight: .semibold))
                 .monospacedDigit()
-                .accessibilityLabel("Recording started")
+                .accessibilityLabel(AppLocalization.text("Recording started", locale: store.effectiveLocale))
 
             Button(action: stopRecording) {
                 Label {
@@ -197,13 +205,15 @@ private struct RecordingCapsuleView: View {
                 } icon: {
                     Image(systemName: "stop.fill")
                 }
+                .labelStyle(RecordingStopLabelStyle(compact: compact))
                 .font(.callout.weight(.semibold))
-                .frame(minWidth: 86, minHeight: 36)
+                .frame(width: compact ? 32 : 86, height: 32)
                 .contentShape(Rectangle())
             }
             .buttonStyle(StopRecordingButtonStyle())
             .accessibilityLabel("Stop Recording")
 
+            if !compact {
             Divider().frame(height: 28).opacity(0.40)
 
             Menu {
@@ -220,11 +230,8 @@ private struct RecordingCapsuleView: View {
                 }
             } label: {
                 HStack(spacing: 6) {
-                    Image(nsImage: AppResourceBundle.image(named: "MicrophoneGlyph"))
-                        .resizable()
-                        .interpolation(.high)
-                        .scaledToFit()
-                        .frame(width: 18, height: 18)
+                    Image(systemName: "mic.fill")
+                        .font(.system(size: 14))
                     Text(verbatim: store.selectedMicrophoneName) // localization: allow-verbatim runtime device name
                 }
                     .font(.caption.weight(.medium))
@@ -239,10 +246,14 @@ private struct RecordingCapsuleView: View {
             .accessibilityLabel(Text(verbatim: microphoneAccessibilityLabel)) // localization: allow-verbatim runtime device name
             .accessibilityHint("Choose a microphone")
 
-            LevelWaveform(level: store.microphoneLevel)
-                .frame(width: 78, height: 28)
+            }
 
-            Text(store.liveTranscript.isEmpty ? "Mów i wskazuj elementy w aktywnym oknie…" : store.liveTranscript)
+            LevelWaveform(level: store.microphoneLevel)
+                .frame(width: compact ? 64 : 78, height: 26)
+
+            if !compact {
+
+            Text(store.liveTranscript.isEmpty ? AppLocalization.text("Speak and point to elements in the active window…", locale: store.effectiveLocale) : store.liveTranscript)
                 .font(.callout.weight(store.liveTranscriptIsFinal ? .medium : .regular))
                 .foregroundStyle(store.liveTranscript.isEmpty || !store.liveTranscriptIsFinal ? .secondary : .primary)
                 .lineLimit(1)
@@ -250,7 +261,7 @@ private struct RecordingCapsuleView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .contentTransition(.interpolate)
                 .animation(.easeOut(duration: 0.18), value: store.liveTranscript)
-                .accessibilityLabel(store.liveTranscript.isEmpty ? "Oczekiwanie na mowę" : store.liveTranscript)
+                .accessibilityLabel(store.liveTranscript.isEmpty ? AppLocalization.text("Waiting for speech", locale: store.effectiveLocale) : store.liveTranscript)
 
             Label(sourceName, systemImage: "macwindow")
                 .font(.caption.weight(.medium))
@@ -261,6 +272,25 @@ private struct RecordingCapsuleView: View {
                 .padding(.vertical, 6)
                 .background(Color.primary.opacity(0.07), in: RoundedRectangle(cornerRadius: 8))
                 .frame(maxWidth: 150)
+            }
+
+            if let warning = store.hudMessage {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .foregroundStyle(.orange)
+                    .help(warning)
+                    .accessibilityLabel(warning)
+            }
+
+            Button {
+                compact.toggle()
+                setCompact(compact)
+            } label: {
+                Image(systemName: compact ? "arrow.up.left.and.arrow.down.right" : "arrow.down.right.and.arrow.up.left")
+                    .frame(width: 28, height: 28)
+            }
+            .buttonStyle(.plain)
+            .help(compact ? AppLocalization.text("Expand recording bar", locale: store.effectiveLocale) : AppLocalization.text("Compact recording bar", locale: store.effectiveLocale))
+            .accessibilityLabel(compact ? AppLocalization.text("Expand recording bar", locale: store.effectiveLocale) : AppLocalization.text("Compact recording bar", locale: store.effectiveLocale))
         }
     }
 
@@ -304,15 +334,15 @@ private struct RecordingCapsuleView: View {
 
     private var statusTitle: String {
         switch store.phase {
-        case .preparing: "Przygotowuję aktywne okno…"
-        case .finalizing: "Tworzę lekki kontekst dla agenta…"
-        case .failed: "Nie udało się rozpocząć"
+        case .preparing: AppLocalization.text("Preparing the active window…", locale: store.effectiveLocale)
+        case .finalizing: AppLocalization.text("Creating agent context…", locale: store.effectiveLocale)
+        case .failed: AppLocalization.text("Couldn’t start recording", locale: store.effectiveLocale)
         default: "Behavio Context"
         }
     }
 
     private var sourceName: String {
-        store.selectedCaptureSource?.displayName ?? "Aktywne okno"
+        store.activeWindowName ?? store.selectedCaptureSource?.displayName ?? AppLocalization.text("Active window", locale: store.effectiveLocale)
     }
 
     private var message: String? {
@@ -321,6 +351,16 @@ private struct RecordingCapsuleView: View {
 
     private var stopLabel: String { "Stop" }
     private var microphoneAccessibilityLabel: String { "Microphone: \(store.selectedMicrophoneName)" }
+}
+
+private struct RecordingStopLabelStyle: LabelStyle {
+    let compact: Bool
+    func makeBody(configuration: Configuration) -> some View {
+        HStack {
+            configuration.icon
+            if !compact { configuration.title }
+        }
+    }
 }
 
 private struct RecordingPulse: View {
@@ -374,6 +414,7 @@ private struct StopRecordingButtonStyle: ButtonStyle {
 }
 
 private struct LevelWaveform: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let level: Double
 
     var body: some View {
@@ -395,7 +436,9 @@ private struct LevelWaveform: View {
                     )
             }
         }
-        .animation(.smooth(duration: 0.14), value: level)
+        .animation(reduceMotion ? nil : .smooth(duration: 0.10), value: level)
+        .accessibilityLabel("Microphone level")
+        .accessibilityValue("\(Int(min(1, max(0, level)) * 100))%")
     }
 
     private var activeBars: Int {
@@ -404,7 +447,7 @@ private struct LevelWaveform: View {
 
     private func responsiveHeight(_ index: Int) -> CGFloat {
         let pattern: [CGFloat] = [7, 11, 16, 22, 15, 10, 18, 24, 18, 12, 8]
-        let energy = 0.38 + min(1, max(0, level)) * 0.62
+        let energy = min(1, max(0, level))
         return max(4, pattern[index] * energy)
     }
 }

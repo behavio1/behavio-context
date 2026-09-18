@@ -53,7 +53,8 @@ public actor AgentContextPackageWriter {
         transcriptStatus: TranscriptStatus,
         transcript: [TranscriptSegment],
         pointerEvents: [PointerEvent],
-        visualChangeTimesMs: [Int]
+        visualChangeTimesMs: [Int],
+        windowTimeline: [ContextWindowInterval] = []
     ) async throws -> AgentContextCompilation {
         guard case let .window(window) = source else {
             throw AgentContextWriterError.sourceMustBeWindow
@@ -61,12 +62,21 @@ public actor AgentContextPackageWriter {
 
         let asset = AVURLAsset(url: recordingURL)
         let assetDuration: CMTime
+        let videoTimeRange: CMTimeRange
         do {
             let videoTracks = try await asset.loadTracks(withMediaType: .video)
-            guard !videoTracks.isEmpty else {
+            guard let videoTrack = videoTracks.first else {
                 throw AgentContextWriterError.recordingHasNoVideo
             }
             assetDuration = try await asset.load(.duration)
+            let segments = try await videoTrack.load(.segments).filter { !$0.isEmpty }
+            guard let first = segments.first, let last = segments.last else {
+                throw AgentContextWriterError.recordingHasNoVideo
+            }
+            videoTimeRange = CMTimeRange(
+                start: first.timeMapping.target.start,
+                end: last.timeMapping.target.end
+            )
         } catch let error as AgentContextWriterError {
             throw error
         } catch {
@@ -77,13 +87,27 @@ public actor AgentContextPackageWriter {
             throw AgentContextWriterError.recordingHasNoVideo
         }
         let durationMs = max(1, min(max(1, requestedDurationMs), measuredDurationMs))
-        let candidates = ContextMomentSelector.select(
+        var candidates = ContextMomentSelector.select(
             durationMs: durationMs,
             transcript: transcript,
             pointerEvents: pointerEvents,
             visualChangeTimesMs: visualChangeTimesMs,
             maximumMoments: maximumMoments
         )
+        if !windowTimeline.isEmpty {
+            // Avoid transitional/mixer frames, and never carry a pointer across windows.
+            candidates = candidates.filter { candidate in
+                windowTimeline.contains { interval in
+                    candidate.timeMs >= interval.startMs + 250 && candidate.timeMs < interval.endMs - 100
+                    && (candidate.pointer == nil || candidate.pointer?.windowID == interval.windowID)
+                    && (candidate.pointer == nil || (candidate.pointer!.timeMs >= interval.startMs && candidate.pointer!.timeMs < interval.endMs))
+                }
+            }
+            for interval in windowTimeline where interval.endMs - interval.startMs > 500 {
+                candidates.append(VisualMomentCandidate(timeMs: interval.startMs + 300, reason: .windowChange, score: 110))
+            }
+            candidates = Array(candidates.sorted { $0.score > $1.score }.prefix(maximumMoments)).sorted { $0.timeMs < $1.timeMs }
+        }
         guard !candidates.isEmpty else {
             throw AgentContextWriterError.recordingHasNoVideo
         }
@@ -94,7 +118,7 @@ public actor AgentContextPackageWriter {
         imageGenerator.requestedTimeToleranceAfter = CMTime(seconds: 0.12, preferredTimescale: 600)
         let analyzedCandidates = try await analyze(
             candidates: candidates,
-            durationMs: durationMs,
+            videoTimeRange: videoTimeRange,
             imageGenerator: imageGenerator
         )
 
@@ -118,15 +142,17 @@ public actor AgentContextPackageWriter {
             var visualMoments: [ContextVisualMoment] = []
             for (index, analyzed) in analyzedCandidates.enumerated() {
                 let candidate = analyzed.candidate
-                let safeMs = min(max(0, candidate.timeMs), max(0, durationMs - 40))
-                let requestedTime = CMTime(value: CMTimeValue(safeMs), timescale: 1_000)
-                let sourceImage: CGImage
-                do {
-                    sourceImage = try await imageGenerator.image(at: requestedTime).image
-                } catch {
-                    throw AgentContextWriterError.frameExtractionFailed(safeMs)
-                }
+                let frame = try await Self.extractFrame(
+                    at: candidate.timeMs,
+                    videoTimeRange: videoTimeRange,
+                    imageGenerator: imageGenerator
+                )
+                let sourceImage = frame.image
+                let safeMs = max(0, Int((CMTimeGetSeconds(frame.actualTime) * 1_000).rounded()))
 
+                let interval = windowTimeline.first { safeMs >= $0.startMs + 100 && safeMs < $0.endMs }
+                if !windowTimeline.isEmpty && interval == nil { continue }
+                if let pointer = candidate.pointer, !windowTimeline.isEmpty, pointer.windowID != interval?.windowID { continue }
                 let isRecommended = recommendedIndexes.contains(index)
                 let outputImage: CGImage
                 if isRecommended,
@@ -161,7 +187,8 @@ public actor AgentContextPackageWriter {
                     },
                     transcriptSegmentID: candidate.transcriptSegmentID,
                     recognizedText: analyzed.recognition?.text,
-                    recognitionConfidence: analyzed.recognition?.confidence
+                    recognitionConfidence: analyzed.recognition?.confidence,
+                    windowID: interval?.windowID
                 ))
             }
 
@@ -170,7 +197,7 @@ public actor AgentContextPackageWriter {
                 .map(\.id)
             let recommendedSet = Set(recommendedInputs)
             let manifest = AgentContextManifest(
-                schemaVersion: 2,
+                schemaVersion: windowTimeline.isEmpty ? 2 : 3,
                 recordingID: recordingURL.deletingLastPathComponent().lastPathComponent,
                 durationMs: durationMs,
                 locale: "pl_PL",
@@ -192,7 +219,8 @@ public actor AgentContextPackageWriter {
                     onDemandCount: visualMoments.filter { !recommendedSet.contains($0.id) }.count,
                     maximumLongEdge: maximumLongEdge,
                     maximumCropEdge: maximumCropEdge
-                )
+                ),
+                windowTimeline: windowTimeline.isEmpty ? nil : windowTimeline
             )
 
             let encoder = JSONEncoder()
@@ -229,7 +257,7 @@ public actor AgentContextPackageWriter {
 
     private func analyze(
         candidates: [VisualMomentCandidate],
-        durationMs: Int,
+        videoTimeRange: CMTimeRange,
         imageGenerator: AVAssetImageGenerator
     ) async throws -> [AnalyzedMomentCandidate] {
         var analyzed: [AnalyzedMomentCandidate] = []
@@ -244,14 +272,11 @@ public actor AgentContextPackageWriter {
                 continue
             }
 
-            let safeMs = min(max(0, candidate.timeMs), max(0, durationMs - 40))
-            let requestedTime = CMTime(value: CMTimeValue(safeMs), timescale: 1_000)
-            let sourceImage: CGImage
-            do {
-                sourceImage = try await imageGenerator.image(at: requestedTime).image
-            } catch {
-                throw AgentContextWriterError.frameExtractionFailed(safeMs)
-            }
+            let sourceImage = try await Self.extractFrame(
+                at: candidate.timeMs,
+                videoTimeRange: videoTimeRange,
+                imageGenerator: imageGenerator
+            ).image
             let recognition = try? AgentContextVisionAnalyzer.recognizeText(
                 near: pointer,
                 in: sourceImage
@@ -271,6 +296,42 @@ public actor AgentContextPackageWriter {
             ))
         }
         return analyzed
+    }
+
+    private static func extractFrame(
+        at timeMs: Int,
+        videoTimeRange: CMTimeRange,
+        imageGenerator: AVAssetImageGenerator
+    ) async throws -> (image: CGImage, actualTime: CMTime) {
+        // Audio can begin before video; the asset duration is not the video range.
+        let lastTime = CMTimeMaximum(
+            videoTimeRange.start,
+            CMTimeSubtract(videoTimeRange.end, CMTime(value: 1, timescale: 1_000))
+        )
+        let requestedTime = CMTimeMaximum(videoTimeRange.start, CMTimeMinimum(
+            CMTime(value: CMTimeValue(max(0, timeMs)), timescale: 1_000), lastTime
+        ))
+        let tolerance = CMTime(seconds: 0.12, preferredTimescale: 600)
+        imageGenerator.requestedTimeToleranceBefore = tolerance
+        imageGenerator.requestedTimeToleranceAfter = tolerance
+        defer {
+            imageGenerator.requestedTimeToleranceBefore = tolerance
+            imageGenerator.requestedTimeToleranceAfter = tolerance
+        }
+        do {
+            return try await imageGenerator.image(at: requestedTime)
+        } catch {
+            try Task.checkCancellation()
+            // A static window or the end of the track may have no nearby sample.
+            // Use the preceding frame, as playback would, rather than a future scene.
+            imageGenerator.requestedTimeToleranceBefore = .positiveInfinity
+            imageGenerator.requestedTimeToleranceAfter = .zero
+            do {
+                return try await imageGenerator.image(at: requestedTime)
+            } catch {
+                throw AgentContextWriterError.frameExtractionFailed(timeMs)
+            }
+        }
     }
 
     private func validatePackage(at directoryURL: URL, manifest: AgentContextManifest) throws {
@@ -317,11 +378,24 @@ public actor AgentContextPackageWriter {
             "",
         ]
 
+        if let windows = manifest.windowTimeline {
+            lines.insert(contentsOf: ["Capture mode: follows the active window; windows are recorded sequentially, not simultaneously.", "Window transitions are sampled; brief switches may be omitted. Gaps/transition frames can hold the preceding image and are not evidence of activity. Pointer coordinates refer to the video canvas, including letterboxing."], at: 3)
+            let entries = windows.map { "- [\(displayTimestamp($0.startMs))–\(displayTimestamp($0.endMs))] window \($0.windowID): \(inlineText($0.source.applicationName)) — \(inlineText($0.source.windowTitle))" }
+            lines.insert(contentsOf: ["", "## Recorded windows", ""] + entries + [""], at: lines.count - 2)
+        }
+        func sourceLabel(_ moment: ContextVisualMoment) -> String {
+            guard let id = moment.windowID,
+                  let window = manifest.windowTimeline?.first(where: { $0.windowID == id && moment.timeMs >= $0.startMs && moment.timeMs <= $0.endMs }) else { return "" }
+            return " [\(inlineText(window.source.applicationName)) — \(inlineText(window.source.windowTitle)); window \(id)]"
+        }
         var timeline: [(timeMs: Int, order: Int, text: String)] = []
         var linkedMomentIDs = Set<String>()
         for segment in manifest.transcriptSegments {
             let middle = segment.startMs + max(0, segment.endMs - segment.startMs) / 2
-            let related = pointedMoments.min {
+            let related = pointedMoments.filter { moment in
+                guard let windows = manifest.windowTimeline else { return true }
+                return windows.contains { middle >= $0.startMs && middle < $0.endMs && moment.timeMs >= $0.startMs && moment.timeMs < $0.endMs && moment.windowID == $0.windowID }
+            }.min {
                 abs($0.timeMs - middle) < abs($1.timeMs - middle)
             }.flatMap {
                 abs($0.timeMs - middle) <= 1_800 ? $0 : nil
@@ -329,7 +403,7 @@ public actor AgentContextPackageWriter {
             var line = "- [\(displayTimestamp(segment.startMs))] SAID: \(inlineText(segment.text))"
             if let related, let target = related.recognizedText {
                 linkedMomentIDs.insert(related.id)
-                line += " | POINTED AT: “\(inlineText(target))” (`\(related.path)`)"
+                line += "\(sourceLabel(related)) | POINTED AT: “\(inlineText(target))” (`\(related.path)`)"
             }
             timeline.append((segment.startMs, 0, line))
         }
@@ -339,7 +413,7 @@ public actor AgentContextPackageWriter {
             timeline.append((
                 moment.timeMs,
                 1,
-                "- [\(displayTimestamp(moment.timeMs))] POINTED AT: “\(inlineText(target))” (`\(moment.path)`)"
+                "- [\(displayTimestamp(moment.timeMs))]\(sourceLabel(moment)) POINTED AT: “\(inlineText(target))” (`\(moment.path)`)"
             ))
         }
         timeline.sort {
@@ -357,7 +431,7 @@ public actor AgentContextPackageWriter {
         lines.append(contentsOf: ["", "## Recommended evidence", ""])
         let recommended = Set(manifest.recommendedInputs)
         for moment in manifest.visualMoments where recommended.contains(moment.id) {
-            var line = "- [\(displayTimestamp(moment.timeMs))] `\(moment.path)` — \(moment.reason.rawValue)"
+            var line = "- [\(displayTimestamp(moment.timeMs))] `\(moment.path)`\(sourceLabel(moment)) — \(moment.reason.rawValue)"
             if let text = moment.recognizedText {
                 line += " — “\(inlineText(text))”"
             }
@@ -418,7 +492,7 @@ public actor AgentContextPackageWriter {
             let tokens = normalizedTokens(text)
             guard !tokens.isEmpty else { continue }
             if let duplicateIndex = result.firstIndex(where: {
-                guard let existing = $0.recognizedText else { return false }
+                guard $0.windowID == moment.windowID, let existing = $0.recognizedText else { return false }
                 return tokenSimilarity(tokens, normalizedTokens(existing)) >= 0.82
             }) {
                 // The later dwell is usually the settled frame and avoids OCR
@@ -461,7 +535,7 @@ public actor AgentContextPackageWriter {
 
     private static func displayTimestamp(_ milliseconds: Int) -> String {
         let seconds = max(0, milliseconds) / 1_000
-        return String(format: "%02d:%02d", seconds / 60, seconds % 60)
+        return String(format: "%02d:%02d.%03d", seconds / 60, seconds % 60, max(0, milliseconds) % 1000)
     }
 
     private static func compactTimestamp(_ milliseconds: Int) -> String {

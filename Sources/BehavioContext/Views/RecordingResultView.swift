@@ -4,6 +4,7 @@ import BehavioContextCore
 import SwiftUI
 
 struct RecordingResultView: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Bindable var store: RecordingSessionStore
     let fallbackResult: RecordingResult
     let mediaHeight: CGFloat
@@ -27,7 +28,7 @@ struct RecordingResultView: View {
     var body: some View {
         NavigationSplitView {
             recordingSidebar
-                .disabled(isReturningToApplication)
+                .disabled(isReturningToApplication || isDeletingRecording || isConfirmingDeletion)
                 .navigationSplitViewColumnWidth(min: 168, ideal: 184, max: 210)
         } detail: {
             recordingDetail
@@ -84,7 +85,10 @@ struct RecordingResultView: View {
         List(selection: recordingSelection) {
             Section("Recordings") {
                 ForEach(store.recordingResults.reversed()) { recording in
-                    RecordingSidebarRow(result: recording)
+                    RecordingSidebarRow(result: recording) {
+                        store.selectRecording(recording.id)
+                        isConfirmingDeletion = true
+                    }
                         .tag(recording.id)
                 }
             }
@@ -161,7 +165,7 @@ struct RecordingResultView: View {
                     Button {
                         copyAndReturn(.video, to: application)
                     } label: {
-                        Label(copyAndReturnTitle(for: application, content: .video), systemImage: "arrow.uturn.backward")
+                        Label("Copy Video & Return", systemImage: "arrow.uturn.backward")
                     }
                     .keyboardShortcut("c", modifiers: [.command, .option, .shift])
                 }
@@ -187,7 +191,7 @@ struct RecordingResultView: View {
             }
             .menuStyle(.borderlessButton)
             .fixedSize()
-            .accessibilityLabel(Text(verbatim: overflowAccessibilityLabel)) // localization: allow-verbatim Polish v1 overflow label
+            .accessibilityLabel(Text(verbatim: overflowAccessibilityLabel)) // localization: allow-verbatim localized overflow label
         }
     }
 
@@ -208,14 +212,14 @@ struct RecordingResultView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(verbatim: contextLabel) // localization: allow-verbatim Polish v1 context result label
+                    Text(verbatim: contextLabel) // localization: allow-verbatim localized context result label
                         .font(.headline)
                     Text(verbatim: contextDocumentURL?.path ?? result.context) // localization: allow-verbatim local file path
                         .font(.caption.monospaced())
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                         .truncationMode(.middle)
-                        .accessibilityLabel(String(localized: "Recording file", locale: locale))
+                        .accessibilityLabel(AppLocalization.text("Recording file", locale: locale))
                 }
 
                 Spacer(minLength: 0)
@@ -232,8 +236,8 @@ struct RecordingResultView: View {
                     }
                     .buttonStyle(.plain)
                     .contentShape(Circle())
-                    .help(Text(verbatim: copyContextDocumentLabel)) // localization: allow-verbatim Polish v1 help
-                    .accessibilityLabel(Text(verbatim: copyContextDocumentLabel)) // localization: allow-verbatim Polish v1 label
+                    .help(Text(verbatim: copyContextDocumentLabel)) // localization: allow-verbatim localized help
+                    .accessibilityLabel(Text(verbatim: copyContextDocumentLabel)) // localization: allow-verbatim localized label
                 }
             }
 
@@ -284,7 +288,7 @@ struct RecordingResultView: View {
                 Button {
                     copyAndReturn(.context, to: application)
                 } label: {
-                    Label(copyAndReturnTitle(for: application, content: .context), systemImage: "arrow.uturn.backward")
+                    Label("Copy Path & Return", systemImage: "arrow.uturn.backward")
                         .lineLimit(1)
                         .truncationMode(.middle)
                 }
@@ -294,7 +298,7 @@ struct RecordingResultView: View {
                 Button {
                     copyContextToPasteboard()
                 } label: {
-                    Label("Copy File Path", systemImage: "doc.on.doc")
+                    Label("Copy Path", systemImage: "doc.on.doc")
                 }
                 .buttonStyle(.bordered)
             }
@@ -303,7 +307,7 @@ struct RecordingResultView: View {
             Button {
                 copyContextToPasteboard()
             } label: {
-                Label("Copy File Path", systemImage: "doc.on.doc")
+                Label("Copy Path", systemImage: "doc.on.doc")
             }
             .buttonStyle(.borderedProminent)
             .disabled(isReturningToApplication)
@@ -317,11 +321,11 @@ struct RecordingResultView: View {
     private var locale: Locale { store.effectiveLocale }
 
     private var contextLabel: String {
-        result.contextDirectoryURL == nil ? "Plik nagrania" : "Kontekst dla agenta · context.md"
+        result.contextDirectoryURL == nil ? AppLocalization.text("Recording file", locale: locale) : AppLocalization.text("Agent context", locale: locale)
     }
 
-    private var overflowAccessibilityLabel: String { "Więcej" }
-    private var copyContextDocumentLabel: String { "Kopiuj treść context.md" }
+    private var overflowAccessibilityLabel: String { AppLocalization.text("More", locale: locale) }
+    private var copyContextDocumentLabel: String { AppLocalization.text("Copy Context Text", locale: locale) }
 
     private var contextDocumentURL: URL? {
         result.contextDirectoryURL?.appendingPathComponent("context.md")
@@ -341,13 +345,13 @@ struct RecordingResultView: View {
         pasteboard.clearContents()
         guard pasteboard.setString(contents, forType: .string) else {
             destinationAlert = RecordingContextDestinationAlert(
-                title: String(localized: "Couldn’t Copy Context", locale: locale),
-                message: String(localized: "Try copying the context again.", locale: locale)
+                title: AppLocalization.text("Couldn’t Copy Context", locale: locale),
+                message: AppLocalization.text("Try copying the context again.", locale: locale)
             )
             return
         }
         analytics.capture(.contextCopied)
-        showCopyToast(String(localized: "Context copied", locale: locale))
+        showCopyToast(AppLocalization.text("Context text copied", locale: locale))
     }
 
     @discardableResult
@@ -366,15 +370,15 @@ struct RecordingResultView: View {
 
         analytics.capture(.videoCopied)
         if showConfirmation {
-            showCopyToast(String(localized: "Video copied", locale: locale))
+            showCopyToast(AppLocalization.text("Video copied", locale: locale))
         }
         return true
     }
 
     private func showVideoCopyError() {
         destinationAlert = RecordingContextDestinationAlert(
-            title: String(localized: "Couldn’t Copy Video", locale: locale),
-            message: String(localized: "Try copying the video again.", locale: locale)
+            title: AppLocalization.text("Couldn’t Copy Video", locale: locale),
+            message: AppLocalization.text("Try copying the video again.", locale: locale)
         )
     }
 
@@ -384,27 +388,17 @@ struct RecordingResultView: View {
         pasteboard.clearContents()
         guard pasteboard.setString(result.context, forType: .string) else {
             destinationAlert = RecordingContextDestinationAlert(
-                title: String(localized: "Couldn’t Copy Context", locale: locale),
-                message: String(localized: "Try copying the context again.", locale: locale)
+                title: AppLocalization.text("Couldn’t Copy Context", locale: locale),
+                message: AppLocalization.text("Try copying the context again.", locale: locale)
             )
             return false
         }
 
         analytics.capture(.contextCopied)
         if showConfirmation {
-            showCopyToast(String(localized: "Context copied", locale: locale))
+            showCopyToast(AppLocalization.text("Path copied", locale: locale))
         }
         return true
-    }
-
-    private func copyAndReturnTitle(for application: NSRunningApplication, content: CopyContent) -> String {
-        String(
-            format: content == .video
-                ? String(localized: "Copy Video & Return to %@", locale: locale)
-                : String(localized: "Copy & Return to %@", locale: locale),
-            locale: locale,
-            application.localizedName ?? application.bundleIdentifier ?? ""
-        )
     }
 
     private func copyAndReturn(_ content: CopyContent, to application: NSRunningApplication) {
@@ -414,10 +408,10 @@ struct RecordingResultView: View {
         switch content {
         case .context:
             didCopy = copyContextToPasteboard(showConfirmation: false)
-            confirmation = String(localized: "Context copied", locale: locale)
+            confirmation = AppLocalization.text("Path copied", locale: locale)
         case .video:
             didCopy = copyVideoToPasteboard(result.fileURL, showConfirmation: false)
-            confirmation = String(localized: "Video copied", locale: locale)
+            confirmation = AppLocalization.text("Video copied", locale: locale)
         }
         guard didCopy else { return }
         isReturningToApplication = true
@@ -449,7 +443,7 @@ struct RecordingResultView: View {
         )
 
         copyToastDismissTask?.cancel()
-        withAnimation(.easeOut(duration: 0.15)) {
+        withAnimation(reduceMotion ? nil : .easeOut(duration: 0.15)) {
             copyToastMessage = message
         }
         copyToastDismissTask = Task { @MainActor in
@@ -458,7 +452,7 @@ struct RecordingResultView: View {
             } catch {
                 return
             }
-            withAnimation(.easeIn(duration: 0.15)) {
+            withAnimation(reduceMotion ? nil : .easeIn(duration: 0.15)) {
                 copyToastMessage = nil
             }
         }
@@ -474,9 +468,10 @@ private struct RecordingContextDestinationAlert: Identifiable {
 
 private struct RecordingSidebarRow: View {
     let result: RecordingResult
+    let requestDeletion: () -> Void
 
     var body: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 6) {
             Image(nsImage: AppResourceBundle.image(named: "CaptureGlyph"))
                 .resizable()
                 .interpolation(.high)
@@ -498,11 +493,24 @@ private struct RecordingSidebarRow: View {
                 Text(result.recordedAt, format: .dateTime.hour().minute())
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                    .lineLimit(1)
+                .lineLimit(1)
             }
+
+            Spacer(minLength: 0)
+
+            Button(action: requestDeletion) {
+                Image(systemName: "trash")
+                    .font(.system(size: 13, weight: .medium))
+                    .frame(width: 26, height: 28)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.borderless)
+            .foregroundStyle(.secondary)
+            .help("Delete Recording")
+            .accessibilityLabel("Delete Recording")
         }
         .padding(.vertical, 3)
-        .accessibilityElement(children: .combine)
+        .accessibilityElement(children: .contain)
     }
 }
 
@@ -514,7 +522,9 @@ private struct RecordingPlayerView: NSViewRepresentable {
     }
 
     func makeNSView(context: Context) -> AVPlayerView {
-        let playerView = HoverControlsPlayerView()
+        let playerView = AVPlayerView()
+        playerView.controlsStyle = .inline
+        playerView.showsFullScreenToggleButton = true
         playerView.videoGravity = .resizeAspect
         playerView.player = context.coordinator.player
         context.coordinator.loadAndPlay(fileURL)
@@ -541,43 +551,5 @@ private struct RecordingPlayerView: NSViewRepresentable {
             player.replaceCurrentItem(with: AVPlayerItem(url: fileURL))
             player.play()
         }
-    }
-}
-
-private final class HoverControlsPlayerView: AVPlayerView {
-    private var hoverTrackingArea: NSTrackingArea?
-
-    override init(frame frameRect: NSRect) {
-        super.init(frame: frameRect)
-        controlsStyle = .none
-    }
-
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        controlsStyle = .none
-    }
-
-    override func updateTrackingAreas() {
-        super.updateTrackingAreas()
-        if let hoverTrackingArea {
-            removeTrackingArea(hoverTrackingArea)
-        }
-        let trackingArea = NSTrackingArea(
-            rect: .zero,
-            options: [.mouseEnteredAndExited, .activeInKeyWindow, .inVisibleRect],
-            owner: self
-        )
-        addTrackingArea(trackingArea)
-        hoverTrackingArea = trackingArea
-    }
-
-    override func mouseEntered(with event: NSEvent) {
-        controlsStyle = .minimal
-        super.mouseEntered(with: event)
-    }
-
-    override func mouseExited(with event: NSEvent) {
-        controlsStyle = .none
-        super.mouseExited(with: event)
     }
 }

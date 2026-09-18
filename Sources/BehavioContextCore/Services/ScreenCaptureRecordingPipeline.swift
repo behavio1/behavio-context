@@ -20,6 +20,8 @@ public actor ScreenCaptureRecordingPipeline: RecordingPipeline {
     private var webcamCapture: WebcamCaptureSource?
     private var microphoneCapture: MicrophoneCaptureSource?
     private var activeMicrophoneID: String?
+    private var streamConfiguration: SCStreamConfiguration?
+    private var captureGeneration = UUID()
 
     public init(
         recorder: LocalMediaRecorder = LocalMediaRecorder(),
@@ -77,6 +79,8 @@ public actor ScreenCaptureRecordingPipeline: RecordingPipeline {
         streamConfiguration.queueDepth = 5
         streamConfiguration.pixelFormat = kCVPixelFormatType_32BGRA
         streamConfiguration.showsCursor = true
+        streamConfiguration.scalesToFit = true
+        self.streamConfiguration = streamConfiguration
         streamConfiguration.capturesAudio = configuration.capturesSystemAudio
         streamConfiguration.excludesCurrentProcessAudio = true
         streamConfiguration.sampleRate = 48_000
@@ -132,6 +136,10 @@ public actor ScreenCaptureRecordingPipeline: RecordingPipeline {
 
             let outputBridge = ScreenCaptureOutputBridge(
                 onSample: { [visualChangeSampler, contextCapture] sampleBuffer, outputType in
+                    if outputType == .screen, case let .window(window) = configuration.source {
+                        let host = CMTimeGetSeconds(sampleBuffer.presentationTimeStamp)
+                        Task { await contextCapture?.recordWindowFrame(window: window, hostTime: host) }
+                    }
                     sampleForwarder.yield(sampleBuffer, outputType: outputType)
                     if outputType == .screen,
                        let timeMs = visualChangeSampler.process(sampleBuffer) {
@@ -173,6 +181,37 @@ public actor ScreenCaptureRecordingPipeline: RecordingPipeline {
         }
     }
 
+    public func followWindow(_ source: CaptureSource?) async throws {
+        let generation = captureGeneration
+        outputBridge?.invalidate()
+        if let captureStream { try? await captureStream.stopCapture() }
+        self.captureStream = nil
+        self.outputBridge = nil
+        await contextCapture?.closeWindowCapture()
+        guard let source, let configuration = streamConfiguration,
+              let forwarder = sampleForwarder, generation == captureGeneration else { return }
+        let content = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: true)
+        guard generation == captureGeneration else { return }
+        let target = try ScreenCaptureKitContentFilterFactory.resolve(for: source, in: content, excludingBundleIdentifier: bundleIdentifier)
+        let bridge = ScreenCaptureOutputBridge(onSample: { [contextCapture] sample, type in
+            forwarder.yield(sample, outputType: type)
+            if type == .screen, case let .window(window) = source {
+                let host = CMTimeGetSeconds(sample.presentationTimeStamp)
+                Task { await contextCapture?.recordWindowFrame(window: window, hostTime: host) }
+            }
+        }, onFatalError: { [weak self] error in
+            Task { await self?.eventContinuation?.yield(.fatal(message: error.localizedDescription)) }
+        })
+        let stream = SCStream(filter: target.filter, configuration: configuration, delegate: bridge)
+        try stream.addStreamOutput(bridge, type: .screen, sampleHandlerQueue: bridge.videoQueue)
+        if configuration.capturesAudio { try stream.addStreamOutput(bridge, type: .audio, sampleHandlerQueue: bridge.audioQueue) }
+        guard generation == captureGeneration else { return }
+        captureStream = stream
+        outputBridge = bridge
+        try await stream.startCapture()
+        if generation != captureGeneration { bridge.invalidate(); try? await stream.stopCapture() }
+    }
+
     public func selectMicrophoneDevice(_ deviceID: String?) async throws {
         guard let microphoneCapture else {
             throw RecordingPipelineControlError.microphoneNotActive
@@ -212,17 +251,21 @@ public actor ScreenCaptureRecordingPipeline: RecordingPipeline {
         } catch {
             logger.warning("Capture source did not stop cleanly: \(error.localizedDescription, privacy: .public)")
         }
+        await contextCapture?.closeWindowCapture()
         let artifacts = try await recorder.finish()
-        let contextDirectoryURL = try await contextCapture?.stop(
-            recordingURL: artifacts.recordingURL
-        ).directoryURL
+        var result = artifacts
+        do {
+            let context = try await contextCapture?.stop(recordingURL: artifacts.recordingURL, mediaStartHostTime: artifacts.mediaStartHostTime)
+            result = RecordingArtifacts(recordingURL: artifacts.recordingURL, contextDirectoryURL: context?.directoryURL)
+        } catch {
+            // A finalized video remains a successful, visible library entry.
+            result.contextFailure = error.localizedDescription
+            await contextCapture?.cancel()
+        }
         logger.info("Recording pipeline stopped")
         eventContinuation?.finish()
         eventContinuation = nil
-        return RecordingArtifacts(
-            recordingURL: artifacts.recordingURL,
-            contextDirectoryURL: contextDirectoryURL
-        )
+        return result
     }
 
     public func cancel() async {
@@ -235,6 +278,8 @@ public actor ScreenCaptureRecordingPipeline: RecordingPipeline {
     }
 
     private func stopCaptureSources() async throws {
+        captureGeneration = UUID()
+        streamConfiguration = nil
         outputBridge?.invalidate()
         var stopError: Error?
         if let captureStream {

@@ -7,17 +7,14 @@ struct ShortcutSettingsView: View {
 
     var body: some View {
         HStack(spacing: 14) {
-            Image(nsImage: AppResourceBundle.image(named: "ShortcutGlyph"))
-                .resizable()
-                .interpolation(.high)
-                .scaledToFit()
-                .frame(width: 34, height: 34)
-                .shadow(color: .blue.opacity(0.20), radius: 5, y: 2)
-                .accessibilityHidden(true)
+            SettingsGlyph(symbol: "command", tint: .orange)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("Global shortcut")
                     .font(.body.weight(.medium))
+                Text("Command + Ctrl + R")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
                 if recorder.isRecording {
                     Text("Press a key with ⌘, ⌃, or ⌥. Press Esc to cancel.")
                         .font(.caption)

@@ -133,6 +133,7 @@ public final class RecordingSessionStore {
         sourceCatalog: any CaptureSourceCatalog = ScreenCaptureKitSourceCatalog(),
         captureAuthorization: any CaptureAuthorization = SystemCaptureAuthorization(),
         preferencesStore: any PreferencesStore = UserDefaultsPreferencesStore(),
+        historyStore: any RecordingHistoryStore = FileRecordingHistoryStore(),
         recordingPipeline: any RecordingPipeline = ScreenCaptureRecordingPipeline(),
         analyticsClient: any AnalyticsClient = NoOpAnalyticsClient()
     ) {
@@ -140,7 +141,7 @@ public final class RecordingSessionStore {
             sourceCatalog: sourceCatalog,
             captureAuthorization: captureAuthorization,
             preferencesStore: preferencesStore,
-            recordingHistoryStore: FileRecordingHistoryStore(),
+            recordingHistoryStore: historyStore,
             recordingPipeline: recordingPipeline,
             analyticsClient: analyticsClient
         )
@@ -198,12 +199,12 @@ public final class RecordingSessionStore {
     }
 
     public var selectedMicrophoneName: String {
-        guard capturesMicrophone else { return "Mikrofon wyłączony" }
+        guard capturesMicrophone else { return AppLocalization.text("Microphone off", locale: effectiveLocale) }
         if let selected = microphones.first(where: { $0.id == microphoneDeviceID }) {
             return selected.name
         }
         return CaptureDeviceCatalog.microphone(withID: microphoneDeviceID)?.localizedName
-            ?? "Domyślny mikrofon"
+            ?? AppLocalization.text("Default microphone", locale: effectiveLocale)
     }
 
     public var configurationIsLocked: Bool { phase.locksConfiguration }
@@ -214,8 +215,8 @@ public final class RecordingSessionStore {
     }
 
     public var hudMessage: String? {
-        if let warningMessage { return warningMessage }
-        if case let .failed(message) = phase { return message }
+        if let warningMessage { return AppLocalization.text(warningMessage, locale: effectiveLocale) }
+        if case let .failed(message) = phase { return AppLocalization.text(message, locale: effectiveLocale) }
         return nil
     }
 
@@ -223,12 +224,14 @@ public final class RecordingSessionStore {
         isInitialized && capturesWebcam && !phase.locksConfiguration
     }
 
+    public var activeWindowName: String?
+
     public var effectiveLocale: Locale {
-        language.localeIdentifier.map(Locale.init(identifier:)) ?? .autoupdatingCurrent
+        Locale(identifier: language.resolvedIdentifier())
     }
 
     public var usesRightToLeftLayout: Bool {
-        effectiveLocale.language.languageCode?.identifier == "ar"
+        false
     }
 
     public func initialize() async {
@@ -445,7 +448,7 @@ public final class RecordingSessionStore {
                 warningMessage = nil
             } catch {
                 microphoneDeviceID = previousID
-                warningMessage = "Nie udało się przełączyć mikrofonu: \(error.localizedDescription)"
+                warningMessage = AppLocalization.text("Couldn’t switch microphone.", locale: effectiveLocale) + " " + error.localizedDescription
             }
         } else {
             microphoneDeviceID = deviceID
@@ -518,7 +521,7 @@ public final class RecordingSessionStore {
 
     public func reportStartFailure(_ message: String) {
         guard !phase.locksConfiguration else { return }
-        warningMessage = message
+        warningMessage = AppLocalization.text(message, locale: effectiveLocale)
         fail(message)
     }
 
@@ -615,7 +618,7 @@ public final class RecordingSessionStore {
         guard phase == .preparing || phase.isRecording else { return }
         logger.error("Recording failed: \(message, privacy: .public)")
         captureRecordingFailure(stage: "finalization", recoveryCategory: "system_event")
-        warningMessage = message
+        warningMessage = AppLocalization.text(message, locale: effectiveLocale)
         stopRecording()
     }
 
@@ -757,7 +760,18 @@ public final class RecordingSessionStore {
         phase = .idle
         stopTask = nil
         recordingResultAvailable?(result)
+        if let contextFailure = artifacts.contextFailure {
+            warningMessage = contextFailure
+            recordingFailureNotice = RecordingFailureNotice(kind: .contextUnavailable, recoveryURL: artifacts.recordingURL)
+            recordingFailureNoticeAvailable?()
+        }
         logger.info("Local recording finalized")
+    }
+
+    public func reloadRecordingHistory() async {
+        guard !configurationIsLocked else { return }
+        await historyPersistenceTask?.value
+        await restoreRecordingHistory()
     }
 
     private func restoreRecordingHistory() async {
@@ -851,7 +865,7 @@ public final class RecordingSessionStore {
             microphoneDeviceID = deviceID
             logger.info("Active microphone is \(name, privacy: .public)")
         case let .compilationProgress(message):
-            compilationMessage = message
+            compilationMessage = AppLocalization.text(message, locale: effectiveLocale)
         }
     }
 
