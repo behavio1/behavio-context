@@ -25,7 +25,7 @@ struct SettingsView: View {
 
             footer
         }
-        .frame(width: 540, height: min(showsAdditionalSettings ? 650 : 480, (NSScreen.main?.visibleFrame.height ?? 900) - 100))
+        .frame(width: 540, height: min(showsAdditionalSettings ? 820 : 740, (NSScreen.main?.visibleFrame.height ?? 900) - 100))
         .background(Color(nsColor: .windowBackgroundColor))
         .environment(\.locale, store.effectiveLocale)
         .environment(\.layoutDirection, store.usesRightToLeftLayout ? .rightToLeft : .leftToRight)
@@ -77,6 +77,7 @@ struct SettingsView: View {
                         store: store,
                         shortcutRecorder: shortcutRecorder
                     )
+                    SpeechSettingsView(store: store).padding(.horizontal, 22)
                     DisclosureGroup("More Settings", isExpanded: $showsAdditionalSettings) {
                         VStack(alignment: .leading, spacing: 12) {
                             storageSection

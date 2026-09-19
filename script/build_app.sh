@@ -4,9 +4,11 @@ set -eu
 cd "$(dirname "$0")/.."
 
 configuration="${1:-debug}"
-swift build -c "$configuration" --product BehavioContext
+if [ "$#" -gt 0 ]; then shift; fi
+./script/build_whisper.sh
+swift build "$@" -c "$configuration" --product BehavioContext
 
-build_dir="$(swift build -c "$configuration" --show-bin-path)"
+build_dir="$(swift build "$@" -c "$configuration" --show-bin-path)"
 app_root="$PWD/.build/app"
 app="$app_root/UI Screen Context.app"
 contents="$app/Contents"
@@ -15,6 +17,9 @@ rm -rf "$app"
 mkdir -p "$contents/MacOS" "$contents/Resources"
 cp "$build_dir/BehavioContext" "$contents/MacOS/BehavioContext"
 cp Configuration/BehavioContextApp.plist "$contents/Info.plist"
+mkdir -p "$contents/Helpers"
+cp .build/whisper-native/build/bin/whisper-cli "$contents/Helpers/"
+cp .build/whisper-native/source/LICENSE "$contents/Resources/Whisper-LICENSE"
 cp LICENSE NOTICE "$contents/Resources/"
 cp -R "$build_dir/BehavioContext_BehavioContext.bundle" "$contents/Resources/"
 cp -R "$build_dir/BehavioContext_BehavioContextCore.bundle" "$contents/Resources/"
@@ -39,14 +44,17 @@ if [ -z "$signing_identity" ] \
     signing_identity="Behavio Context Local Development"
 fi
 
+codesign --force --sign "${signing_identity:--}" --entitlements Configuration/WhisperHelper.entitlements "$contents/Helpers/whisper-cli"
+
 if [ -n "$signing_identity" ]; then
-    codesign --force --deep --sign "$signing_identity" \
+    codesign --force --sign "$signing_identity" \
         --entitlements BehavioContext.entitlements "$app"
     echo "Signed with stable identity: $signing_identity"
 else
-    codesign --force --deep --sign - --entitlements BehavioContext.entitlements "$app"
+    codesign --force --sign - --entitlements BehavioContext.entitlements "$app"
     echo "Warning: ad-hoc signing changes the macOS privacy identity after each rebuild." >&2
     echo "Set BEHAVIO_CONTEXT_SIGNING_IDENTITY or install the local development identity." >&2
 fi
 codesign --verify --deep --strict "$app"
+codesign -d --entitlements :- "$contents/Helpers/whisper-cli" 2>/dev/null | python3 -c 'import plistlib,sys; e=plistlib.loads(sys.stdin.buffer.read()); assert e == {"com.apple.security.app-sandbox": True, "com.apple.security.inherit": True}, "Whisper helper must inherit the app sandbox"'
 echo "$app"

@@ -14,6 +14,27 @@ enum BehavioContextChecks {
             )
             return
         }
+        try checkSpeechSettings()
+        if CommandLine.arguments.count == 6, CommandLine.arguments[1] == "--check-whisper" {
+            let segments = try await LocalWhisperTranscriber.transcribe(
+                recordingURL: URL(fileURLWithPath: CommandLine.arguments[2]),
+                settings: SpeechSettings(language: .polish, engine: SpeechEngine(rawValue: CommandLine.arguments[3])!),
+                executable: URL(fileURLWithPath: CommandLine.arguments[4]),
+                model: URL(fileURLWithPath: CommandLine.arguments[5]))
+            try require(!segments.isEmpty && segments.contains { $0.text.lowercased().contains("zada") }, "Whisper did not recover the spoken task-list request")
+            try require(segments.allSatisfy { $0.endMs <= 20000 }, "Whisper timestamps exceed the fixture duration")
+            try require(segments.allSatisfy { $0.startMs >= 0 && $0.endMs >= $0.startMs }, "invalid speech timestamps")
+            try JSONEncoder().encode(segments).write(to: FileManager.default.temporaryDirectory.appendingPathComponent("behavio-speech-qa-transcript.json"), options: .atomic)
+            print("PASS: local Whisper decoded audio and returned \(segments.count) timestamped segments")
+            return
+        }
+        if CommandLine.arguments.count == 3, CommandLine.arguments[1] == "--download-model" {
+            let engine = SpeechEngine(rawValue: CommandLine.arguments[2])!
+            print("Downloading public model weights; audio is not sent")
+            try await SpeechModelDownload(engine: engine).install { _ in }
+            print("PASS: downloaded model checksum and atomic installation")
+            return
+        }
         try await checkRecordingFolders()
         if CommandLine.arguments.contains("--check-storage") { return }
         try await checkDelayedVideo()
@@ -61,7 +82,9 @@ enum BehavioContextChecks {
             transcript: previous.transcriptSegments,
             pointerEvents: previous.pointerEvents,
             visualChangeTimesMs: visualChanges,
-            windowTimeline: previous.windowTimeline ?? []
+            windowTimeline: previous.windowTimeline ?? [],
+            speech: SpeechSettings(language: SpeechLanguage(rawValue: previous.locale) ?? .english, engine: SpeechEngine(rawValue: previous.speechEngine ?? "apple") ?? .apple),
+            transcriptionError: previous.transcriptionError
         )
         print("PASS: reprocessed \(compilation.directoryURL.path)")
     }
@@ -92,6 +115,24 @@ enum BehavioContextChecks {
         print("PASS: context failure preserves saved MP4, visible result and durable history")
     }
 
+    private static func checkSpeechSettings() throws {
+        let old = try JSONDecoder().decode(PreferencesSnapshot.self, from: Data("{\"language\":\"de\"}".utf8))
+        try require(old.language == .german && old.speech.engine == .apple, "legacy preferences lost")
+        let settings = PreferencesSnapshot(language: .english, speech: SpeechSettings(language: .polish, engine: .whisperTurbo))
+        let restored = try JSONDecoder().decode(PreferencesSnapshot.self, from: JSONEncoder().encode(settings))
+        try require(restored.language == .english && restored.speech.language == .polish && restored.speech.engine == .whisperTurbo, "spoken and interface languages were coupled")
+        let data = Data(#"{"transcription":[{"offsets":{"from":120,"to":1680},"text":" Test mowy "}]}"#.utf8)
+        let segments = try LocalWhisperTranscriber.decode(data)
+        try require(segments.count == 1 && segments[0].startMs == 120 && segments[0].endMs == 1680 && segments[0].text == "Test mowy", "Whisper timestamps/text lost")
+        let bad = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try Data("partial download".utf8).write(to: bad)
+        defer { try? FileManager.default.removeItem(at: bad) }
+        var rejected = false
+        do { try SpeechModelDownload(engine: .whisperSmall).validate(bad) } catch { rejected = true }
+        try require(rejected, "partial model accepted")
+        print("PASS: independent speech preferences, migration, Whisper timing and incomplete model rejection")
+    }
+
     private static func checkLanguageSelection() throws {
         for (preferences, expected) in [(["pl-PL"], "pl"), (["es-MX"], "es"), (["de-AT"], "de"), (["en-GB"], "en"), (["ja-JP"], "en"), (["fr-FR", "de-DE"], "de")] {
             try require(AppLanguage.system.resolvedIdentifier(preferredLanguages: preferences) == expected, "language resolution failed")
@@ -113,14 +154,16 @@ enum BehavioContextChecks {
         }
         let a = window(11, "Window A"), b = window(22, "Window B")
         let timeline = [ContextWindowInterval(window: a, startMs: 0, endMs: 1400), ContextWindowInterval(window: b, startMs: 1800, endMs: 3200), ContextWindowInterval(window: a, startMs: 3600, endMs: 4800)]
-        let compilation = try await AgentContextPackageWriter().compile(recordingURL: video, source: .window(a), durationMs: 4800, transcriptStatus: .failed, transcript: [], pointerEvents: [PointerEvent(timeMs: 2000, kind: .click, normalizedX: 0.5, normalizedY: 0.5, windowID: 11)], visualChangeTimesMs: [1600, 3400], windowTimeline: timeline)
+        let compilation = try await AgentContextPackageWriter().compile(recordingURL: video, source: .window(a), durationMs: 4800, transcriptStatus: .failed, transcript: [], pointerEvents: [PointerEvent(timeMs: 2000, kind: .click, normalizedX: 0.5, normalizedY: 0.5, windowID: 11)], visualChangeTimesMs: [1600, 3400], windowTimeline: timeline, speech: SpeechSettings(language: .german, engine: .whisperSmall), transcriptionError: "Fixture model unavailable")
         let manifest = compilation.manifest
+        try require(manifest.locale == "de_DE" && manifest.speechEngine == "whisperSmall" && manifest.transcriptionError == "Fixture model unavailable", "speech failure metadata lost")
         try require(manifest.schemaVersion == 3, "multi-window schema missing")
         try require(manifest.windowTimeline == timeline, "return to earlier window lost")
         try require(Set(manifest.visualMoments.compactMap(\.windowID)) == Set([11,22]), "window attribution missing")
         try require(manifest.visualMoments.allSatisfy { $0.pointer == nil }, "stale pointer crossed window boundary")
         try require(manifest.visualMoments.allSatisfy { m in timeline.contains { m.timeMs >= $0.startMs && m.timeMs < $0.endMs && m.windowID == $0.windowID } }, "gap mislabeled as active capture")
         let markdown = try String(contentsOf: compilation.directoryURL.appendingPathComponent("context.md"), encoding: .utf8)
+        try require(markdown.contains("Agent response language: de_DE."), "agent language must use the recording locale")
         try require(markdown.contains("## Recorded windows") && markdown.contains("Window A") && markdown.contains("Window B"), "agent-readable window history missing")
         let decoded = try JSONDecoder().decode(AgentContextManifest.self, from: Data(contentsOf: compilation.directoryURL.appendingPathComponent("manifest.json")))
         try require(decoded == manifest, "multi-window manifest roundtrip failed")
@@ -128,6 +171,18 @@ enum BehavioContextChecks {
     }
 
     private static func checkMomentSelection() throws {
+        var sampled: [PointerEvent] = []
+        for time in stride(from: 0, through: 1000, by: 10) {
+            let event = PointerEvent(timeMs: time, kind: .move, normalizedX: Double(time) / 2000, normalizedY: 0.5, windowID: 1)
+            if event.shouldAppend(after: sampled.last) { sampled.append(event) }
+        }
+        try require(sampled.count > 10 && sampled.first?.timeMs == 0, "continuous movement erased pointer history")
+        let stationary = PointerEvent(timeMs: 2000, kind: .move, normalizedX: sampled.last!.normalizedX, normalizedY: 0.5, windowID: 1)
+        try require(!stationary.shouldAppend(after: sampled.last), "stationary sampling erased dwell start")
+        let otherWindow = PointerEvent(timeMs: 2000, kind: .move, normalizedX: stationary.normalizedX, normalizedY: 0.5, windowID: 2)
+        try require(otherWindow.shouldAppend(after: sampled.last), "same-position window transition lost")
+        let sampledClick = PointerEvent(timeMs: 2000, kind: .click, normalizedX: stationary.normalizedX, normalizedY: 0.5, windowID: 1)
+        try require(sampledClick.shouldAppend(after: sampled.last), "click lost to movement sampling")
         let transcript = [TranscriptSegment(
             id: "segment-001",
             startMs: 4_000,
@@ -220,8 +275,8 @@ enum BehavioContextChecks {
             microphone: ContextMicrophone(deviceID: "mic", name: "Studio Mic"),
             transcriptStatus: .complete,
             transcript: transcript,
-            pointerEvents: [pointer],
-            visualChangeTimesMs: [2_800]
+            pointerEvents: [pointer, PointerEvent(timeMs: 2_800, kind: .move, normalizedX: 0.9, normalizedY: 0.8)],
+            visualChangeTimesMs: []
         )
 
         let contextURL = compilation.directoryURL
@@ -246,6 +301,25 @@ enum BehavioContextChecks {
             encoding: .utf8
         )
         try require(contextText.contains("## Agent-ready timeline"), "agent timeline missing")
+        let unlabeledDwell = compilation.manifest.visualMoments.first { $0.reason == .pointerDwell && $0.recognizedText == nil }
+        try require(unlabeledDwell != nil, "unlabeled dwell evidence lost")
+        if let dwell = unlabeledDwell {
+            try require(compilation.manifest.recommendedInputs.contains(dwell.id), "unlabeled dwell omitted from recommended evidence")
+            try require(contextText.contains("inspect `\(dwell.path)`"), "unlabeled pointer missing from timeline")
+            let image = CGImageSourceCreateWithURL(contextURL.appendingPathComponent(dwell.path) as CFURL, nil)!
+            let frame = CGImageSourceCreateImageAtIndex(image, 0, nil)!
+            try require(frame.width != frame.height, "unlabeled evidence was cropped, invalidating canvas coordinates")
+        }
+        try require(contextText.contains("POINTER: x=0.9000, y=0.8000"), "pointer coordinates missing")
+        let copied = AgentContextPackageWriter.clipboardText(contextText, directoryURL: contextURL)
+        try require(copied.contains(contextURL.path) && copied.contains("Images are not attached"), "clipboard image access contract missing")
+        let relocated = contextURL.deletingLastPathComponent().appendingPathComponent("relocated context")
+        let recopied = AgentContextPackageWriter.clipboardText(contextText, directoryURL: relocated)
+        try require(recopied.contains(relocated.path) && !recopied.contains(contextURL.path), "clipboard used stale directory")
+
+        try require(contextText.contains("Agent response language: pl_PL."), "Polish recording lost response language")
+        try require(contextText.contains("SAID: Tutaj klikam ten przycisk"), "original speech must remain unchanged")
+        try require(contextText.contains("unless the user explicitly requests another language"), "explicit user language override missing")
         try require(contextText.contains("Microphone: Studio Mic"), "microphone missing from context")
 
         let decodedManifest = try JSONDecoder().decode(

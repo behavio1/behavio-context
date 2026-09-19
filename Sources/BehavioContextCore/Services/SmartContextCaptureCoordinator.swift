@@ -16,16 +16,16 @@ public enum SmartContextCoordinatorError: Error, LocalizedError {
         case .speechPermissionDenied:
             "Speech Recognition permission is required for local transcription."
         case .polishRecognitionUnavailable:
-            "Polish speech recognition is unavailable on this Mac."
+            "Speech recognition for the selected language is unavailable on this Mac."
         case .onDeviceRecognitionUnavailable:
-            "The Polish on-device speech model is unavailable."
+            "The selected on-device speech model is unavailable. Configure Dictation in System Settings or choose local Whisper."
         }
     }
 }
 
 public actor SmartContextCaptureCoordinator {
     private let writer: AgentContextPackageWriter
-    private var transcriber: LocalPolishTranscriber?
+    private var transcriber: LocalAppleTranscriber?
     private var source: CaptureSource?
     private var microphone: ContextMicrophone?
     private var pointerEvents: [PointerEvent] = []
@@ -34,6 +34,9 @@ public actor SmartContextCaptureCoordinator {
     private var startedHostTime = 0.0
     private var windowClosed = false
     private var windows: [(window: WindowSource, start: Double, end: Double)] = []
+    private var speech = SpeechSettings()
+    private var speechFailure: String?
+    private var reprocessRecording = false
     private var transcriptStatus: TranscriptStatus = .failed
     private var update: (@Sendable (RecordingPipelineEvent) -> Void)?
 
@@ -44,12 +47,14 @@ public actor SmartContextCaptureCoordinator {
     public func start(
         source: CaptureSource,
         microphone: ContextMicrophone? = nil,
+        speech: SpeechSettings = SpeechSettings(),
         update: @escaping @Sendable (RecordingPipelineEvent) -> Void
     ) async throws {
         guard case .window = source else {
             throw SmartContextCoordinatorError.activeWindowRequired
         }
         await cancel()
+        self.speech = speech
         self.source = source
         self.microphone = microphone
         self.update = update
@@ -59,7 +64,8 @@ public actor SmartContextCaptureCoordinator {
         visualChangeTimesMs = []
         transcriptStatus = .failed
 
-        let transcriber = LocalPolishTranscriber { transcript, isFinal in
+        guard speech.engine == .apple, microphone != nil else { return }
+        let transcriber = LocalAppleTranscriber(locale: speech.language.rawValue) { transcript, isFinal in
             update(.transcriptChanged(text: transcript, isFinal: isFinal))
         }
         do {
@@ -68,6 +74,7 @@ public actor SmartContextCaptureCoordinator {
             transcriptStatus = .partial
         } catch {
             self.transcriber = nil
+            speechFailure = error.localizedDescription
             transcriptStatus = .failed
             update(.transcriptionUnavailable(message: error.localizedDescription))
         }
@@ -94,12 +101,7 @@ public actor SmartContextCaptureCoordinator {
 
     public func recordPointerEvent(_ event: PointerEvent) {
         guard startedAt != nil else { return }
-        if event.kind == .move,
-           let last = pointerEvents.last,
-           last.kind == .move,
-           event.timeMs - last.timeMs < 80 {
-            pointerEvents[pointerEvents.count - 1] = event
-        } else {
+        if event.shouldAppend(after: pointerEvents.last) {
             pointerEvents.append(event)
         }
     }
@@ -120,9 +122,27 @@ public actor SmartContextCaptureCoordinator {
         }
         update?(.compilationProgress(message: "Finalizing transcript…"))
         var segments = await transcriber?.stop() ?? []
-        if segments.isEmpty, microphone != nil {
+        speechFailure = transcriber?.failure ?? speechFailure
+        var usesMediaOrigin = false
+        if speech.engine != .apple, microphone != nil {
+            update?(.compilationProgress(message: "Transcribing locally with Whisper…"))
+            do {
+                segments = try await LocalWhisperTranscriber.transcribe(recordingURL: recordingURL, settings: speech)
+                speechFailure = nil
+                usesMediaOrigin = true
+            } catch {
+                speechFailure = error.localizedDescription
+                update?(.transcriptionUnavailable(message: error.localizedDescription))
+            }
+        } else if (segments.isEmpty || reprocessRecording), microphone != nil {
             update?(.compilationProgress(message: "Recovering the transcript locally…"))
-            segments = await RecordedPolishTranscriber().transcribe(recordingURL: recordingURL)
+            let recovery = RecordedAppleTranscriber()
+            segments = await recovery.transcribe(recordingURL: recordingURL, locale: speech.language.rawValue)
+            speechFailure = recovery.failure ?? speechFailure
+            usesMediaOrigin = true
+        }
+        if segments.isEmpty, speechFailure == nil {
+            speechFailure = microphone == nil ? "The microphone was off." : "No reliable speech was recognized in the selected language. Check the speech settings and try again."
         }
         if !segments.isEmpty {
             transcriptStatus = .complete
@@ -132,7 +152,7 @@ public actor SmartContextCaptureCoordinator {
         let origin = mediaStartHostTime ?? startedHostTime
         let timeline = windows.map { ContextWindowInterval(window: $0.window, startMs: max(0, Int(($0.start - origin) * 1000)), endMs: max(0, Int(($0.end - origin) * 1000))) }
         let mappedPointers = pointerEvents.map { PointerEvent(id: $0.id, timeMs: max(0, $0.timeMs - Int(origin * 1000)), kind: $0.kind, normalizedX: $0.normalizedX, normalizedY: $0.normalizedY, windowID: $0.windowID) }
-        let offset = Int((startedHostTime - origin) * 1000)
+        let offset = usesMediaOrigin ? 0 : Int((startedHostTime - origin) * 1000)
         segments = segments.map { TranscriptSegment(id: $0.id, startMs: max(0, $0.startMs + offset), endMs: max(0, $0.endMs + offset), text: $0.text, words: $0.words.map { TranscriptWord(text: $0.text, startMs: max(0, $0.startMs + offset), endMs: max(0, $0.endMs + offset)) }) }
         let durationMs = max(
             1,
@@ -148,11 +168,23 @@ public actor SmartContextCaptureCoordinator {
             transcript: segments,
             pointerEvents: mappedPointers,
             visualChangeTimesMs: visualChangeTimesMs,
-            windowTimeline: timeline
+            windowTimeline: timeline,
+            speech: speech,
+            transcriptionError: segments.isEmpty ? speechFailure : nil
         )
         update?(.compilationProgress(message: "Context ready"))
         clear()
         return compilation
+    }
+
+    public func changeSpeech(_ settings: SpeechSettings) async {
+        guard startedAt != nil else { return }
+        await transcriber?.cancel()
+        transcriber = nil
+        speech = settings
+        reprocessRecording = true
+        speechFailure = nil
+        update?(.transcriptChanged(text: "", isFinal: false))
     }
 
     public func cancel() async {
@@ -162,6 +194,8 @@ public actor SmartContextCaptureCoordinator {
 
     private func clear() {
         transcriber = nil
+        speechFailure = nil
+        reprocessRecording = false
         source = nil
         microphone = nil
         pointerEvents = []
@@ -173,7 +207,8 @@ public actor SmartContextCaptureCoordinator {
     }
 }
 
-private final class LocalPolishTranscriber: @unchecked Sendable {
+private final class LocalAppleTranscriber: @unchecked Sendable {
+    private let locale: String
     private let queue = DispatchQueue(label: "one.behavio.context.transcription")
     private let lock = NSLock()
     private let update: @Sendable (String, Bool) -> Void
@@ -183,8 +218,11 @@ private final class LocalPolishTranscriber: @unchecked Sendable {
     private var latestSegments: [TranscriptSegment] = []
     private var receivedFinalResult = false
     private var hasStopped = false
+    private var lastFailure: String?
+    var failure: String? { lock.withLock { lastFailure } }
 
-    init(update: @escaping @Sendable (String, Bool) -> Void) {
+    init(locale: String, update: @escaping @Sendable (String, Bool) -> Void) {
+        self.locale = locale
         self.update = update
     }
 
@@ -193,7 +231,7 @@ private final class LocalPolishTranscriber: @unchecked Sendable {
         guard authorization == .authorized else {
             throw SmartContextCoordinatorError.speechPermissionDenied
         }
-        guard let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "pl_PL")),
+        guard let recognizer = SFSpeechRecognizer(locale: Locale(identifier: locale)),
               recognizer.isAvailable else {
             throw SmartContextCoordinatorError.polishRecognitionUnavailable
         }
@@ -218,8 +256,8 @@ private final class LocalPolishTranscriber: @unchecked Sendable {
             if let result {
                 self.handle(result)
             }
-            if error != nil {
-                self.lock.withLock { self.hasStopped = true }
+            if let error {
+                self.lock.withLock { self.hasStopped = true; self.lastFailure = error.localizedDescription }
             }
         }
         lock.withLock { self.task = task }
@@ -283,19 +321,22 @@ private final class LocalPolishTranscriber: @unchecked Sendable {
     }
 }
 
-private final class RecordedPolishTranscriber: @unchecked Sendable {
+private final class RecordedAppleTranscriber: @unchecked Sendable {
     private let lock = NSLock()
+    private var lastFailure: String?
+    var failure: String? { lock.withLock { lastFailure } }
     private var recognizer: SFSpeechRecognizer?
     private var recognitionTask: SFSpeechRecognitionTask?
     private var timeoutTask: Task<Void, Never>?
     private var continuation: CheckedContinuation<[TranscriptSegment], Never>?
     private var latestSegments: [TranscriptSegment] = []
 
-    func transcribe(recordingURL: URL) async -> [TranscriptSegment] {
+    func transcribe(recordingURL: URL, locale: String) async -> [TranscriptSegment] {
         guard SFSpeechRecognizer.authorizationStatus() == .authorized,
-              let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "pl_PL")),
+              let recognizer = SFSpeechRecognizer(locale: Locale(identifier: locale)),
               recognizer.isAvailable,
               recognizer.supportsOnDeviceRecognition else {
+            lock.withLock { lastFailure = "The selected Apple speech language is not ready for offline recognition. Check speech permission and the local model, or choose Whisper." }
             return []
         }
 
@@ -318,13 +359,15 @@ private final class RecordedPolishTranscriber: @unchecked Sendable {
                         finish(with: segments)
                     }
                 }
-                if error != nil {
+                if let error {
+                    lock.withLock { lastFailure = error.localizedDescription }
                     finish(with: lock.withLock { latestSegments })
                 }
             }
             timeoutTask = Task { [weak self] in
                 try? await Task.sleep(for: .seconds(90))
                 guard !Task.isCancelled, let self else { return }
+                lock.withLock { lastFailure = "Apple speech recognition timed out." }
                 finish(with: lock.withLock { latestSegments })
             }
         }

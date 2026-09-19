@@ -14,7 +14,7 @@ UI Screen Context lets a user explain a visible application by speaking and poin
 The app currently has three different clipboard actions:
 
 - **Copy Path / Copy Path & Return** copies the local `context/` directory path as plain text. If context compilation is absent, it can copy the `recording.mp4` path instead. It does not copy or upload the directory contents.
-- **Copy Context Text** copies the Markdown document itself. Relative image paths in this text do not attach images or reveal the package's absolute location.
+- **Copy Context Text** copies the Markdown document itself. New copies append the current local context directory, allowing a local agent to resolve relative image paths. Images are not attached; a cloud agent may still need the actual images. Older copies may lack the directory.
 - **Copy Video & Return** puts a file URL on the clipboard. The receiving application decides whether to attach the video; verify what you actually received.
 
 “Return” switches back to the previous app. It does not prove that anything was pasted, uploaded, or sent.
@@ -52,7 +52,9 @@ Window detection is sampled. Short visits can be omitted; gaps and transition fr
 
 ## Recording UI and failure states
 
-The expanded and compact recording bars use the same capture pipeline. Hidden transcription or window labels in compact mode do not mean speech or window tracking was disabled. A moving audio meter shows input level, not successful speech recognition. Interface language (English, Polish, Spanish, German) is independent of the currently Polish-only on-device speech recognizer. Never infer transcript language or success from interface labels.
+The expanded and compact recording bars use the same capture pipeline. Hidden transcription or window labels in compact mode do not mean speech or window tracking was disabled. A moving audio meter shows input level, not successful speech recognition. Interface language is independent of the selected speech language and local engine (Apple or Whisper). Never infer transcript language or success from interface labels.
+
+`Agent response language` comes from the recording’s saved speech locale. Generate responses and descriptions directly in that language unless the current user explicitly requests another language. English structural labels such as `SAID` and `POINTED AT` do not request English output. Preserve original speech, OCR quotes, filenames and identifiers; do not translate the package. Older packages without this instruction can use `Speech language` or manifest `locale` as evidence of the spoken language.
 
 A context-compilation error can coexist with a successfully saved MP4. Distinguish capture, transcription, context compilation, and clipboard delivery when reporting what failed. Changing the recording folder affects new recordings only; older entries can resolve to previous folders. Use the supplied path rather than assuming all sessions share one directory.
 
@@ -75,3 +77,5 @@ Answer the user's actual question first. For a walkthrough, briefly connect the 
 If only pointing is present, describe what was indicated; do not invent a request to repair, remove, or redesign it. Ask a narrow clarification only if a missing instruction or ambiguous target prevents the next action. Do not request all files when the available text already answers the question.
 
 For evidence references, use a timestamp and moment identifier/path. State whether you used pasted text, opened images, or the manifest. A successful clipboard/context export proves that package generation worked for that recording; it does not by itself validate transcription, pointer precision, or the recorded application's behavior.
+
+`POINTER` entries preserve visual pointing even when OCR cannot confirm a text target. Their coordinates are normalized to the full image canvas with a top-left origin; these unconfirmed-target images are not cropped. Inspect the referenced image at the position, relate it to speech by time, and do not invent a control label. Zero confirmed text targets does not mean no pointing occurred.

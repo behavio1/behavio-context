@@ -32,9 +32,9 @@ if rg -i --glob '!README.md' --glob '!check_native_only.sh' \
   exit 1
 fi
 
-if rg -q 'com\.apple\.security\.(network|device\.camera)' \
+if rg -q 'com\.apple\.security\.(network\.server|device\.camera)' \
   "$ROOT_DIR/BehavioContext.entitlements"; then
-  echo "Privacy check failed: release entitlements include network or camera access." >&2
+  echo "Privacy check failed: release entitlements include server or camera access." >&2
   exit 1
 fi
 

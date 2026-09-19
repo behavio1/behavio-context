@@ -343,7 +343,10 @@ struct RecordingResultView: View {
     private func copyContextDocumentToPasteboard(_ contents: String) {
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()
-        guard pasteboard.setString(contents, forType: .string) else {
+        let copiedText = result.contextDirectoryURL.map {
+            AgentContextPackageWriter.clipboardText(contents, directoryURL: $0)
+        } ?? contents
+        guard pasteboard.setString(copiedText, forType: .string) else {
             destinationAlert = RecordingContextDestinationAlert(
                 title: AppLocalization.text("Couldn’t Copy Context", locale: locale),
                 message: AppLocalization.text("Try copying the context again.", locale: locale)
@@ -527,13 +530,13 @@ private struct RecordingPlayerView: NSViewRepresentable {
         playerView.showsFullScreenToggleButton = true
         playerView.videoGravity = .resizeAspect
         playerView.player = context.coordinator.player
-        context.coordinator.loadAndPlay(fileURL)
+        context.coordinator.load(fileURL)
         return playerView
     }
 
     func updateNSView(_ playerView: AVPlayerView, context: Context) {
         guard context.coordinator.currentURL != fileURL else { return }
-        context.coordinator.loadAndPlay(fileURL)
+        context.coordinator.load(fileURL)
     }
 
     static func dismantleNSView(_ playerView: AVPlayerView, coordinator: Coordinator) {
@@ -546,10 +549,10 @@ private struct RecordingPlayerView: NSViewRepresentable {
         let player = AVPlayer()
         private(set) var currentURL: URL?
 
-        func loadAndPlay(_ fileURL: URL) {
+        func load(_ fileURL: URL) {
             currentURL = fileURL
             player.replaceCurrentItem(with: AVPlayerItem(url: fileURL))
-            player.play()
+            player.pause()
         }
     }
 }

@@ -49,7 +49,8 @@ public actor ScreenCaptureRecordingPipeline: RecordingPipeline {
         }
         try await contextCapture?.start(
             source: configuration.source,
-            microphone: contextMicrophone
+            microphone: contextMicrophone,
+            speech: configuration.speech
         ) { [weak self] event in
             Task { await self?.eventContinuation?.yield(event) }
         }
@@ -210,6 +211,10 @@ public actor ScreenCaptureRecordingPipeline: RecordingPipeline {
         outputBridge = bridge
         try await stream.startCapture()
         if generation != captureGeneration { bridge.invalidate(); try? await stream.stopCapture() }
+    }
+
+    public func changeSpeech(_ settings: SpeechSettings) async {
+        await contextCapture?.changeSpeech(settings)
     }
 
     public func selectMicrophoneDevice(_ deviceID: String?) async throws {

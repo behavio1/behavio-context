@@ -113,10 +113,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 result,
                 retaining: Set(store.recordingResults.map(\.id))
             )
-            self.recordingResultController?.present(result)
+            guard let directory = result.contextDirectoryURL,
+                  let document = try? String(contentsOf: directory.appendingPathComponent("context.md"), encoding: .utf8),
+                  !document.isEmpty else { return }
+            let clipboard = NSPasteboard.general
+            clipboard.clearContents()
+            if clipboard.setString(AgentContextPackageWriter.clipboardText(document, directoryURL: directory), forType: .string) {
+                store.showCompletionNotice("Context copied. Share it with your agent.")
+            } else {
+                store.showCompletionNotice("Couldn’t copy context. Open Recordings to copy it again.")
+            }
         }
         store.recordingFailureNoticeAvailable = { [weak self] in
-            self?.openSettings()
+            self?.feedbackController?.synchronize()
         }
         store.requestScreenRecordingSettings = {
             guard let url = URL(
@@ -136,7 +145,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        openSettings()
+        if store.phase.isRecording {
+            feedbackController?.synchronize()
+            return false
+        }
+        if !flag { openSettings() }
         return true
     }
 

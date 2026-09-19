@@ -4,7 +4,7 @@ by Behavio
 
 Talk to the active window, point with the cursor, and give an AI agent a compact folder instead of a full screen recording.
 
-UI Screen Context is a native macOS utility built for bug reports, UI feedback, and agent-assisted work. It follows the active window as you switch apps and windows, transcribes Polish speech locally, tracks relevant pointer activity, detects visual changes, and compiles the result into a small text-first package.
+UI Screen Context is a native macOS utility built for bug reports, UI feedback, and agent-assisted work. It follows the active window as you switch apps and windows, transcribes speech locally in the selected language, tracks relevant pointer activity, detects visual changes, and compiles the result into a small text-first package.
 
 ## How it works
 
@@ -42,7 +42,7 @@ In Settings, **Recordings and contexts folder** controls where new recordings ar
 
 ## Language and settings
 
-The interface supports English, Polish, Spanish, and German. **Follow System** matches the preferred languages and falls back to English. This selection does not change speech recognition: local transcription currently requires the Polish on-device model. An unavailable model can leave visual context usable while the transcript reports failure. The audio meter indicates input level independently of transcription.
+The interface supports English, Polish, Spanish, and German. **Follow System** matches the preferred languages and falls back to English. The separate **Spoken language** control selects English, Polish, Spanish or German for recognition. Choose Apple on-device recognition or local Whisper Small / Large v3 Turbo. The recording bar has the same language menu; changing it reprocesses the whole recording in that language when recording stops. Missing Apple models show setup instructions and a recheck action. The audio meter indicates input level independently of transcription.
 
 **More Settings** expands by clicking its entire header. It contains the recording folder and menu-bar icon toggle with a matching icon preview. The menu provides Start/Stop, Recordings, Open Recordings Folder, and Settings. The app uses a simplified template version of its logo for the menu bar and its full icon in the Dock.
 
@@ -51,7 +51,9 @@ If context compilation fails after video capture succeeds, the saved MP4 remains
 ## Privacy
 
 - Follows the active window sequentially as you switch apps or windows; never falls back to capturing the whole display.
-- Polish transcription requests on-device recognition and never falls back to cloud recognition.
+- Apple transcription requires on-device recognition; Whisper runs in a bundled native helper. Neither uploads recordings.
+- Model downloads are explicit: Small is about 488 MB; Large v3 Turbo about 1.63 GB. Downloads have progress/cancel/retry and SHA-256 verification.
+- **Use Existing Model…** accepts a compatible model file or folder, verifies it and imports a local copy. Existing `.pt` weights can be converted offline with `script/convert_existing_whisper.sh`; MLX files are a different format. No model is downloaded automatically.
 - Does not record keystrokes. Escape exists only as a temporary stop hotkey while recording.
 - Does not upload recordings, transcripts, screenshots, or analytics.
 - Keeps raw MP4 material outside the folder supplied to the agent.
@@ -60,7 +62,7 @@ See the [privacy policy](docs/privacy.md).
 
 ## Requirements
 
-- macOS 15 or newer; local live transcription requires the Polish on-device speech model available on the Mac.
+- macOS 15 or newer; Apple live transcription requires an available offline model for the selected spoken language. Whisper transcribes the saved recording after stopping.
 - Screen Recording and Microphone permissions.
 - Input Monitoring is optional but required for pointer-aware moments outside the app.
 - Swift 6.0+ for command-line builds, or Xcode for the Xcode project.
@@ -99,7 +101,7 @@ Or open `BehavioContext.xcodeproj` in Xcode and select the `BehavioContext` sche
 
 - SwiftUI and AppKit provide the menu bar app and nonactivating Recording Capsule.
 - ScreenCaptureKit captures one `SCWindow` at a time through `desktopIndependentWindow`, replacing the stream when the active window changes. Source intervals identify each recorded window; transitions can contain gaps.
-- Speech performs local Polish partial/final transcription, with a local finalized-file retry when live recognition has no result.
+- Speech performs Apple local partial/final transcription in the selected language, with a local finalized-file retry. Whisper uses the finalized audio and preserves media-relative timestamps. Exported transcript metadata includes language, engine and a failure reason.
 - A short-lived global pointer monitor records normalized mouse events only during recording.
 - AVFoundation extracts and downsizes selected frames after the MP4 is finalized; Vision resolves nearby text at pointer dwell and click moments.
 - The package writer validates a temporary directory before publishing `context/` atomically.
@@ -113,3 +115,20 @@ UI Screen Context by Behavio is open-source software licensed under the [Apache 
 Anyone may download, use, modify, fork, and redistribute the software, including for commercial purposes. You do not have to publish your modifications. When redistributing it, include the license, preserve applicable copyright and attribution notices (including [NOTICE](NOTICE)), and clearly mark modified files.
 
 The software is provided without warranties. Third-party components retain their own licenses; the license does not grant rights to use trademarks. See [LICENSE](LICENSE) for the full terms.
+
+## Speech development checks
+
+The app bundles a pinned native whisper.cpp runtime (v1.9.4), built by `script/build_whisper.sh`; model weights are not bundled or committed. CMake and a C++ compiler are required for packaging. Imported/downloaded models live in the app sandbox under `Application Support/BehavioContext/SpeechModels`.
+
+On this machine, SDK 27 Command Line Tools lack SwiftUI macro/asset tools. The verified local build is:
+
+```sh
+./script/build_app.sh debug --build-system native --sdk /Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk
+./script/test_core.sh --build-system native --sdk /Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk
+```
+
+Full Xcode is required for XCTest here. Project development guidance lives in `.agents/skills/macos-swift-development` and `.agents/skills/local-speech-recognition`, linked from `AGENTS.md`.
+
+The copied context includes an agent response-language instruction derived from the recording’s saved speech language, independently of the app interface language. Structural headings remain English. Agents should generate responses directly in that language unless the user requests otherwise; transcript text, screen quotes, filenames and identifiers remain unchanged. Previously saved packages are not rewritten.
+
+After a recording finishes compiling, its context text and local image-directory reference are copied to the clipboard automatically. A brief nonactivating notice confirms it is ready for ⌘V. The app does not open the results window or start playback; open Recordings to review a saved recording manually. If context generation fails, the recording stays saved and no success notice is shown.

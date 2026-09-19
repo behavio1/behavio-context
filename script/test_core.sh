@@ -2,4 +2,4 @@
 set -eu
 
 cd "$(dirname "$0")/.."
-swift run BehavioContextChecks
+swift run "$@" BehavioContextChecks

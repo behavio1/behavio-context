@@ -1,6 +1,7 @@
 import Foundation
 
 public struct RecordingConfiguration: Equatable, Sendable {
+    public let speech: SpeechSettings
     public let source: CaptureSource
     public let capturesSystemAudio: Bool
     public let capturesMicrophone: Bool
@@ -17,8 +18,10 @@ public struct RecordingConfiguration: Equatable, Sendable {
         capturesWebcam: Bool,
         webcamDeviceID: String?,
         webcamLayout: WebcamLayout,
-        blursWebcamBackground: Bool = false
+        blursWebcamBackground: Bool = false,
+        speech: SpeechSettings = SpeechSettings()
     ) {
+        self.speech = speech
         self.source = source
         self.capturesSystemAudio = capturesSystemAudio
         self.capturesMicrophone = capturesMicrophone

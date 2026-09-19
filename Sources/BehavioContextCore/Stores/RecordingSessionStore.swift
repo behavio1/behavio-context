@@ -20,6 +20,13 @@ public final class RecordingSessionStore {
             overlayStateChanged?()
         }
     }
+    public private(set) var completionNotice: String? {
+        didSet { overlayStateChanged?() }
+    }
+    public func showCompletionNotice(_ message: String) {
+        completionNotice = AppLocalization.text(message, locale: effectiveLocale)
+    }
+
     public private(set) var recordingFailureNotice: RecordingFailureNotice?
     public private(set) var elapsedSeconds: TimeInterval = 0 {
         didSet { overlayStateChanged?() }
@@ -90,6 +97,21 @@ public final class RecordingSessionStore {
             overlayStateChanged?()
         }
     }
+    public let speechModelInstaller = SpeechModelInstaller()
+    public var speech: SpeechSettings {
+        didSet {
+            persist()
+            speechReadiness = SpeechReadiness.check(speech)
+            overlayStateChanged?()
+        }
+    }
+    public private(set) var speechReadiness: SpeechReadiness = .permissionRequired
+    public func selectSpeechLanguage(_ language: SpeechLanguage) async {
+        speech.language = language
+        if phase.isRecording { await recordingPipeline.changeSpeech(speech) }
+    }
+    public func refreshSpeechReadiness() { speechReadiness = SpeechReadiness.check(speech) }
+
     public var language: AppLanguage {
         didSet {
             persist()
@@ -170,6 +192,7 @@ public final class RecordingSessionStore {
         webcamDeviceID = defaults.webcamDeviceID
         webcamLayout = defaults.webcamLayout
         blursWebcamBackground = defaults.blursWebcamBackground
+        speech = defaults.speech
         language = defaults.language
         globalShortcut = defaults.globalShortcut
     }
@@ -496,6 +519,7 @@ public final class RecordingSessionStore {
         recordingStartedAt = nil
         pendingRecordingDuration = nil
         elapsedSeconds = 0
+        completionNotice = nil
         liveTranscript = ""
         liveTranscriptIsFinal = false
         microphoneLevel = 0
@@ -604,6 +628,7 @@ public final class RecordingSessionStore {
     }
 
     public func dismissFeedback() {
+        completionNotice = nil
         warningMessage = nil
         if case .failed = phase {
             phase = .idle
@@ -641,7 +666,8 @@ public final class RecordingSessionStore {
                 capturesWebcam: capturesWebcam,
                 webcamDeviceID: webcamDeviceID,
                 webcamLayout: webcamLayout,
-                blursWebcamBackground: blursWebcamBackground
+                blursWebcamBackground: blursWebcamBackground,
+                speech: speech
             )
             let events = try await recordingPipeline.start(configuration: configuration)
             pipelineIsRecording = true
@@ -909,6 +935,7 @@ public final class RecordingSessionStore {
         webcamDeviceID = snapshot.webcamDeviceID
         webcamLayout = snapshot.webcamLayout
         blursWebcamBackground = snapshot.blursWebcamBackground
+        speech = snapshot.speech
         language = snapshot.language
         globalShortcut = snapshot.globalShortcut
     }
@@ -929,6 +956,7 @@ public final class RecordingSessionStore {
             webcamLayout: webcamLayout,
             blursWebcamBackground: blursWebcamBackground,
             language: language,
+            speech: speech,
             globalShortcut: globalShortcut
         )
         persistenceTask?.cancel()

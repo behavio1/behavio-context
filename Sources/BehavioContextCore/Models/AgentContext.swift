@@ -85,6 +85,13 @@ public struct PointerEvent: Codable, Equatable, Identifiable, Sendable {
         self.normalizedY = min(1, max(0, normalizedY))
     }
 
+    /// Preserve the beginning of a dwell without letting rapid movement erase history.
+    public func shouldAppend(after last: PointerEvent?) -> Bool {
+        guard let last, kind == .move, last.kind == .move, windowID == last.windowID else { return true }
+        return timeMs - last.timeMs >= 80 &&
+            hypot(normalizedX - last.normalizedX, normalizedY - last.normalizedY) >= 0.003
+    }
+
     enum CodingKeys: String, CodingKey {
         case id, kind
         case windowID = "window_id"
@@ -361,6 +368,8 @@ public struct AgentContextManifest: Codable, Equatable, Sendable {
     public let visualMoments: [ContextVisualMoment]
     public let recommendedInputs: [String]
     public let limits: ContextLimits
+    public var speechEngine: String? = nil
+    public var transcriptionError: String? = nil
     public var windowTimeline: [ContextWindowInterval]? = nil
 
     enum CodingKeys: String, CodingKey {
@@ -374,6 +383,8 @@ public struct AgentContextManifest: Codable, Equatable, Sendable {
         case visualMoments = "visual_moments"
         case recommendedInputs = "recommended_inputs"
         case limits
+        case speechEngine = "speech_engine"
+        case transcriptionError = "transcription_error"
         case windowTimeline = "window_timeline"
     }
 }

@@ -54,13 +54,13 @@ final class RecordingFeedbackPanelController {
 
     func synchronize() {
         let phaseChanged = store.phase != previousPhase
-        let warningChanged = store.hudMessage != previousWarning
+        let warningChanged = (store.hudMessage ?? store.completionNotice) != previousWarning
         let wasFinalizing = previousPhase == .finalizing
         previousPhase = store.phase
-        previousWarning = store.hudMessage
+        previousWarning = store.hudMessage ?? store.completionNotice
 
         dismissalTask?.cancel()
-        if store.phase == .idle && store.hudMessage == nil {
+        if store.phase == .idle && store.hudMessage == nil && store.completionNotice == nil {
             if wasFinalizing {
                 scheduleDismissal()
             } else {
@@ -71,7 +71,7 @@ final class RecordingFeedbackPanelController {
 
         guard let screen = targetScreen else { return }
         let isCompact = compact && store.phase.isRecording
-        let width = min(isCompact ? 300 : 940, screen.visibleFrame.width - 32)
+        let width = min(isCompact ? 350 : 990, screen.visibleFrame.width - 32)
         panel.setContentSize(NSSize(width: width, height: isCompact ? 44 : 60))
         position(on: screen)
         panel.ignoresMouseEvents = store.phase == .preparing || store.phase == .finalizing
@@ -88,6 +88,8 @@ final class RecordingFeedbackPanelController {
             )
         }
         if case .failed = store.phase {
+            scheduleDismissal()
+        } else if store.phase == .idle && store.completionNotice != nil {
             scheduleDismissal()
         }
     }
@@ -126,6 +128,7 @@ final class RecordingFeedbackPanelController {
 
     private var announcement: String {
         if let warning = store.hudMessage { return warning }
+        if let notice = store.completionNotice { return notice }
         return switch store.phase {
         case .preparing: AppLocalization.text("Preparing recording", locale: store.effectiveLocale)
         case .recording: AppLocalization.text("Recording started", locale: store.effectiveLocale)
@@ -248,12 +251,14 @@ private struct RecordingCapsuleView: View {
 
             }
 
+            SpokenLanguageMenu(store: store)
+
             LevelWaveform(level: store.microphoneLevel)
                 .frame(width: compact ? 64 : 78, height: 26)
 
             if !compact {
 
-            Text(store.liveTranscript.isEmpty ? AppLocalization.text("Speak and point to elements in the active window…", locale: store.effectiveLocale) : store.liveTranscript)
+            Text(store.liveTranscript.isEmpty ? AppLocalization.text(store.speech.engine == .apple ? "Speak and point to elements in the active window…" : "Whisper transcribes after you stop recording. Audio stays on this Mac.", locale: store.effectiveLocale) : store.liveTranscript)
                 .font(.callout.weight(store.liveTranscriptIsFinal ? .medium : .regular))
                 .foregroundStyle(store.liveTranscript.isEmpty || !store.liveTranscriptIsFinal ? .secondary : .primary)
                 .lineLimit(1)
@@ -298,6 +303,9 @@ private struct RecordingCapsuleView: View {
         HStack(spacing: 12) {
             if store.phase == .preparing || store.phase == .finalizing {
                 ProgressView().controlSize(.small)
+            } else if store.completionNotice != nil && store.hudMessage == nil {
+                Image(systemName: "doc.on.clipboard")
+                    .foregroundStyle(.primary)
             } else {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .foregroundStyle(.orange)
@@ -346,7 +354,7 @@ private struct RecordingCapsuleView: View {
     }
 
     private var message: String? {
-        store.hudMessage ?? store.compilationMessage
+        store.hudMessage ?? store.completionNotice ?? store.compilationMessage
     }
 
     private var stopLabel: String { "Stop" }

@@ -65,12 +65,14 @@ public enum RecordingPipelineControlError: Error, LocalizedError, Sendable {
 
 public protocol RecordingPipeline: Sendable {
     func start(configuration: RecordingConfiguration) async throws -> AsyncStream<RecordingPipelineEvent>
+    func changeSpeech(_ settings: SpeechSettings) async
     func selectMicrophoneDevice(_ deviceID: String?) async throws
     func stop() async throws -> RecordingArtifacts
     func cancel() async
 }
 
 public extension RecordingPipeline {
+    func changeSpeech(_ settings: SpeechSettings) async {}
     func selectMicrophoneDevice(_ deviceID: String?) async throws {
         throw RecordingPipelineControlError.microphoneNotActive
     }

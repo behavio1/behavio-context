@@ -37,6 +37,7 @@ public struct PreferencesSnapshot: Codable, Equatable, Sendable {
     public var blursWebcamBackground: Bool
     public var webcamLayout: WebcamLayout
     public var language: AppLanguage
+    public var speech: SpeechSettings
     public var globalShortcut: GlobalShortcut
 
     public init(
@@ -50,6 +51,7 @@ public struct PreferencesSnapshot: Codable, Equatable, Sendable {
         webcamLayout: WebcamLayout = .defaultLayout,
         blursWebcamBackground: Bool = false,
         language: AppLanguage = .system,
+        speech: SpeechSettings = SpeechSettings(),
         globalShortcut: GlobalShortcut = .defaultShortcut
     ) {
         self.selectedCaptureSourceID = selectedCaptureSourceID
@@ -61,6 +63,7 @@ public struct PreferencesSnapshot: Codable, Equatable, Sendable {
         self.webcamDeviceID = webcamDeviceID
         self.webcamLayout = webcamLayout
         self.blursWebcamBackground = blursWebcamBackground
+        self.speech = speech
         self.language = language
         self.globalShortcut = globalShortcut
     }
@@ -70,6 +73,7 @@ public struct PreferencesSnapshot: Codable, Equatable, Sendable {
     private enum CodingKeys: String, CodingKey {
         case selectedCaptureSourceID, lastCaptureSourceKind, capturesSystemAudio, capturesMicrophone
         case microphoneDeviceID, capturesWebcam, webcamDeviceID, webcamLayout, language, globalShortcut
+        case speech
         case blursWebcamBackground
     }
 
@@ -84,6 +88,7 @@ public struct PreferencesSnapshot: Codable, Equatable, Sendable {
         webcamDeviceID = try values.decodeIfPresent(String.self, forKey: .webcamDeviceID)
         blursWebcamBackground = try values.decodeIfPresent(Bool.self, forKey: .blursWebcamBackground) ?? false
         webcamLayout = try values.decodeIfPresent(WebcamLayout.self, forKey: .webcamLayout) ?? .defaultLayout
+        speech = (try? values.decode(SpeechSettings.self, forKey: .speech)) ?? SpeechSettings()
         language = try values.decodeIfPresent(AppLanguage.self, forKey: .language) ?? .system
         // Older preferences only stored an enable switch. Always restore an active shortcut.
         let shortcut = try? values.decode(GlobalShortcut.self, forKey: .globalShortcut)

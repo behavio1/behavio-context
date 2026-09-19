@@ -3064,6 +3064,1042 @@
           }
         }
       }
+    },
+    "Speech Recognition": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speech Recognition"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rozpoznawanie mowy"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reconocimiento de voz"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spracherkennung"
+          }
+        }
+      }
+    },
+    "Spoken language": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spoken language"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Język mowy"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Idioma hablado"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gesprochene Sprache"
+          }
+        }
+      }
+    },
+    "Recognition engine": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recognition engine"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silnik rozpoznawania"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Motor de reconocimiento"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erkennungsmodul"
+          }
+        }
+      }
+    },
+    "Apple · On this Mac": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple · On this Mac"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple · Na tym Macu"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple · En este Mac"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple · Auf diesem Mac"
+          }
+        }
+      }
+    },
+    "Whisper Small · Local": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Whisper Small · Local"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Whisper Small · Lokalnie"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Whisper Small · Local"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Whisper Small · Lokal"
+          }
+        }
+      }
+    },
+    "Whisper Large v3 Turbo · Local": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Whisper Large v3 Turbo · Local"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Whisper Large v3 Turbo · Lokalnie"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Whisper Large v3 Turbo · Local"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Whisper Large v3 Turbo · Lokal"
+          }
+        }
+      }
+    },
+    "Choose the language you speak. This does not change the app language.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose the language you speak. This does not change the app language."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wybierz język, w którym mówisz. Nie zmienia to języka aplikacji."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elige el idioma en el que hablas. Esto no cambia el idioma de la app."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wähle die Sprache, die du sprichst. Die App-Sprache bleibt unverändert."
+          }
+        }
+      }
+    },
+    "Whisper transcribes after you stop recording. Audio stays on this Mac.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Whisper transcribes after you stop recording. Audio stays on this Mac."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Whisper tworzy transkrypcję po zatrzymaniu nagrywania. Dźwięk pozostaje na tym Macu."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Whisper transcribe al detener la grabación. El audio permanece en este Mac."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Whisper transkribiert nach dem Aufnahmestopp. Audio bleibt auf diesem Mac."
+          }
+        }
+      }
+    },
+    "Cancel Download": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel Download"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anuluj pobieranie"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelar descarga"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download abbrechen"
+          }
+        }
+      }
+    },
+    "Download Model…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download Model…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pobierz model…"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Descargar modelo…"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modell laden…"
+          }
+        }
+      }
+    },
+    "Download Model": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download Model"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pobierz model"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Descargar modelo"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modell laden"
+          }
+        }
+      }
+    },
+    "Download a local speech model?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download a local speech model?"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pobrać lokalny model mowy?"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Descargar un modelo de voz local?"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lokales Sprachmodell laden?"
+          }
+        }
+      }
+    },
+    "Downloads about 488 MB from Hugging Face. The model runs locally; your recordings are never uploaded.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Downloads about 488 MB from Hugging Face. The model runs locally; your recordings are never uploaded."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pobierze około 488 MB z Hugging Face. Model działa lokalnie; nagrania nie są wysyłane."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Descarga unos 488 MB de Hugging Face. El modelo funciona localmente; tus grabaciones nunca se suben."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lädt etwa 488 MB von Hugging Face. Das Modell läuft lokal; deine Aufnahmen werden nie hochgeladen."
+          }
+        }
+      }
+    },
+    "Downloads about 1.63 GB from Hugging Face. The model runs locally; your recordings are never uploaded.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Downloads about 1.63 GB from Hugging Face. The model runs locally; your recordings are never uploaded."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pobierze około 1,63 GB z Hugging Face. Model działa lokalnie; nagrania nie są wysyłane."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Descarga unos 1,63 GB de Hugging Face. El modelo funciona localmente; tus grabaciones nunca se suben."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lädt etwa 1,63 GB von Hugging Face. Das Modell läuft lokal; deine Aufnahmen werden nie hochgeladen."
+          }
+        }
+      }
+    },
+    "Ready for local recognition": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ready for local recognition"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gotowe do lokalnego rozpoznawania"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listo para el reconocimiento local"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bereit für lokale Erkennung"
+          }
+        }
+      }
+    },
+    "Apple’s offline model is unavailable for this language. In System Settings → Keyboard → Dictation, add the language and allow any offered download. Then check again. If it remains unavailable, use local Whisper.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple’s offline model is unavailable for this language. In System Settings → Keyboard → Dictation, add the language and allow any offered download. Then check again. If it remains unavailable, use local Whisper."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Model offline Apple dla tego języka jest niedostępny. W Ustawieniach systemowych → Klawiatura → Dyktowanie dodaj język i pobierz model, jeśli system go oferuje. Następnie sprawdź ponownie. Jeśli nadal jest niedostępny, użyj lokalnego Whispera."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El modelo sin conexión de Apple no está disponible para este idioma. En Ajustes del Sistema → Teclado → Dictado, añade el idioma y acepta la descarga si se ofrece. Vuelve a comprobarlo. Si sigue sin estar disponible, usa Whisper local."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Offline-Modell von Apple ist für diese Sprache nicht verfügbar. Füge die Sprache unter Systemeinstellungen → Tastatur → Diktierfunktion hinzu und lade angebotene Dateien. Prüfe danach erneut. Verwende andernfalls lokales Whisper."
+          }
+        }
+      }
+    },
+    "Open Dictation Settings": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Dictation Settings"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ustawienia dyktowania"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abrir ajustes de dictado"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diktiereinstellungen öffnen"
+          }
+        }
+      }
+    },
+    "Check Again": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check Again"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprawdź ponownie"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comprobar de nuevo"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erneut prüfen"
+          }
+        }
+      }
+    },
+    "Allow Speech Recognition for this app in System Settings → Privacy & Security.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allow Speech Recognition for this app in System Settings → Privacy & Security."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zezwól tej aplikacji na rozpoznawanie mowy w Ustawieniach systemowych → Prywatność i ochrona."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permite el reconocimiento de voz para esta app en Ajustes del Sistema → Privacidad y seguridad."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erlaube die Spracherkennung für diese App unter Systemeinstellungen → Datenschutz & Sicherheit."
+          }
+        }
+      }
+    },
+    "Open Speech Permissions": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Speech Permissions"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uprawnienia rozpoznawania mowy"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abrir permisos de voz"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprachberechtigungen öffnen"
+          }
+        }
+      }
+    },
+    "macOS will ask for speech recognition permission when you start recording.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS will ask for speech recognition permission when you start recording."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS zapyta o zgodę na rozpoznawanie mowy po rozpoczęciu nagrywania."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS pedirá permiso para reconocer la voz al iniciar la grabación."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS fragt beim Aufnahmestart nach der Berechtigung zur Spracherkennung."
+          }
+        }
+      }
+    },
+    "The local Whisper runtime is missing. Reinstall the app.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The local Whisper runtime is missing. Reinstall the app."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Brakuje lokalnego silnika Whisper. Zainstaluj aplikację ponownie."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Falta el motor local de Whisper. Reinstala la app."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die lokale Whisper-Laufzeit fehlt. Installiere die App erneut."
+          }
+        }
+      }
+    },
+    "Changes apply to the whole recording.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Changes apply to the whole recording."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zmiana dotyczy całego nagrania."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Los cambios se aplican a toda la grabación."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Änderungen gelten für die gesamte Aufnahme."
+          }
+        }
+      }
+    },
+    "Speech setup required": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speech setup required"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skonfiguruj rozpoznawanie mowy"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configura el reconocimiento de voz"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spracherkennung einrichten"
+          }
+        }
+      }
+    },
+    "This language is not ready for local recognition with the selected engine. Open Speech Recognition settings to configure Apple or download a Whisper model. Your video will still be saved.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This language is not ready for local recognition with the selected engine. Open Speech Recognition settings to configure Apple or download a Whisper model. Your video will still be saved."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ten język nie jest gotowy do lokalnego rozpoznawania wybranym silnikiem. Otwórz ustawienia rozpoznawania mowy, aby skonfigurować Apple lub pobrać model Whisper. Wideo zostanie zapisane."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Este idioma no está listo para el reconocimiento local con el motor elegido. Abre los ajustes de reconocimiento de voz para configurar Apple o descargar un modelo Whisper. El vídeo se guardará."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese Sprache ist mit dem gewählten Modul nicht für lokale Erkennung bereit. Öffne die Spracherkennungseinstellungen, um Apple einzurichten oder ein Whisper-Modell zu laden. Das Video wird trotzdem gespeichert."
+          }
+        }
+      }
+    },
+    "OK": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aceptar"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        }
+      }
+    },
+    "Transcribing locally with Whisper…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transcribing locally with Whisper…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lokalna transkrypcja przez Whisper…"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transcribiendo localmente con Whisper…"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lokale Transkription mit Whisper…"
+          }
+        }
+      }
+    },
+    "Use Existing Model…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use Existing Model…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Użyj istniejącego modelu…"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usar modelo existente…"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vorhandenes Modell verwenden…"
+          }
+        }
+      }
+    },
+    "Choose a model file or folder. A local copy is verified and stored for this app; no download is needed.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a model file or folder. A local copy is verified and stored for this app; no download is needed."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wybierz plik lub folder modelu. Lokalna kopia zostanie sprawdzona i zapisana dla tej aplikacji; pobieranie nie jest potrzebne."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elige un archivo o carpeta de modelo. Se verifica y guarda una copia local para esta app; no hace falta descargarlo."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wähle eine Modelldatei oder einen Ordner. Eine lokale Kopie wird geprüft und für diese App gespeichert; kein Download nötig."
+          }
+        }
+      }
+    },
+    "Checking local model…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking local model…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprawdzanie lokalnego modelu…"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verificando el modelo local…"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lokales Modell wird geprüft…"
+          }
+        }
+      }
+    },
+    "No compatible model found. Choose a ggml .bin model. Existing .pt or MLX weights need local conversion; nothing will be downloaded automatically.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No compatible model found. Choose a ggml .bin model. Existing .pt or MLX weights need local conversion; nothing will be downloaded automatically."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nie znaleziono zgodnego modelu. Wybierz model ggml .bin. Wagi .pt lub MLX wymagają lokalnej konwersji; nic nie zostanie pobrane automatycznie."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se encontró un modelo compatible. Elige un modelo ggml .bin. Los pesos .pt o MLX requieren conversión local; no se descargará nada automáticamente."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kein kompatibles Modell gefunden. Wähle ein ggml-.bin-Modell. Vorhandene .pt- oder MLX-Dateien müssen lokal konvertiert werden; es wird nichts automatisch geladen."
+          }
+        }
+      }
+    },
+    "This model format needs local conversion to ggml .bin. No model will be downloaded automatically.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This model format needs local conversion to ggml .bin. No model will be downloaded automatically."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ten format wymaga lokalnej konwersji do ggml .bin. Model nie zostanie pobrany automatycznie."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Este formato requiere conversión local a ggml .bin. No se descargará ningún modelo automáticamente."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dieses Format muss lokal in ggml .bin konvertiert werden. Kein Modell wird automatisch geladen."
+          }
+        }
+      }
+    },
+    "The model file is incomplete. Download it again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The model file is incomplete. Download it again."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plik modelu jest niekompletny. Wybierz poprawny plik lub pobierz go ponownie."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El archivo del modelo está incompleto. Selecciona un archivo válido o vuelve a descargarlo."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Modelldatei ist unvollständig. Wähle eine gültige Datei oder lade sie erneut."
+          }
+        }
+      }
+    },
+    "The model file failed verification. Download it again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The model file failed verification. Download it again."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weryfikacja pliku modelu nie powiodła się. Wybierz zgodny model lub pobierz go ponownie."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El archivo del modelo no superó la verificación. Elige un modelo compatible o vuelve a descargarlo."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Modelldatei hat die Prüfung nicht bestanden. Wähle ein kompatibles Modell oder lade es erneut."
+          }
+        }
+      }
+    },
+    "The model download failed. Check your connection and try again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The model download failed. Check your connection and try again."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pobieranie modelu nie powiodło się. Sprawdź połączenie i spróbuj ponownie."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Falló la descarga del modelo. Comprueba tu conexión e inténtalo de nuevo."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Modelldownload ist fehlgeschlagen. Prüfe die Verbindung und versuche es erneut."
+          }
+        }
+      }
+    },
+    "Couldn’t copy context. Open Recordings to copy it again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn’t copy context. Open Recordings to copy it again."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nie udało się skopiować kontekstu. Otwórz Nagrania i skopiuj go ponownie."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se pudo copiar el contexto. Abre Grabaciones para copiarlo de nuevo."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kontext konnte nicht kopiert werden. Öffne Aufnahmen und kopiere ihn erneut."
+          }
+        }
+      }
+    },
+    "Context copied. Share it with your agent.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Context copied. Share it with your agent."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kontekst skopiowany. Przekaż go swojemu agentowi."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Contexto copiado. Compártelo con tu agente."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kontext kopiert. Gib ihn an deinen Agenten weiter."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

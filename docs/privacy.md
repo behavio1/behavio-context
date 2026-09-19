@@ -10,7 +10,7 @@ UI Screen Context is an open-source macOS application published by Behavio. Priv
 
 UI Screen Context follows the active window as you switch apps and windows, recording one window at a time. It can process microphone audio for live speech transcription and mouse activity for visual references. It does not record keyboard input.
 
-Transcription explicitly requires on-device speech recognition. The app does not fall back to cloud speech recognition. Recordings, screenshots, transcripts, pointer events, history, and preferences stay on your Mac unless you deliberately share them.
+Apple transcription explicitly requires on-device speech recognition. Local Whisper is an alternative that transcribes after recording. The app does not fall back to cloud speech recognition. Recordings, screenshots, transcripts, pointer events, history, and preferences stay on your Mac unless you deliberately share them.
 
 ## Agent context
 
@@ -22,7 +22,7 @@ Copying context puts only the local `context/` path on the macOS clipboard. UI S
 
 - Screen Recording: capture the active window.
 - Microphone: create local speech input.
-- Speech Recognition: transcribe speech locally.
+- Speech Recognition: Apple speech recognition only; local Whisper does not require this permission.
 - Input Monitoring: observe mouse movement, clicks, and scrolling while recording. The app does not observe keystrokes.
 
 You can revoke permissions in System Settings → Privacy & Security.
@@ -33,4 +33,6 @@ Recordings and their context folders remain in local Application Support until y
 
 ## Network and analytics
 
-The application contains no analytics client and does not upload user content. Build tools can access GitHub to download the declared open-source Logboard dependency.
+The application does not upload user content. An explicitly requested model download makes an HTTPS request to Hugging Face and its file-delivery services; those services receive normal connection metadata such as the IP address. Only public model weights are downloaded. Audio and transcripts are never sent. An existing compatible model can instead be imported locally.
+
+Build tools access GitHub for open-source dependencies and the pinned native Whisper runtime. The application has a network-client entitlement for model downloads; this is not used for remote recognition.

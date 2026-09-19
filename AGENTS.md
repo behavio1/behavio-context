@@ -10,3 +10,11 @@
 ## Reading recordings
 
 When the user supplies Behavio Context output (a context path, pasted `# Behavio Context` timeline, or context attachments), use [.agents/skills/read-behavio-context/SKILL.md](.agents/skills/read-behavio-context/SKILL.md). It defines the clipboard modes and how to distinguish spoken intent from OCR evidence.
+
+## YouTube materials
+
+For promotional video preparation, follow [docs/youtube-publication.md](docs/youtube-publication.md) and its global skill reference. Keep uploads private until the user approves publication in YouTube.
+
+## Native macOS and speech development
+
+For Swift/SwiftUI implementation and review, use [.agents/skills/macos-swift-development/SKILL.md](.agents/skills/macos-swift-development/SKILL.md). For speech languages, offline engines and model downloads, also use [.agents/skills/local-speech-recognition/SKILL.md](.agents/skills/local-speech-recognition/SKILL.md). These are project-authored guides grounded in Apple and Swift documentation, not official Apple skills.
