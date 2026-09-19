@@ -10,3 +10,6 @@
 *.xccheckout
 *.moved-aside
 DerivedData/
+
+# Local browser workflow notes
+/.agents/skills/ego-browser-behavio-context/
