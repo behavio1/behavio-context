@@ -6,6 +6,14 @@ Show an AI agent what you want changed: point at the screen, explain it aloud, t
 
 UI Screen Context records the active window as you switch between apps. It combines local speech transcription, cursor positions and selected screenshots into a context package for your agent. Use it to explain a UI change or show how to reproduce a bug.
 
+## Watch the demo
+
+[Watch UI Screen Context on YouTube](https://www.youtube.com/watch?v=K5U635NP1BM) — a 42-second demo of recording spoken UI feedback, pointing at an element and passing the context to OpenCode.
+
+Shorts: [full workflow](https://www.youtube.com/shorts/Bh-CaUKFr-k) · [UI change example](https://www.youtube.com/shorts/rKlTONIWrDc) · [quick demo](https://www.youtube.com/shorts/4r4s55Erzgc).
+
+The videos use a staged workflow and AI-generated presenters. The before-and-after screens show a real local UI change.
+
 ## How it works
 
 1. Put the window you want to explain in front.

@@ -5,7 +5,7 @@ Use the global [youtube-marketing skill](/Users/Marcin_1/.agents/skills/youtube-
 ## Current project choices
 
 - Channel: Behavio Marketing & AI Agents. Prepare through Ego Browser.
-- Keep videos private. The user personally approves final publication in YouTube; do not schedule or publish.
+- The user explicitly approved publication on 2026-09-19. The four current GitHub-endcard versions listed below were published; superseded versions remain private. New uploads still require publication approval.
 - English screens, narration, titles and descriptions. Website: https://behavio.one.
 - Start descriptions with what the viewer will see or learn, then name the tool and example. Avoid a scene-by-scene recap.
 - Natural phrases: UI feedback, AI coding agent, OpenCode workflow when shown. These are relevance-based candidates, not measured search-volume findings.
@@ -26,3 +26,14 @@ Use the global [youtube-marketing skill](/Users/Marcin_1/.agents/skills/youtube-
 
 Final exports, subtitles and metadata: `dist/promo-ui-screen-context/youtube-ready/`.
 Upload checkpoints: `dist/promo-ui-screen-context/youtube-ready/upload-status.json`.
+
+## Published videos — 2026-09-19
+
+Verified as Public in YouTube Studio on Behavio Marketing & AI Agents:
+
+- [Main demo](https://www.youtube.com/watch?v=K5U635NP1BM)
+- [Full workflow Short](https://www.youtube.com/shorts/Bh-CaUKFr-k)
+- [UI change Short](https://www.youtube.com/shorts/rKlTONIWrDc)
+- [Quick demo Short](https://www.youtube.com/shorts/4r4s55Erzgc)
+
+Current upload checkpoint: `dist/promo-ui-screen-context/youtube-github-endcard/upload-status.json`. The older `youtube-ready` checkpoint describes superseded uploads.
