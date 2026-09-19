@@ -12,7 +12,6 @@ public final class RecordingSessionStore {
         }
     }
     public private(set) var captureSources: [CaptureSource] = []
-    public private(set) var cameras: [CaptureDeviceOption] = []
     public private(set) var microphones: [CaptureDeviceOption] = []
     public private(set) var warningMessage: String? {
         didSet {
@@ -65,35 +64,10 @@ public final class RecordingSessionStore {
             overlayStateChanged?()
         }
     }
-    public var capturesSystemAudio: Bool { didSet { persist() } }
     public var capturesMicrophone: Bool { didSet { persist() } }
     public var microphoneDeviceID: String? {
         didSet {
             persist()
-            overlayStateChanged?()
-        }
-    }
-    public var capturesWebcam: Bool {
-        didSet {
-            persist()
-            overlayStateChanged?()
-        }
-    }
-    public var webcamDeviceID: String? {
-        didSet {
-            persist()
-            overlayStateChanged?()
-        }
-    }
-    public var blursWebcamBackground: Bool {
-        didSet {
-            persist()
-            overlayStateChanged?()
-        }
-    }
-    public var webcamLayout: WebcamLayout {
-        didSet {
-            persist(debounced: true)
             overlayStateChanged?()
         }
     }
@@ -124,7 +98,6 @@ public final class RecordingSessionStore {
     @ObservationIgnored private let preferencesStore: any PreferencesStore
     @ObservationIgnored private let recordingHistoryStore: any RecordingHistoryStore
     @ObservationIgnored private let recordingPipeline: any RecordingPipeline
-    @ObservationIgnored private let analyticsClient: any AnalyticsClient
     @ObservationIgnored private var startTask: Task<Void, Never>?
     @ObservationIgnored private var stopTask: Task<Void, Never>?
     @ObservationIgnored private var eventTask: Task<Void, Never>?
@@ -132,9 +105,6 @@ public final class RecordingSessionStore {
     @ObservationIgnored private var persistenceTask: Task<Void, Never>?
     @ObservationIgnored private var historyPersistenceTask: Task<Void, Never>?
     @ObservationIgnored private var activeSessionID: UUID?
-    @ObservationIgnored private var recordingStartedAt: Date?
-    @ObservationIgnored private var pendingRecordingDuration: TimeInterval?
-    @ObservationIgnored private var recordingFailureWasCaptured = false
     @ObservationIgnored private var pipelineIsRecording = false
     @ObservationIgnored private var isLoadingPreferences = true
     @ObservationIgnored private var requiresCaptureSourceSelection = false
@@ -156,16 +126,14 @@ public final class RecordingSessionStore {
         captureAuthorization: any CaptureAuthorization = SystemCaptureAuthorization(),
         preferencesStore: any PreferencesStore = UserDefaultsPreferencesStore(),
         historyStore: any RecordingHistoryStore = FileRecordingHistoryStore(),
-        recordingPipeline: any RecordingPipeline = ScreenCaptureRecordingPipeline(),
-        analyticsClient: any AnalyticsClient = NoOpAnalyticsClient()
+        recordingPipeline: any RecordingPipeline = ScreenCaptureRecordingPipeline()
     ) {
         self.init(
             sourceCatalog: sourceCatalog,
             captureAuthorization: captureAuthorization,
             preferencesStore: preferencesStore,
             recordingHistoryStore: historyStore,
-            recordingPipeline: recordingPipeline,
-            analyticsClient: analyticsClient
+            recordingPipeline: recordingPipeline
         )
     }
 
@@ -174,24 +142,17 @@ public final class RecordingSessionStore {
         captureAuthorization: any CaptureAuthorization,
         preferencesStore: any PreferencesStore,
         recordingHistoryStore: any RecordingHistoryStore = VolatileRecordingHistoryStore(),
-        recordingPipeline: any RecordingPipeline,
-        analyticsClient: any AnalyticsClient = NoOpAnalyticsClient()
+        recordingPipeline: any RecordingPipeline
     ) {
         self.sourceCatalog = sourceCatalog
         self.captureAuthorization = captureAuthorization
         self.preferencesStore = preferencesStore
         self.recordingHistoryStore = recordingHistoryStore
         self.recordingPipeline = recordingPipeline
-        self.analyticsClient = analyticsClient
         let defaults = PreferencesSnapshot.defaults
         selectedCaptureSourceID = defaults.selectedCaptureSourceID
-        capturesSystemAudio = defaults.capturesSystemAudio
         capturesMicrophone = defaults.capturesMicrophone
         microphoneDeviceID = defaults.microphoneDeviceID
-        capturesWebcam = defaults.capturesWebcam
-        webcamDeviceID = defaults.webcamDeviceID
-        webcamLayout = defaults.webcamLayout
-        blursWebcamBackground = defaults.blursWebcamBackground
         speech = defaults.speech
         language = defaults.language
         globalShortcut = defaults.globalShortcut
@@ -241,10 +202,6 @@ public final class RecordingSessionStore {
         if let warningMessage { return AppLocalization.text(warningMessage, locale: effectiveLocale) }
         if case let .failed(message) = phase { return AppLocalization.text(message, locale: effectiveLocale) }
         return nil
-    }
-
-    public var showsWebcamPositioningOverlay: Bool {
-        isInitialized && capturesWebcam && !phase.locksConfiguration
     }
 
     public var activeWindowName: String?
@@ -387,11 +344,7 @@ public final class RecordingSessionStore {
     }
 
     private func refreshCaptureDevices() {
-        cameras = CaptureDeviceCatalog.cameras()
         microphones = CaptureDeviceCatalog.microphones()
-        if webcamDeviceID == nil || !cameras.contains(where: { $0.id == webcamDeviceID }) {
-            webcamDeviceID = cameras.first?.id
-        }
         if microphoneDeviceID == nil || !microphones.contains(where: { $0.id == microphoneDeviceID }) {
             microphoneDeviceID = microphones.first?.id
         }
@@ -417,26 +370,6 @@ public final class RecordingSessionStore {
             return
         }
         selectedCaptureSourceID = sourceID
-        guard capturesSystemAudio else { return }
-        Task { [weak self] in
-            await self?.setSystemAudioEnabled(true)
-        }
-    }
-
-    public func setSystemAudioEnabled(_ enabled: Bool) async {
-        guard !configurationIsLocked else { return }
-        guard enabled else {
-            capturesSystemAudio = false
-            return
-        }
-        guard let source = selectedCaptureSource,
-              await captureAuthorization.requestSystemAudioAccess(for: source) else {
-            capturesSystemAudio = false
-            warningMessage = "System Audio permission is unavailable. Enable it in Privacy & Security before recording."
-            return
-        }
-        capturesSystemAudio = true
-        warningMessage = nil
     }
 
     public func setMicrophoneEnabled(_ enabled: Bool) async {
@@ -478,37 +411,10 @@ public final class RecordingSessionStore {
         }
     }
 
-    public func setWebcamEnabled(_ enabled: Bool) async {
-        guard !configurationIsLocked else { return }
-        guard enabled else {
-            capturesWebcam = false
-            return
-        }
-        guard await captureAuthorization.requestCameraAccess() else {
-            capturesWebcam = false
-            warningMessage = "Camera permission is unavailable. Enable it in Privacy & Security before recording."
-            return
-        }
-        capturesWebcam = true
-        warningMessage = nil
-    }
-
-    public func selectWebcamDevice(_ deviceID: String?) async {
-        guard !configurationIsLocked else { return }
-        if capturesWebcam, !(await captureAuthorization.requestCameraAccess()) {
-            capturesWebcam = false
-            warningMessage = "Camera permission is unavailable. Enable it in Privacy & Security before recording."
-            return
-        }
-        webcamDeviceID = deviceID
-    }
-
     public func startRecording() {
         guard !phase.locksConfiguration, startTask == nil, stopTask == nil else { return }
         warningMessage = nil
-        recordingFailureWasCaptured = false
         guard let source = selectedCaptureSource else {
-            captureRecordingFailure(stage: "start", recoveryCategory: "not_applicable")
             fail("No screen or window is available. Check Screen Recording permission and refresh sources.")
             return
         }
@@ -516,8 +422,6 @@ public final class RecordingSessionStore {
         recordingWillStart?()
         let sessionID = UUID()
         activeSessionID = sessionID
-        recordingStartedAt = nil
-        pendingRecordingDuration = nil
         elapsedSeconds = 0
         completionNotice = nil
         liveTranscript = ""
@@ -554,7 +458,6 @@ public final class RecordingSessionStore {
         guard phase == .preparing || phase.isRecording else { return }
 
         logger.info("Recording stop requested")
-        pendingRecordingDuration = recordingStartedAt.map { Date().timeIntervalSince($0) }
         let pendingStartTask = startTask
         let wasPreparing = phase == .preparing
         if wasPreparing {
@@ -603,24 +506,9 @@ public final class RecordingSessionStore {
         timerTask?.cancel()
         timerTask = nil
         pipelineIsRecording = false
-        recordingStartedAt = nil
-        pendingRecordingDuration = nil
         Task { await recordingPipeline.cancel() }
         phase = .idle
         elapsedSeconds = 0
-    }
-
-    public func updateWebcamPosition(_ position: NormalizedWebcamPosition) {
-        guard !configurationIsLocked else { return }
-        webcamLayout.position = position
-    }
-
-    public func updateWebcamSize(_ size: WebcamSize, position: NormalizedWebcamPosition) {
-        guard !configurationIsLocked else { return }
-        var updatedLayout = webcamLayout
-        updatedLayout.size = size
-        updatedLayout.position = position
-        webcamLayout = updatedLayout
     }
 
     public func clearWarning() {
@@ -642,7 +530,6 @@ public final class RecordingSessionStore {
     public func handleFatalSystemEvent(_ message: String) {
         guard phase == .preparing || phase.isRecording else { return }
         logger.error("Recording failed: \(message, privacy: .public)")
-        captureRecordingFailure(stage: "finalization", recoveryCategory: "system_event")
         warningMessage = AppLocalization.text(message, locale: effectiveLocale)
         stopRecording()
     }
@@ -660,13 +547,8 @@ public final class RecordingSessionStore {
             try Task.checkCancellation()
             let configuration = RecordingConfiguration(
                 source: source,
-                capturesSystemAudio: capturesSystemAudio,
                 capturesMicrophone: capturesMicrophone,
                 microphoneDeviceID: microphoneDeviceID,
-                capturesWebcam: capturesWebcam,
-                webcamDeviceID: webcamDeviceID,
-                webcamLayout: webcamLayout,
-                blursWebcamBackground: blursWebcamBackground,
                 speech: speech
             )
             let events = try await recordingPipeline.start(configuration: configuration)
@@ -676,14 +558,7 @@ public final class RecordingSessionStore {
 
             startTask = nil
             let startedAt = Date()
-            recordingStartedAt = startedAt
             phase = .recording(startedAt: startedAt)
-            analyticsClient.capture(.recordingStarted(
-                sourceKind: source.id.kind,
-                systemAudioEnabled: capturesSystemAudio,
-                microphoneEnabled: capturesMicrophone,
-                webcamEnabled: capturesWebcam
-            ))
             startElapsedTimer(sessionID: sessionID, startedAt: startedAt)
             eventTask = Task { [weak self] in
                 for await event in events {
@@ -695,7 +570,6 @@ public final class RecordingSessionStore {
             }
         } catch is CancellationError {
             pipelineIsRecording = false
-            recordingStartedAt = nil
             guard activeSessionID == sessionID else { return }
             activeSessionID = nil
             await recordingPipeline.cancel()
@@ -706,9 +580,7 @@ public final class RecordingSessionStore {
             activeSessionID = nil
             startTask = nil
             pipelineIsRecording = false
-            recordingStartedAt = nil
             await recordingPipeline.cancel()
-            captureRecordingFailure(stage: "start", recoveryCategory: "not_applicable")
             fail(error.localizedDescription)
         }
     }
@@ -722,7 +594,6 @@ public final class RecordingSessionStore {
         } catch is CancellationError {
             activeSessionID = nil
             pipelineIsRecording = false
-            recordingStartedAt = nil
             eventTask?.cancel()
             eventTask = nil
             stopTask = nil
@@ -731,7 +602,6 @@ public final class RecordingSessionStore {
         } catch {
             activeSessionID = nil
             pipelineIsRecording = false
-            recordingStartedAt = nil
             eventTask?.cancel()
             eventTask = nil
             stopTask = nil
@@ -747,12 +617,6 @@ public final class RecordingSessionStore {
                     : .partialRecordingPreserved,
                 recoveryURL: recoveryError?.recoveryURL
             )
-            captureRecordingFailure(
-                stage: "finalization",
-                recoveryCategory: recoveryError == nil
-                    ? "recording_not_saved"
-                    : "partial_recording_preserved"
-            )
             warningMessage = error.localizedDescription
             phase = .failed(message: error.localizedDescription)
             recordingFailureNoticeAvailable?()
@@ -765,16 +629,6 @@ public final class RecordingSessionStore {
             fileURL: artifacts.recordingURL,
             contextDirectoryURL: artifacts.contextDirectoryURL
         )
-        let duration = pendingRecordingDuration
-            ?? recordingStartedAt.map { Date().timeIntervalSince($0) }
-            ?? elapsedSeconds
-        if !recordingFailureWasCaptured {
-            analyticsClient.capture(.recordingCompleted(
-                duration: duration
-            ))
-        }
-        recordingStartedAt = nil
-        pendingRecordingDuration = nil
         latestRecordingResult = result
         recordingResults.removeAll { $0.id == result.id }
         recordingResults.append(result)
@@ -866,11 +720,7 @@ public final class RecordingSessionStore {
     }
 
     private func prepareEnabledCapturePermissions() async {
-        if capturesSystemAudio, selectedCaptureSource != nil {
-            await setSystemAudioEnabled(true)
-        }
         if capturesMicrophone { await setMicrophoneEnabled(true) }
-        if capturesWebcam { await setWebcamEnabled(true) }
     }
 
     private func handle(_ event: RecordingPipelineEvent) {
@@ -912,15 +762,6 @@ public final class RecordingSessionStore {
         phase = .failed(message: message)
     }
 
-    private func captureRecordingFailure(stage: String, recoveryCategory: String) {
-        guard !recordingFailureWasCaptured else { return }
-        recordingFailureWasCaptured = true
-        analyticsClient.capture(.recordingFailed(
-            stage: stage,
-            recoveryCategory: recoveryCategory
-        ))
-    }
-
     private func apply(_ snapshot: PreferencesSnapshot) {
         let lastSourceKind = snapshot.lastCaptureSourceKind
             ?? snapshot.selectedCaptureSourceID?.kind
@@ -928,19 +769,14 @@ public final class RecordingSessionStore {
         selectedCaptureSourceID = requiresCaptureSourceSelection
             ? nil
             : snapshot.selectedCaptureSourceID
-        capturesSystemAudio = snapshot.capturesSystemAudio
         capturesMicrophone = snapshot.capturesMicrophone
         microphoneDeviceID = snapshot.microphoneDeviceID
-        capturesWebcam = snapshot.capturesWebcam
-        webcamDeviceID = snapshot.webcamDeviceID
-        webcamLayout = snapshot.webcamLayout
-        blursWebcamBackground = snapshot.blursWebcamBackground
         speech = snapshot.speech
         language = snapshot.language
         globalShortcut = snapshot.globalShortcut
     }
 
-    private func persist(debounced: Bool = false) {
+    private func persist() {
         guard !isLoadingPreferences else { return }
         let snapshot = PreferencesSnapshot(
             selectedCaptureSourceID: selectedCaptureSourceID?.kind == .display
@@ -948,26 +784,14 @@ public final class RecordingSessionStore {
                 : nil,
             lastCaptureSourceKind: selectedCaptureSourceID?.kind
                 ?? (requiresCaptureSourceSelection ? .window : nil),
-            capturesSystemAudio: capturesSystemAudio,
             capturesMicrophone: capturesMicrophone,
             microphoneDeviceID: microphoneDeviceID,
-            capturesWebcam: capturesWebcam,
-            webcamDeviceID: webcamDeviceID,
-            webcamLayout: webcamLayout,
-            blursWebcamBackground: blursWebcamBackground,
             language: language,
             speech: speech,
             globalShortcut: globalShortcut
         )
         persistenceTask?.cancel()
         persistenceTask = Task { [preferencesStore] in
-            if debounced {
-                do {
-                    try await Task.sleep(for: .milliseconds(150))
-                } catch {
-                    return
-                }
-            }
             guard !Task.isCancelled else { return }
             await preferencesStore.save(snapshot.sanitizedForPersistence)
         }

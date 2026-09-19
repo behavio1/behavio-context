@@ -1,6 +1,6 @@
 # YouTube preparation for UI Screen Context
 
-Use the global [youtube-marketing skill](/Users/Marcin_1/.agents/skills/youtube-marketing/SKILL.md), installed from [sergebulaev/youtube-skills](https://github.com/sergebulaev/youtube-skills) on 2026-09-19. Local corrections in its entrypoint override outdated upstream hashtag and snippet claims. Installation validation passed. Do not install a second copy in this repository or under `.codex/skills`.
+Use the global `youtube-marketing` skill, installed from [sergebulaev/youtube-skills](https://github.com/sergebulaev/youtube-skills) on 2026-09-19. Local corrections in its entrypoint override outdated upstream hashtag and snippet claims. Installation validation passed. Do not install a second copy in this repository or under `.codex/skills`.
 
 ## Current project choices
 

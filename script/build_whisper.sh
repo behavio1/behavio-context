@@ -9,5 +9,5 @@ if [ ! -f "$root/source/CMakeLists.txt" ]; then
     mkdir -p "$root/source"
     tar -xzf "$root/source.tar.gz" --strip-components=1 -C "$root/source"
 fi
-cmake -S "$root/source" -B "$root/build" -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_DEPLOYMENT_TARGET=15.0 -DGGML_NATIVE=OFF -DBUILD_SHARED_LIBS=OFF -DWHISPER_BUILD_TESTS=OFF -DWHISPER_BUILD_EXAMPLES=ON -DGGML_METAL=ON -DGGML_METAL_EMBED_LIBRARY=ON
+cmake -S "$root/source" -B "$root/build" -DCMAKE_BUILD_TYPE=Release "-DCMAKE_C_FLAGS=-ffile-prefix-map=$PWD=." "-DCMAKE_CXX_FLAGS=-ffile-prefix-map=$PWD=." -DCMAKE_OSX_DEPLOYMENT_TARGET=15.0 -DGGML_NATIVE=OFF -DBUILD_SHARED_LIBS=OFF -DWHISPER_BUILD_TESTS=OFF -DWHISPER_BUILD_EXAMPLES=ON -DGGML_METAL=ON -DGGML_METAL_EMBED_LIBRARY=ON
 cmake --build "$root/build" --config Release --target whisper-cli -j 4

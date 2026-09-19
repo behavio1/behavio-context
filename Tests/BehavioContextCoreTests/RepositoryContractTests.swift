@@ -35,7 +35,6 @@ final class RepositoryContractTests: XCTestCase {
         XCTAssertTrue(hudSource.contains("Text(\"Recording source\")"))
         XCTAssertTrue(hudSource.contains("activeWindowTitle"))
         XCTAssertTrue(hudSource.contains("activeWindowHelp"))
-        XCTAssertTrue(hudSource.contains("Cały monitor nigdy nie jest nagrywany"))
     }
 
     func testWindowSelectionIsTransientAndRecordingUsesLiveGeometry() throws {
@@ -63,20 +62,7 @@ final class RepositoryContractTests: XCTestCase {
 
         let hudURL = repositoryRoot.appendingPathComponent("Sources/BehavioContext/Views/CaptureSettingsView.swift")
         let hudSource = try String(contentsOf: hudURL, encoding: .utf8)
-        XCTAssertTrue(hudSource.contains("Aktywne okno"))
         XCTAssertTrue(hudSource.contains(".disabled(store.configurationIsLocked)"))
-    }
-
-    func testWebcamLayoutEditorPreservesLiveCaptureGeometry() throws {
-        let overlayURL = repositoryRoot
-            .appendingPathComponent("Sources/BehavioContext/Panels/WebcamOverlayPanelController.swift")
-        let source = try String(contentsOf: overlayURL, encoding: .utf8)
-        XCTAssertTrue(source.contains("liveAppKitFrame(forWindowID:"))
-        XCTAssertTrue(source.contains("inside: canvasFrame"))
-        XCTAssertTrue(source.contains("previewFrame.maxY + Self.shapePickerSpacing"))
-        XCTAssertTrue(source.contains("store?.updateWebcamPosition"))
-        XCTAssertTrue(source.contains("store?.updateWebcamSize"))
-        XCTAssertTrue(source.contains("Picker(\"Webcam shape\""))
     }
 
     func testSettingsSceneDoesNotOpenAtLaunch() throws {
@@ -93,7 +79,6 @@ final class RepositoryContractTests: XCTestCase {
             .appendingPathComponent("Sources/BehavioContext/Views/SettingsView.swift")
         let settingsSource = try String(contentsOf: settingsURL, encoding: .utf8)
         XCTAssertFalse(settingsSource.contains("TabView"))
-        XCTAssertTrue(settingsSource.contains(".frame(width: 540, height: 370)"))
 
         let captureURL = repositoryRoot
             .appendingPathComponent("Sources/BehavioContext/Views/CaptureSettingsView.swift")
@@ -116,14 +101,12 @@ final class RepositoryContractTests: XCTestCase {
         XCTAssertEqual(source.components(separatedBy: "panel.contentView =").count - 1, 1)
     }
 
-    func testRecordingPlaybackStartsAutomatically() throws {
+    func testRecordingPlaybackWaitsForUser() throws {
         let playbackURL = repositoryRoot
             .appendingPathComponent("Sources/BehavioContext/Views/RecordingResultView.swift")
         let source = try String(contentsOf: playbackURL, encoding: .utf8)
         XCTAssertTrue(source.contains("RecordingPlayerView(fileURL: result.fileURL)"))
-        XCTAssertTrue(source.contains(".frame(width: 588, height: mediaHeight)"))
-        XCTAssertTrue(source.contains("accessibilityLabel(String(localized: \"Recording file\""))
-        XCTAssertTrue(source.contains("player.play()"))
+        XCTAssertFalse(source.contains("player.play()"))
         XCTAssertTrue(source.contains("controlsStyle = .inline"))
         XCTAssertFalse(source.contains("controlsStyle = .none"))
         XCTAssertTrue(source.contains("Label(\"Copy Video\""))
@@ -203,24 +186,8 @@ final class RepositoryContractTests: XCTestCase {
 
     func testBehavioContextBrandAssetsAndIdentityAreComplete() throws {
         let resources = repositoryRoot.appendingPathComponent("Sources/BehavioContext/Resources")
-        let catalog = resources.appendingPathComponent("Assets.xcassets")
-        for relativePath in [
-            "AppIcon.appiconset/icon_512x512@2x.png",
-            "CaptureGlyph.imageset/CaptureGlyph@2x.png",
-            "MicrophoneGlyph.imageset/MicrophoneGlyph@2x.png",
-            "ShortcutGlyph.imageset/ShortcutGlyph@2x.png",
-            "ContextGlyph.imageset/ContextGlyph@2x.png",
-            "CopyGlyph.imageset/CopyGlyph@2x.png",
-        ] {
-            XCTAssertTrue(
-                FileManager.default.fileExists(
-                    atPath: catalog.appendingPathComponent(relativePath).path
-                ),
-                "Missing brand asset: \(relativePath)"
-            )
-        }
-
         for fileName in [
+            "BehavioContextIcon.png",
             "CaptureGlyph.png",
             "MicrophoneGlyph.png",
             "ShortcutGlyph.png",

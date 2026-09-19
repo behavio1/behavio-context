@@ -8,7 +8,6 @@ struct RecordingResultView: View {
     @Bindable var store: RecordingSessionStore
     let fallbackResult: RecordingResult
     let mediaHeight: CGFloat
-    let analytics: AnalyticsConsentController
     let contextReturnController: RecordingContextReturnController
     let copiedAndReturned: @MainActor (String, Locale) -> Void
     let dismiss: @MainActor () -> Void
@@ -353,7 +352,6 @@ struct RecordingResultView: View {
             )
             return
         }
-        analytics.capture(.contextCopied)
         showCopyToast(AppLocalization.text("Context text copied", locale: locale))
     }
 
@@ -371,7 +369,6 @@ struct RecordingResultView: View {
             return false
         }
 
-        analytics.capture(.videoCopied)
         if showConfirmation {
             showCopyToast(AppLocalization.text("Video copied", locale: locale))
         }
@@ -397,7 +394,6 @@ struct RecordingResultView: View {
             return false
         }
 
-        analytics.capture(.contextCopied)
         if showConfirmation {
             showCopyToast(AppLocalization.text("Path copied", locale: locale))
         }

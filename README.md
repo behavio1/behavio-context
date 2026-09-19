@@ -17,7 +17,7 @@ The videos use a staged workflow and AI-generated presenters. The before-and-aft
 ## How it works
 
 1. Put the window you want to explain in front.
-2. Before your first recording, choose your microphone, spoken language and local speech engine in Settings (see below).
+2. Before your first recording, review the [permissions](#permissions-before-your-first-recording), then choose your microphone, spoken language and local speech engine in Settings.
 3. Press **⌃⌘R**. The Recording Capsule lets you change the microphone and spoken language during recording.
 4. Speak naturally, point, pause over text, click, and scroll.
 5. Stop with **Esc**, **⌃⌘R**, or the Stop button beside the timer.
@@ -26,6 +26,24 @@ The videos use a staged workflow and AI-generated presenters. The before-and-aft
 Open **Recordings** when you want to review a saved recording. Results do not open automatically, and playback waits for you to press Play.
 
 The floating Recording Capsule shows elapsed time, microphone selection and level, the spoken-language menu, the current window, and Stop. Apple recognition can show live transcription; Whisper transcribes after you stop. The compact bar keeps the timer, Stop, audio level, spoken-language menu and warning indicator, while hiding transcription and window/device names. The app remembers the selected view. Changing the microphone switches the live input and persists the choice for the next session.
+
+## Permissions before your first recording
+
+macOS asks for access as you enable recording features. Review these before starting a recording you want to keep:
+
+| Access | When you need it | What the app uses it for |
+| --- | --- | --- |
+| **Screen Recording** | Required to capture a window. | Records the active window as you switch apps. Without it, the app cannot capture your screen evidence. |
+| **Microphone** | When the microphone is enabled. | Records your spoken explanation for local transcription. You can leave the microphone off to capture visual context only. |
+| **Speech Recognition** | When using **Apple · On this Mac**. | Lets Apple's on-device recognizer transcribe your speech. A supported offline language model must also be available. Local Whisper does not require this permission. |
+| **Input Monitoring** | Requested when recording starts; recommended for pointer evidence. | Captures mouse movement, clicks and scrolling outside the app while recording. Without access, pointer-event coverage may be incomplete. The app does not record typed keys. |
+| **Selected files and folders** | When you choose a recording folder or import an existing Whisper model. | The macOS file picker grants access to the location you select. Model import makes a local copy; changing the recording folder affects new recordings. |
+
+If you deny a permission, open **System Settings → Privacy & Security** and enable UI Screen Context in the relevant category. Screen capture may appear under **Screen & System Audio Recording**, depending on your macOS version. Follow any macOS instruction to quit and reopen the app, then try a short recording.
+
+**Accessibility**, **Full Disk Access** and **Camera** access are not required for this workflow.
+
+After Stop, the app writes the completed context to your clipboard and shows an in-app confirmation. This replaces the previous clipboard contents. A separate AI agent still needs access to the referenced local files, or you need to attach them yourself; granting this app folder access does not grant access to another app.
 
 ## Agent package
 
@@ -103,8 +121,7 @@ See the [privacy policy](docs/privacy.md).
 ## Requirements
 
 - macOS 15 or newer; Apple live transcription requires an available offline model for the selected spoken language. Whisper transcribes the saved recording after stopping.
-- Screen Recording and Microphone permissions.
-- Input Monitoring is optional but required for pointer-aware moments outside the app.
+- Screen Recording permission; Microphone access for spoken feedback. See [permissions](#permissions-before-your-first-recording) for Apple speech recognition, pointer monitoring and folder access.
 - Swift 6.0+ for command-line builds, or Xcode for the Xcode project.
 
 The app can save video and visual context when speech recognition is unavailable. Pointer-event coverage may be limited without Input Monitoring. `manifest.json` records transcript status, language, engine and any captured recognition error; a successful recognition status is not an accuracy score.
@@ -124,7 +141,9 @@ back to ad-hoc signing. macOS binds Screen Recording permission to the code
 identity, so an ad-hoc build needs its permission refreshed after the binary is
 rebuilt; ordinary relaunches of the same binary do not.
 
-Or open `BehavioContext.xcodeproj` in Xcode and select the `BehavioContext` scheme.
+The script defaults to **release**. Pass `debug` explicitly for development. Both the command-line packager and the Xcode app target use `script/package_resources.sh` to bundle and sign Whisper, generate the app icon and export translations. Packaging requires Python 3, CMake and a C++ compiler.
+
+You can also open `BehavioContext.xcodeproj` in Xcode and select the `BehavioContext` scheme. The shared packaging step builds Whisper if needed; its first build downloads the pinned runtime source. Model weights are downloaded only through the app after user confirmation.
 
 ## Test
 

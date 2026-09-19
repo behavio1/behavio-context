@@ -138,17 +138,13 @@ public actor SmartContextCaptureCoordinator {
             update?(.compilationProgress(message: "Recovering the transcript locally…"))
             let recovery = RecordedAppleTranscriber()
             segments = await recovery.transcribe(recordingURL: recordingURL, locale: speech.language.rawValue)
-            speechFailure = recovery.failure ?? speechFailure
+            speechFailure = recovery.failure
             usesMediaOrigin = true
         }
         if segments.isEmpty, speechFailure == nil {
             speechFailure = microphone == nil ? "The microphone was off." : "No reliable speech was recognized in the selected language. Check the speech settings and try again."
         }
-        if !segments.isEmpty {
-            transcriptStatus = .complete
-        } else {
-            transcriptStatus = .failed
-        }
+        transcriptStatus = TranscriptStatus.result(hasSegments: !segments.isEmpty, failure: speechFailure)
         let origin = mediaStartHostTime ?? startedHostTime
         let timeline = windows.map { ContextWindowInterval(window: $0.window, startMs: max(0, Int(($0.start - origin) * 1000)), endMs: max(0, Int(($0.end - origin) * 1000))) }
         let mappedPointers = pointerEvents.map { PointerEvent(id: $0.id, timeMs: max(0, $0.timeMs - Int(origin * 1000)), kind: $0.kind, normalizedX: $0.normalizedX, normalizedY: $0.normalizedY, windowID: $0.windowID) }
@@ -170,7 +166,7 @@ public actor SmartContextCaptureCoordinator {
             visualChangeTimesMs: visualChangeTimesMs,
             windowTimeline: timeline,
             speech: speech,
-            transcriptionError: segments.isEmpty ? speechFailure : nil
+            transcriptionError: speechFailure
         )
         update?(.compilationProgress(message: "Context ready"))
         clear()

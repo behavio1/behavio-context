@@ -5,6 +5,12 @@ public enum TranscriptStatus: String, Codable, Equatable, Sendable {
     case complete
     case partial
     case failed
+
+    public static func result(hasSegments: Bool, failure: String?) -> Self {
+        guard hasSegments else { return .failed }
+        return failure == nil ? .complete : .partial
+    }
+
 }
 
 public struct TranscriptWord: Codable, Equatable, Sendable {
@@ -45,7 +51,6 @@ public struct TranscriptSegment: Codable, Equatable, Identifiable, Sendable {
         self.text = text
         self.words = words
     }
-
 
     enum CodingKeys: String, CodingKey {
         case id, text, words

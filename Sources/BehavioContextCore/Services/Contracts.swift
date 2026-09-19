@@ -8,9 +8,7 @@ public protocol CaptureSourceCatalog: Sendable {
 }
 
 public protocol CaptureAuthorization: Sendable {
-    func requestCameraAccess() async -> Bool
     func requestMicrophoneAccess() async -> Bool
-    func requestSystemAudioAccess(for source: CaptureSource) async -> Bool
 }
 
 public extension CaptureSourceCatalog {

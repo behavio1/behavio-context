@@ -40,9 +40,7 @@ public actor LocalMediaRecorder: MediaSampleSink {
 
     public func start(
         profile: OutputProfile,
-        capturesAudio: Bool,
-        webcamEnabled: Bool,
-        webcamLayout: WebcamLayout
+        capturesAudio: Bool
     ) async throws {
         await cancel()
 
@@ -68,9 +66,7 @@ public actor LocalMediaRecorder: MediaSampleSink {
         try await mixer.setFrameRate(Double(profile.frameRate))
         try await configureRecordingScreen(
             mixer: mixer,
-            profile: profile,
-            webcamEnabled: webcamEnabled,
-            layout: webcamLayout
+            profile: profile
         )
 
         let destination = try await directoryProvider?() ?? recordingsDirectory
@@ -545,48 +541,10 @@ private func makeAudioSampleBuffer(
 @ScreenActor
 private func configureRecordingScreen(
     mixer: MediaMixer,
-    profile: OutputProfile,
-    webcamEnabled: Bool,
-    layout: WebcamLayout
+    profile: OutputProfile
 ) async throws {
     let screen = mixer.screen
     screen.size = CGSize(width: profile.width, height: profile.height)
     screen.backgroundColor = CGColor(gray: 0, alpha: 1)
 
-    guard webcamEnabled else { return }
-    let placement = WebcamLayoutEngine.placement(
-        canvasSize: screen.size,
-        cameraSize: CGSize(width: 1280, height: 720),
-        layout: layout
-    )
-    let webcam = VideoTrackScreenObject()
-    try await waitForHaishinKitVideoDefaults(webcam)
-    webcam.track = 1
-    webcam.size = placement.frame.size
-    webcam.horizontalAlignment = .left
-    webcam.verticalAlignment = .top
-    webcam.layoutMargin = NSEdgeInsets(
-        top: placement.frame.minY,
-        left: placement.frame.minX,
-        bottom: 0,
-        right: 0
-    )
-    webcam.videoGravity = .resizeAspectFill
-    webcam.cornerRadius = placement.cornerRadius
-    try screen.addChild(webcam)
-}
-
-@ScreenActor
-private func waitForHaishinKitVideoDefaults(
-    _ webcam: VideoTrackScreenObject
-) async throws {
-    while true {
-        switch webcam.horizontalAlignment {
-        case .center:
-            return
-        case .left, .right:
-            try Task.checkCancellation()
-            await Task.yield()
-        }
-    }
 }

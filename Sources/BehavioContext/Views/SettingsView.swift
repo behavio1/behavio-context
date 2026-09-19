@@ -4,7 +4,6 @@ import SwiftUI
 
 struct SettingsView: View {
     @Bindable var store: RecordingSessionStore
-    @Bindable var analytics: AnalyticsConsentController
     @Bindable var recordingStorage: RecordingStorageController
     @AppStorage("BehavioContext.showsMenuBarIcon") private var showsMenuBarIcon = true
     @State private var showsAdditionalSettings = false
@@ -65,9 +64,6 @@ struct SettingsView: View {
             Button("Dismiss", role: .cancel) { recordingStorage.errorMessage = nil }
         } message: {
             Text(verbatim: recordingStorage.errorMessage ?? "") // localization: allow-verbatim system error
-        }
-        .onAppear {
-            analytics.capture(.settingsOpened)
         }
     }
 

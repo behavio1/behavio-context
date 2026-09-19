@@ -10,7 +10,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         subsystem: "one.behavio.context",
         category: "application"
     )
-    let analytics: AnalyticsConsentController
     let store: RecordingSessionStore
     let recordingStorage: RecordingStorageController
     let shortcutRecorder = ShortcutRecorder()
@@ -20,7 +19,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let activeWindowResolver: ActiveWindowResolver
     private let pointerTimelineRecorder: PointerTimelineRecorder
     private let contextReturnController = RecordingContextReturnController()
-    private var overlayController: WebcamOverlayPanelController?
     private var feedbackController: RecordingFeedbackPanelController?
     private var recordingResultController: RecordingResultPanelController?
     private var shortcutController: GlobalShortcutController?
@@ -30,15 +28,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var workspaceObservers: [NSObjectProtocol] = []
 
     override init() {
-        // The launch release never initializes a telemetry SDK, even if a local
-        // analytics token or a previously enabled preference is present.
-        let analyticsClient = NoOpAnalyticsClient()
         let contextCapture = SmartContextCaptureCoordinator()
         self.contextCapture = contextCapture
         activeWindowResolver = ActiveWindowResolver(ownBundleIdentifier: Self.bundleIdentifier)
         pointerTimelineRecorder = PointerTimelineRecorder(coordinator: contextCapture)
-        analytics = AnalyticsConsentController(client: analyticsClient)
-        analytics.setEnabled(false)
         let library = RecordingLibrary()
         recordingStorage = RecordingStorageController(library: library)
         let pipeline = ScreenCaptureRecordingPipeline(
@@ -48,15 +41,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         store = RecordingSessionStore(
             sourceCatalog: ScreenCaptureKitSourceCatalog(bundleIdentifier: Self.bundleIdentifier),
             historyStore: library,
-            recordingPipeline: pipeline,
-            analyticsClient: analyticsClient
+            recordingPipeline: pipeline
         )
         super.init()
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         logger.info("BehavioContext launched")
-        analytics.capture(.appLaunched)
         // Load our packaged icon explicitly when Launch Services still caches a development build.
         if let iconURL = Bundle.main.url(forResource: "BehavioContext", withExtension: "icns"),
            let icon = NSImage(contentsOf: iconURL) {
@@ -64,17 +55,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         NSApp.setActivationPolicy(.regular)
         contextReturnController.startObserving()
-        overlayController = WebcamOverlayPanelController(store: store) { [weak self] in
-            self?.overlayController?.hide()
-            self?.openSettings()
-        }
         let feedbackController = RecordingFeedbackPanelController(
             store: store,
             stopRecording: { [weak self] in self?.store.stopRecording() }
         )
         let recordingResultController = RecordingResultPanelController(
             store: store,
-            analytics: analytics,
             contextReturnController: contextReturnController
         )
         self.feedbackController = feedbackController
@@ -97,7 +83,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         store.overlayStateChanged = { [weak self] in
             guard let self else { return }
-            self.overlayController?.synchronize()
             self.feedbackController?.synchronize()
             self.synchronizeRecordingInputs()
         }
@@ -161,7 +146,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         shortcutController?.setEscapeEnabled(false)
         contextReturnController.stopObserving()
         store.cancelRecording()
-        analytics.flush()
         for observer in workspaceObservers {
             NSWorkspace.shared.notificationCenter.removeObserver(observer)
             NotificationCenter.default.removeObserver(observer)
@@ -214,20 +198,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    func editWebcamLayout() {
-        guard store.showsWebcamPositioningOverlay, let source = store.selectedCaptureSource else { return }
-        // The Settings button is the entry point; hide that window to reveal the capture canvas.
-        NSApp.keyWindow?.orderOut(nil)
-        overlayController?.show()
-        if case let .window(window) = source {
-            CaptureWindowFocusController.focus(window) { [weak self] in
-                self?.overlayController?.synchronize()
-            }
-        }
-    }
-
     func openSettings() {
-        overlayController?.hide()
         logger.info("Opening Settings")
         WindowPresentation.afterMenuDismissal { [weak self] in
             self?.presentSettings()
@@ -301,9 +272,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 }
                 Task { @MainActor in
                     guard let self else { return }
-                    if deviceID == self.store.webcamDeviceID {
-                        self.store.handleOptionalInputLoss("Webcam")
-                    } else if deviceID == self.store.microphoneDeviceID {
+                    if deviceID == self.store.microphoneDeviceID {
                         self.store.handleOptionalInputLoss("Microphone")
                     }
                 }
@@ -321,6 +290,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 followTask = Task { [weak self] in
                     guard let self else { return }
                     var currentID: UInt32? = window.windowID
+                    var lastMetadataRefresh = Date.distantPast
                     while !Task.isCancelled && store.phase.isRecording {
                         let hint = try? ActiveWindowResolver.captureHint(ownBundleIdentifier: Self.bundleIdentifier)
                         if hint?.windowID != currentID {
@@ -342,6 +312,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                                 currentID = hint?.windowID
                             } catch {
                                 currentID = nil // Retry; never fall back to a display or a different window.
+                            }
+                        }
+                        if let hint, hint.windowID == currentID,
+                           Date().timeIntervalSince(lastMetadataRefresh) >= 1 {
+                            lastMetadataRefresh = Date()
+                            if let source = try? await activeWindowResolver.resolve(hint),
+                               case let .window(current) = source,
+                               !Task.isCancelled, store.phase.isRecording {
+                                await recordingPipeline.refreshWindowMetadata(current)
+                                store.activeWindowName = current.displayName
                             }
                         }
                         try? await Task.sleep(for: .milliseconds(200))

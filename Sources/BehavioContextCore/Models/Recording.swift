@@ -3,33 +3,18 @@ import Foundation
 public struct RecordingConfiguration: Equatable, Sendable {
     public let speech: SpeechSettings
     public let source: CaptureSource
-    public let capturesSystemAudio: Bool
     public let capturesMicrophone: Bool
     public let microphoneDeviceID: String?
-    public let capturesWebcam: Bool
-    public let webcamDeviceID: String?
-    public let blursWebcamBackground: Bool
-    public let webcamLayout: WebcamLayout
     public init(
         source: CaptureSource,
-        capturesSystemAudio: Bool,
         capturesMicrophone: Bool,
         microphoneDeviceID: String?,
-        capturesWebcam: Bool,
-        webcamDeviceID: String?,
-        webcamLayout: WebcamLayout,
-        blursWebcamBackground: Bool = false,
         speech: SpeechSettings = SpeechSettings()
     ) {
         self.speech = speech
         self.source = source
-        self.capturesSystemAudio = capturesSystemAudio
         self.capturesMicrophone = capturesMicrophone
         self.microphoneDeviceID = microphoneDeviceID
-        self.capturesWebcam = capturesWebcam
-        self.webcamDeviceID = webcamDeviceID
-        self.webcamLayout = webcamLayout
-        self.blursWebcamBackground = blursWebcamBackground
     }
 }
 

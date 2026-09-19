@@ -251,14 +251,21 @@ public actor AgentContextPackageWriter {
             )
 
             try validatePackage(at: temporaryURL, manifest: manifest)
-            if fileManager.fileExists(atPath: contextURL.path) {
-                try fileManager.removeItem(at: contextURL)
-            }
-            try fileManager.moveItem(at: temporaryURL, to: contextURL)
+            try Self.publishValidatedDirectory(temporaryURL, at: contextURL, fileManager: fileManager)
             return AgentContextCompilation(directoryURL: contextURL, manifest: manifest)
         } catch {
             try? fileManager.removeItem(at: temporaryURL)
             throw error
+        }
+    }
+
+    /// Publish a validated sibling directory without deleting the last good package first.
+    public static func publishValidatedDirectory(_ temporaryURL: URL, at contextURL: URL, fileManager: FileManager = .default) throws {
+        if fileManager.fileExists(atPath: contextURL.path) {
+            _ = try fileManager.replaceItemAt(contextURL, withItemAt: temporaryURL,
+                backupItemName: ".context-backup-" + UUID().uuidString, options: .usingNewMetadataOnly)
+        } else {
+            try fileManager.moveItem(at: temporaryURL, to: contextURL)
         }
     }
 

@@ -14,25 +14,8 @@ enum ScreenCaptureKitContentFilterFactory {
         excludingBundleIdentifier bundleIdentifier: String
     ) throws -> ResolvedScreenCaptureTarget {
         switch source {
-        case let .display(screen):
-            guard let display = content.displays.first(where: {
-                $0.displayID == screen.displayID
-            }) else {
-                throw PipelineError.selectedSourceUnavailable
-            }
-            let excludedApplications = content.applications.filter {
-                $0.bundleIdentifier == bundleIdentifier
-            }
-            let filter = SCContentFilter(
-                display: display,
-                excludingApplications: excludedApplications,
-                exceptingWindows: []
-            )
-            return ResolvedScreenCaptureTarget(
-                filter: filter,
-                pixelWidth: display.width,
-                pixelHeight: display.height
-            )
+        case .display:
+            throw SmartContextCoordinatorError.activeWindowRequired
 
         case let .window(sourceWindow):
             guard let window = content.windows.first(where: {

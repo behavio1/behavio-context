@@ -10,7 +10,6 @@ final class RecordingResultPanelController {
     private static let minimumMediaHeight: CGFloat = 160
     private static let verticalScreenMargin: CGFloat = 80
     private let store: RecordingSessionStore
-    private let analytics: AnalyticsConsentController
     private let contextReturnController: RecordingContextReturnController
     private let pasteReminderController = PasteReminderPanelController()
     private var presentedResultID: RecordingResult.ID?
@@ -34,11 +33,9 @@ final class RecordingResultPanelController {
 
     init(
         store: RecordingSessionStore,
-        analytics: AnalyticsConsentController,
         contextReturnController: RecordingContextReturnController
     ) {
         self.store = store
-        self.analytics = analytics
         self.contextReturnController = contextReturnController
     }
 
@@ -107,7 +104,6 @@ final class RecordingResultPanelController {
                 store: store,
                 fallbackResult: result,
                 mediaHeight: mediaHeight,
-                analytics: analytics,
                 contextReturnController: contextReturnController,
                 copiedAndReturned: { [weak self] confirmation, locale in
                     guard let self else { return }

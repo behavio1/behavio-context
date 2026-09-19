@@ -14,6 +14,8 @@ enum BehavioContextChecks {
             )
             return
         }
+        if CommandLine.arguments.contains("--check-recorder") { try await checkRecorder(); return }
+        try checkReviewRegressions()
         try checkSpeechSettings()
         if CommandLine.arguments.count == 6, CommandLine.arguments[1] == "--check-whisper" {
             let segments = try await LocalWhisperTranscriber.transcribe(
@@ -45,6 +47,57 @@ enum BehavioContextChecks {
         try checkMomentSelection()
         try await checkContextPackage()
         print("PASS: Behavio Context deterministic core and package checks")
+    }
+
+    private static func checkRecorder() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("behavio-recorder-check-\(UUID().uuidString)")
+        defer { try? FileManager.default.removeItem(at: root) }
+        let recorder = LocalMediaRecorder(recordingsDirectory: root)
+        try await recorder.start(profile: OutputProfile(width: 640, height: 360, videoBitRate: 1000000, frameRate: 30, audioBitRate: 128000), capturesAudio: true)
+        do {
+            let format = AVAudioFormat(standardFormatWithSampleRate: 48000, channels: 2)!
+            let base = ProcessInfo.processInfo.systemUptime
+            for frame in 0..<90 {
+                let time = CMTime(seconds: base + Double(frame) / 30, preferredTimescale: 1000000000)
+                guard let pixels = makePixelBuffer(frame: frame) else { throw CheckFailure("pixel buffer unavailable") }
+                var description: CMVideoFormatDescription?
+                CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: pixels, formatDescriptionOut: &description)
+                var timing = CMSampleTimingInfo(duration: CMTime(value: 1, timescale: 30), presentationTimeStamp: time, decodeTimeStamp: .invalid)
+                var video: CMSampleBuffer?
+                CMSampleBufferCreateReadyWithImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: pixels, formatDescription: description!, sampleTiming: &timing, sampleBufferOut: &video)
+                await recorder.appendVideo(video!, track: 0)
+                let audio = try reviewAudioSample(format: format, frameCount: 1600, presentationTimeStamp: time)
+                await recorder.appendAudio(audio, track: 0)
+                try await Task.sleep(for: .milliseconds(34))
+            }
+            try await Task.sleep(for: .milliseconds(50))
+            let result = try await recorder.finish()
+            let asset = AVURLAsset(url: result.recordingURL)
+            let video = try await asset.loadTracks(withMediaType: .video)
+            let audio = try await asset.loadTracks(withMediaType: .audio)
+            try require(video.count == 1 && audio.count == 1, "recorder lost video or microphone track")
+            let duration = try await asset.load(.duration).seconds
+            try require(duration > 2.5 && duration < 5, "recorder duration is invalid")
+            let videoRange = try await video[0].load(.timeRange)
+            let audioRange = try await audio[0].load(.timeRange)
+            try require(abs(videoRange.start.seconds - audioRange.start.seconds) < 0.3, "audio/video start drift")
+            try require(abs(videoRange.end.seconds - audioRange.end.seconds) < 0.3, "audio/video end drift")
+            let generator = AVAssetImageGenerator(asset: asset)
+            _ = try await generator.image(at: CMTime(seconds: 1, preferredTimescale: 600))
+            print("PASS: native recorder produces playable MP4 with synchronized video and microphone tracks")
+        } catch { await recorder.cancel(); throw error }
+    }
+
+    private static func checkReviewRegressions() throws {
+        let legacy = Data(#"{"capturesWebcam":true,"webcamDeviceID":"old-camera","webcamLayout":{"obsolete":true},"blursWebcamBackground":true,"capturesSystemAudio":true,"capturesMicrophone":false,"language":"pl"}"#.utf8)
+        let preferences = try JSONDecoder().decode(PreferencesSnapshot.self, from: legacy)
+        try require(!preferences.capturesMicrophone && preferences.language == .polish, "legacy migration lost supported settings")
+        let saved = try JSONSerialization.jsonObject(with: JSONEncoder().encode(preferences)) as! [String: Any]
+        try require(saved["capturesWebcam"] == nil && saved["capturesSystemAudio"] == nil && saved["webcamLayout"] == nil, "hidden inputs survived migration")
+        try require(TranscriptStatus.result(hasSegments: true, failure: "interrupted") == .partial, "partial speech marked complete")
+        try require(TranscriptStatus.result(hasSegments: true, failure: nil) == .complete, "successful speech marked partial")
+        try require(TranscriptStatus.result(hasSegments: false, failure: "failed") == .failed, "empty speech marked complete")
+        print("PASS: removed input preferences migrate safely; partial speech retains failure status")
     }
 
     private static func reprocessRecording(at recordingURL: URL) async throws {
@@ -167,7 +220,13 @@ enum BehavioContextChecks {
         try require(markdown.contains("## Recorded windows") && markdown.contains("Window A") && markdown.contains("Window B"), "agent-readable window history missing")
         let decoded = try JSONDecoder().decode(AgentContextManifest.self, from: Data(contentsOf: compilation.directoryURL.appendingPathComponent("manifest.json")))
         try require(decoded == manifest, "multi-window manifest roundtrip failed")
-        print("PASS: A→B→A attribution, gaps, stale pointer isolation and schema roundtrip")
+        let renamed = window(11, "New browser tab")
+        let sameIDTimeline = [ContextWindowInterval(window: a, startMs: 0, endMs: 1800), ContextWindowInterval(window: renamed, startMs: 1800, endMs: 4800)]
+        let replaced = try await AgentContextPackageWriter().compile(recordingURL: video, source: .window(a), durationMs: 4800, transcriptStatus: .partial, transcript: [TranscriptSegment(id: "partial", startMs: 2000, endMs: 2500, text: "Incomplete explanation", words: [])], pointerEvents: [], visualChangeTimesMs: [2100], windowTimeline: sameIDTimeline, transcriptionError: "Fixture interruption")
+        let updated = try String(contentsOf: replaced.directoryURL.appendingPathComponent("context.md"), encoding: .utf8)
+        try require(updated.contains("New browser tab") && updated.contains("partial") && updated.contains("Fixture interruption"), "replacement lost updated tab or partial transcript metadata")
+        try require(!updated.contains("Window B"), "old context survived successful replacement")
+        print("PASS: A→B→A and same-ID titles, safe context replacement, partial transcript export")
     }
 
     private static func checkMomentSelection() throws {
@@ -280,6 +339,15 @@ enum BehavioContextChecks {
         )
 
         let contextURL = compilation.directoryURL
+        let prior = try Data(contentsOf: contextURL.appendingPathComponent("manifest.json"))
+        var replacementFailed = false
+        do {
+            try AgentContextPackageWriter.publishValidatedDirectory(
+                contextURL.deletingLastPathComponent().appendingPathComponent("missing-staged-context"), at: contextURL)
+        } catch { replacementFailed = true }
+        try require(replacementFailed, "missing staged directory did not fail replacement")
+        let preserved = try Data(contentsOf: contextURL.appendingPathComponent("manifest.json"))
+        try require(preserved == prior, "failed replacement destroyed previous context")
         for required in ["context.md", "manifest.json", "transcript.json", "recommended", "on-demand"] {
             try require(
                 FileManager.default.fileExists(atPath: contextURL.appendingPathComponent(required).path),
@@ -494,7 +562,7 @@ enum BehavioContextChecks {
         guard let base = CVPixelBufferGetBaseAddress(buffer) else { return nil }
         let bytesPerRow = CVPixelBufferGetBytesPerRow(buffer)
         let pixels = base.assumingMemoryBound(to: UInt8.self)
-        let blue = UInt8(40 + frame * 12)
+        let blue = UInt8(40 + (frame % 10) * 12)
         for y in 0..<360 {
             for x in 0..<640 {
                 let offset = y * bytesPerRow + x * 4
@@ -540,4 +608,47 @@ private struct PartialSuccessPipeline: RecordingPipeline {
         return artifacts
     }
     func cancel() async {}
+}
+
+private func reviewAudioSample(
+    format: AVAudioFormat,
+    frameCount: AVAudioFrameCount,
+    presentationTimeStamp: CMTime
+) throws -> CMSampleBuffer {
+    let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frameCount)!
+    buffer.frameLength = frameCount
+    for channel in 0..<Int(format.channelCount) {
+        guard let samples = buffer.floatChannelData?[channel] else { continue }
+        for frame in 0..<Int(frameCount) {
+            samples[frame] = Float(0.2 * sin(2 * .pi * 440 * Double(frame) / 48_000))
+        }
+    }
+
+    var sampleBuffer: CMSampleBuffer?
+    var status = CMAudioSampleBufferCreateWithPacketDescriptions(
+        allocator: nil,
+        dataBuffer: nil,
+        dataReady: false,
+        makeDataReadyCallback: nil,
+        refcon: nil,
+        formatDescription: format.formatDescription,
+        sampleCount: Int(frameCount),
+        presentationTimeStamp: presentationTimeStamp,
+        packetDescriptions: nil,
+        sampleBufferOut: &sampleBuffer
+    )
+    guard status == noErr, let sampleBuffer else {
+        throw NSError(domain: "BehavioContextIntegrationTests", code: Int(status))
+    }
+    status = CMSampleBufferSetDataBufferFromAudioBufferList(
+        sampleBuffer,
+        blockBufferAllocator: kCFAllocatorDefault,
+        blockBufferMemoryAllocator: kCFAllocatorDefault,
+        flags: 0,
+        bufferList: buffer.audioBufferList
+    )
+    guard status == noErr else {
+        throw NSError(domain: "BehavioContextIntegrationTests", code: Int(status))
+    }
+    return sampleBuffer
 }

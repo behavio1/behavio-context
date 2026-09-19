@@ -114,12 +114,8 @@ final class PersistenceAndStoreTests: XCTestCase {
     func testPreferencesRoundTripContainsOnlyRecordingSettings() throws {
         let snapshot = PreferencesSnapshot(
             selectedCaptureSourceID: .display(42),
-            capturesSystemAudio: true,
             capturesMicrophone: false,
             microphoneDeviceID: "mic",
-            capturesWebcam: true,
-            webcamDeviceID: "camera",
-            webcamLayout: WebcamLayout(mask: .circle, size: .large),
             language: .english,
             globalShortcut: GlobalShortcut(
                 keyCode: UInt16(kVK_ANSI_R), modifiers: UInt32(cmdKey | shiftKey), keyDisplayName: "R"
@@ -181,7 +177,6 @@ final class PersistenceAndStoreTests: XCTestCase {
     @MainActor
     func testCustomShortcutIsSavedAndRegisteredAfterRelaunch() async {
         let preferences = InMemoryPreferences(snapshot: PreferencesSnapshot(
-            capturesSystemAudio: false, capturesMicrophone: false
         ))
         func newStore() -> RecordingSessionStore {
             RecordingSessionStore(
@@ -226,7 +221,6 @@ final class PersistenceAndStoreTests: XCTestCase {
         let window = makeWindow(id: 42, title: "Roadmap", applicationName: "Notes")
         let preferences = InMemoryPreferences(snapshot: PreferencesSnapshot(
             selectedCaptureSourceID: .window(42),
-            capturesSystemAudio: false,
             capturesMicrophone: false
         ))
         let store = RecordingSessionStore(
@@ -256,53 +250,6 @@ final class PersistenceAndStoreTests: XCTestCase {
         let configuration = await pipeline.configurationValue()
         XCTAssertEqual(configuration?.source.id, .window(42))
         store.cancelRecording()
-    }
-
-    @MainActor
-    func testWebcamBlurNotifiesPreviewPersistsAndReachesRecordingConfiguration() async {
-        let preferences = InMemoryPreferences(snapshot: PreferencesSnapshot(
-            capturesSystemAudio: false, capturesMicrophone: false
-        ))
-        let pipeline = TestRecordingPipeline(outputURL: temporaryRecordingURL())
-        let store = RecordingSessionStore(
-            sourceCatalog: TestSourceCatalog(screens: [makeScreen(id: 1, isPrimary: true)]),
-            captureAuthorization: PermittedCaptureAuthorization(),
-            preferencesStore: preferences,
-            recordingPipeline: pipeline
-        )
-        await store.initialize()
-        var previewUpdates = 0
-        store.overlayStateChanged = { previewUpdates += 1 }
-        store.blursWebcamBackground = true
-        XCTAssertGreaterThan(previewUpdates, 0)
-        for _ in 0..<100 {
-            if await preferences.load().blursWebcamBackground { break }
-            try? await Task.sleep(for: .milliseconds(10))
-        }
-        let persisted = await preferences.load()
-        XCTAssertTrue(persisted.blursWebcamBackground)
-
-        store.startRecording()
-        let didStart = await waitUntilOnMainActor { store.phase.isRecording }
-        XCTAssertTrue(didStart)
-        let configuration = await pipeline.configurationValue()
-        XCTAssertEqual(configuration?.blursWebcamBackground, true)
-        store.cancelRecording()
-
-        let restored = RecordingSessionStore(
-            sourceCatalog: TestSourceCatalog(screens: [makeScreen(id: 1, isPrimary: true)]),
-            captureAuthorization: PermittedCaptureAuthorization(),
-            preferencesStore: preferences,
-            recordingPipeline: TestRecordingPipeline(outputURL: temporaryRecordingURL())
-        )
-        await restored.initialize()
-        XCTAssertTrue(restored.blursWebcamBackground)
-    }
-
-    func testWebcamSizeDecodesLegacyIntegerRepresentation() throws {
-        let data = Data(#"{"mask":"rounded","size":32,"position":{"x":0.5,"y":0.5}}"#.utf8)
-        let layout = try JSONDecoder().decode(WebcamLayout.self, from: data)
-        XCTAssertEqual(layout.size.percentage, 32)
     }
 
     @MainActor
@@ -379,33 +326,9 @@ final class PersistenceAndStoreTests: XCTestCase {
     }
 
     @MainActor
-    func testRecordingAnalyticsEmitsSuccessfulStartAndCompletionExactlyOnce() async {
-        let analytics = StoreAnalyticsSpy()
-        let pipeline = TestRecordingPipeline(
-            outputURL: temporaryRecordingURL()
-        )
-        let store = makeStore(pipeline: pipeline, analyticsClient: analytics)
-        await store.initialize()
-
-        store.startRecording()
-        let didStart = await waitUntilOnMainActor { store.phase.isRecording }
-        XCTAssertTrue(didStart)
-        store.stopRecording()
-        let didComplete = await waitUntilOnMainActor { store.phase == .idle }
-        XCTAssertTrue(didComplete)
-
-        XCTAssertEqual(analytics.events.map(\.name), ["recording_started", "recording_completed"])
-        XCTAssertEqual(analytics.events[0].properties["source_kind"], .string("display"))
-        XCTAssertEqual(analytics.events[0].properties["microphone_enabled"], .bool(false))
-        XCTAssertEqual(store.phase, .idle)
-    }
-
-    @MainActor
-    func testRecordingAnalyticsEmitsStartFailureExactlyOnce() async {
-        let analytics = StoreAnalyticsSpy()
+    func testStartFailureCanBeDismissed() async {
         let store = makeStore(
-            pipeline: FailingStartRecordingPipeline(),
-            analyticsClient: analytics
+            pipeline: FailingStartRecordingPipeline()
         )
         await store.initialize()
 
@@ -416,77 +339,34 @@ final class PersistenceAndStoreTests: XCTestCase {
         }
         XCTAssertTrue(didFail)
 
-        let failures = analytics.events.filter { $0.name == "recording_failed" }
-        XCTAssertEqual(failures.count, 1)
-        XCTAssertEqual(failures.first?.properties["stage"], .string("start"))
-        XCTAssertEqual(failures.first?.properties["recovery_category"], .string("not_applicable"))
-
         store.dismissFeedback()
         XCTAssertEqual(store.phase, .idle)
         XCTAssertNil(store.hudMessage)
     }
 
     @MainActor
-    func testRecordingAnalyticsEmitsMissingSourceFailureExactlyOnce() async {
-        let analytics = StoreAnalyticsSpy()
+    func testMissingSourceFails() async {
         let store = RecordingSessionStore(
             sourceCatalog: TestSourceCatalog(screens: []),
             captureAuthorization: PermittedCaptureAuthorization(),
             preferencesStore: InMemoryPreferences(snapshot: .defaults),
-            recordingPipeline: TestRecordingPipeline(outputURL: temporaryRecordingURL()),
-            analyticsClient: analytics
+            recordingPipeline: TestRecordingPipeline(outputURL: temporaryRecordingURL())
         )
         await store.initialize()
 
         store.startRecording()
 
-        let failures = analytics.events.filter { $0.name == "recording_failed" }
-        XCTAssertEqual(failures.count, 1)
-        XCTAssertEqual(failures.first?.properties["stage"], .string("start"))
-        XCTAssertEqual(
-            Set(failures.first?.properties.keys.map { $0 } ?? []),
-            ["stage", "recovery_category"]
-        )
         if case .failed = store.phase {
-            // Expected state is unchanged by analytics.
+            // Missing source must leave recording in the failed state.
         } else {
             XCTFail("Expected missing source to keep the existing failed transition")
         }
     }
 
     @MainActor
-    func testRecordingAnalyticsEmitsEachFinalizationRecoveryCategoryExactlyOnce() async {
-        for (pipeline, expectedCategory) in [
-            (RecoverableFailureRecordingPipeline(recoveryURL: temporaryRecordingURL()) as any RecordingPipeline, "partial_recording_preserved"),
-            (NonRecoverableFailureRecordingPipeline() as any RecordingPipeline, "recording_not_saved"),
-        ] {
-            let analytics = StoreAnalyticsSpy()
-            let store = makeStore(pipeline: pipeline, analyticsClient: analytics)
-            await store.initialize()
-
-            store.startRecording()
-            let didStart = await waitUntilOnMainActor { store.phase.isRecording }
-            XCTAssertTrue(didStart)
-            store.stopRecording()
-            let didFail = await waitUntilOnMainActor {
-                if case .failed = store.phase { return true }
-                return false
-            }
-            XCTAssertTrue(didFail)
-
-            let failures = analytics.events.filter { $0.name == "recording_failed" }
-            XCTAssertEqual(failures.count, 1)
-            XCTAssertEqual(failures.first?.properties["stage"], .string("finalization"))
-            XCTAssertEqual(failures.first?.properties["recovery_category"], .string(expectedCategory))
-        }
-    }
-
-    @MainActor
     func testFatalSystemEventAndFailedStopEmitOneFailureWithoutChangingFailedState() async {
-        let analytics = StoreAnalyticsSpy()
         let store = makeStore(
-            pipeline: RecoverableFailureRecordingPipeline(recoveryURL: temporaryRecordingURL()),
-            analyticsClient: analytics
+            pipeline: RecoverableFailureRecordingPipeline(recoveryURL: temporaryRecordingURL())
         )
         await store.initialize()
         store.startRecording()
@@ -500,17 +380,12 @@ final class PersistenceAndStoreTests: XCTestCase {
         }
         XCTAssertTrue(didFail)
 
-        let failures = analytics.events.filter { $0.name == "recording_failed" }
-        XCTAssertEqual(failures.count, 1)
-        XCTAssertEqual(failures.first?.properties["recovery_category"], .string("system_event"))
     }
 
     @MainActor
-    func testFatalSystemEventWithPreservedRecordingDoesNotEmitCompletion() async {
-        let analytics = StoreAnalyticsSpy()
+    func testFatalSystemEventPreservesRecording() async {
         let store = makeStore(
-            pipeline: TestRecordingPipeline(outputURL: temporaryRecordingURL()),
-            analyticsClient: analytics
+            pipeline: TestRecordingPipeline(outputURL: temporaryRecordingURL())
         )
         await store.initialize()
         store.startRecording()
@@ -521,14 +396,6 @@ final class PersistenceAndStoreTests: XCTestCase {
         let didFinalize = await waitUntilOnMainActor { store.phase == .idle }
         XCTAssertTrue(didFinalize)
 
-        XCTAssertEqual(
-            analytics.events.map(\.name),
-            ["recording_started", "recording_failed"]
-        )
-        XCTAssertEqual(
-            analytics.events.last?.properties["recovery_category"],
-            .string("system_event")
-        )
         XCTAssertNotNil(store.latestRecordingResult)
     }
 
@@ -755,53 +622,25 @@ final class PersistenceAndStoreTests: XCTestCase {
             sourceCatalog: TestSourceCatalog(screens: [makeScreen(id: 1, isPrimary: true)]),
             captureAuthorization: authorization,
             preferencesStore: InMemoryPreferences(snapshot: PreferencesSnapshot(
-                capturesSystemAudio: true,
-                capturesMicrophone: true,
-                capturesWebcam: true
+                capturesMicrophone: true
             )),
             recordingPipeline: TestRecordingPipeline(outputURL: temporaryRecordingURL())
         )
         await store.initialize()
         let counts = await authorization.counts()
-        XCTAssertEqual(counts.camera, 1)
+        XCTAssertEqual(counts.camera, 0)
         XCTAssertEqual(counts.microphone, 1)
-        XCTAssertEqual(counts.systemAudio, 1)
+        XCTAssertEqual(counts.systemAudio, 0)
     }
 
-    @MainActor
-    func testWebcamDraggingDoesNotReregisterGlobalShortcut() async {
-        let store = makeStore(
-            pipeline: TestRecordingPipeline(outputURL: temporaryRecordingURL())
-        )
-        await store.initialize()
-        var shortcutUpdates = 0
-        store.shortcutPreferenceChanged = { _ in
-            shortcutUpdates += 1
-            return true
-        }
-
-        for step in 0..<40 {
-            store.updateWebcamPosition(NormalizedWebcamPosition(x: Double(step) / 40, y: 0.5))
-        }
-        try? await Task.sleep(for: .milliseconds(250))
-        XCTAssertEqual(shortcutUpdates, 0)
-        store.updateGlobalShortcut(GlobalShortcut(
-            keyCode: UInt16(kVK_ANSI_R), modifiers: UInt32(cmdKey | shiftKey), keyDisplayName: "R"
-        ))
-        XCTAssertEqual(shortcutUpdates, 1)
-    }
-
-    func testMicrophoneDrivesMainAudioTrackWhenSystemAudioIsAlsoCaptured() async throws {
-        XCTAssertEqual(MediaTrackLayout.microphoneTrack, 0)
-        XCTAssertEqual(MediaTrackLayout.systemAudioTrack(capturesMicrophone: false), 0)
-        XCTAssertEqual(MediaTrackLayout.systemAudioTrack(capturesMicrophone: true), 1)
+    func testSystemAudioIsIgnoredAndMicrophoneUsesMainTrack() async throws {
 
         let sink = RecordingMediaSink()
-        let forwarder = MediaSampleForwarder(sink: sink, systemAudioTrack: 1, microphoneTrack: 0)
+        let forwarder = MediaSampleForwarder(sink: sink, microphoneTrack: 0)
         let sampleBuffer = try makeVideoSampleBuffer()
         forwarder.yield(sampleBuffer, outputType: .audio)
         forwarder.yieldMicrophone(sampleBuffer)
-        let receivedAudio = await waitUntil { await sink.audioTracks().sorted() == [0, 1] }
+        let receivedAudio = await waitUntil { await sink.audioTracks() == [0] }
         XCTAssertTrue(receivedAudio)
         await forwarder.stop()
     }
@@ -820,18 +659,7 @@ final class PersistenceAndStoreTests: XCTestCase {
         XCTAssertEqual(frameCount, 1)
     }
 
-    func testScreenAndWebcamFramesUseSeparateVideoTracks() async throws {
-        let sink = RecordingMediaSink()
-        let forwarder = MediaSampleForwarder(sink: sink)
-        let sampleBuffer = try makeVideoSampleBuffer()
-        forwarder.yield(sampleBuffer, outputType: .screen)
-        forwarder.yieldWebcam(sampleBuffer)
-        let receivedTracks = await waitUntil { await sink.videoTracks().sorted() == [0, 1] }
-        XCTAssertTrue(receivedTracks)
-        await forwarder.stop()
-    }
-
-    func testWebcamSampleTimestampsCanBeMappedToCaptureClock() throws {
+    func testSampleTimestampsCanBeMappedToCaptureClock() throws {
         let sampleBuffer = try makeVideoSampleBuffer()
         let offset = CMTime(seconds: 3, preferredTimescale: 600)
         let synchronizedSample = try XCTUnwrap(copySampleBuffer(sampleBuffer) { CMTimeAdd($0, offset) })
@@ -868,9 +696,7 @@ final class PersistenceAndStoreTests: XCTestCase {
                 frameRate: 30,
                 audioBitRate: 128_000
             ),
-            capturesAudio: false,
-            webcamEnabled: false,
-            webcamLayout: .defaultLayout
+            capturesAudio: false
         )
 
         XCTAssertEqual(
@@ -904,9 +730,7 @@ final class PersistenceAndStoreTests: XCTestCase {
         )
         try await recorder.start(
             profile: profile,
-            capturesAudio: true,
-            webcamEnabled: false,
-            webcamLayout: .defaultLayout
+            capturesAudio: true
         )
         let mixer = MediaMixer(captureSessionMode: .manual)
         let baseSeconds = ProcessInfo.processInfo.systemUptime
@@ -1182,7 +1006,6 @@ private actor RecoverableFailureRecordingPipeline: RecordingPipeline {
         return events.stream
     }
 
-
     func stop() throws -> RecordingArtifacts {
         continuation?.finish()
         throw RecordingRecoveryError(
@@ -1198,9 +1021,9 @@ private actor RecoverableFailureRecordingPipeline: RecordingPipeline {
 
 private actor FailingStartRecordingPipeline: RecordingPipeline {
     func start(configuration: RecordingConfiguration) throws -> AsyncStream<RecordingPipelineEvent> {
-        throw TestRecordingAnalyticsError.failed
+        throw TestRecordingError.failed
     }
-    func stop() throws -> RecordingArtifacts { throw TestRecordingAnalyticsError.failed }
+    func stop() throws -> RecordingArtifacts { throw TestRecordingError.failed }
     func cancel() {}
 }
 
@@ -1213,12 +1036,12 @@ private actor NonRecoverableFailureRecordingPipeline: RecordingPipeline {
     }
     func stop() throws -> RecordingArtifacts {
         continuation?.finish()
-        throw TestRecordingAnalyticsError.failed
+        throw TestRecordingError.failed
     }
     func cancel() { continuation?.finish() }
 }
 
-private enum TestRecordingAnalyticsError: Error {
+private enum TestRecordingError: Error {
     case failed
 }
 
@@ -1274,30 +1097,18 @@ private actor RecordingMediaSink: MediaSampleSink {
 @MainActor
 private func makeStore(
     pipeline: any RecordingPipeline,
-    recordingHistoryStore: any RecordingHistoryStore = VolatileRecordingHistoryStore(),
-    analyticsClient: any AnalyticsClient = NoOpAnalyticsClient()
+    recordingHistoryStore: any RecordingHistoryStore = VolatileRecordingHistoryStore()
 ) -> RecordingSessionStore {
     RecordingSessionStore(
         sourceCatalog: TestSourceCatalog(screens: [makeScreen(id: 1, isPrimary: true)]),
         captureAuthorization: PermittedCaptureAuthorization(),
         preferencesStore: InMemoryPreferences(snapshot: PreferencesSnapshot(
             selectedCaptureSourceID: .display(1),
-            capturesSystemAudio: false,
             capturesMicrophone: false
         )),
         recordingHistoryStore: recordingHistoryStore,
-        recordingPipeline: pipeline,
-        analyticsClient: analyticsClient
+        recordingPipeline: pipeline
     )
-}
-
-@MainActor
-private final class StoreAnalyticsSpy: AnalyticsClient {
-    private(set) var events: [AnalyticsEvent] = []
-    func capture(_ event: AnalyticsEvent) { events.append(event) }
-    func optIn() {}
-    func optOut() {}
-    func flush() {}
 }
 
 private actor TestRecordingHistoryStore: RecordingHistoryStore {

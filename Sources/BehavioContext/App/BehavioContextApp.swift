@@ -31,7 +31,6 @@ struct BehavioContextApp: App {
         Settings {
             SettingsView(
                 store: appDelegate.store,
-                analytics: appDelegate.analytics,
                 recordingStorage: appDelegate.recordingStorage,
                 shortcutRecorder: appDelegate.shortcutRecorder
             )

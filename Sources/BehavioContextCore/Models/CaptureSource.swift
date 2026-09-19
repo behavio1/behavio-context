@@ -76,6 +76,11 @@ public enum CaptureSource: Codable, Hashable, Identifiable, Sendable {
     case display(ScreenSource)
     case window(WindowSource)
 
+    public var windowSource: WindowSource? {
+        if case let .window(window) = self { return window }
+        return nil
+    }
+
     public var id: CaptureSourceID {
         switch self {
         case let .display(screen): .display(screen.displayID)

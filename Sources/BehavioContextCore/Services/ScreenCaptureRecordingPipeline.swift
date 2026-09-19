@@ -17,7 +17,6 @@ public actor ScreenCaptureRecordingPipeline: RecordingPipeline {
     private var outputBridge: ScreenCaptureOutputBridge?
     private var eventContinuation: AsyncStream<RecordingPipelineEvent>.Continuation?
     private var sampleForwarder: MediaSampleForwarder?
-    private var webcamCapture: WebcamCaptureSource?
     private var microphoneCapture: MicrophoneCaptureSource?
     private var activeMicrophoneID: String?
     private var streamConfiguration: SCStreamConfiguration?
@@ -82,26 +81,21 @@ public actor ScreenCaptureRecordingPipeline: RecordingPipeline {
         streamConfiguration.showsCursor = true
         streamConfiguration.scalesToFit = true
         self.streamConfiguration = streamConfiguration
-        streamConfiguration.capturesAudio = configuration.capturesSystemAudio
+        streamConfiguration.capturesAudio = false
         streamConfiguration.excludesCurrentProcessAudio = true
         streamConfiguration.sampleRate = 48_000
         streamConfiguration.channelCount = 2
 
         let sampleForwarder = MediaSampleForwarder(
             sink: recorder,
-            systemAudioTrack: MediaTrackLayout.systemAudioTrack(
-                capturesMicrophone: configuration.capturesMicrophone
-            ),
-            microphoneTrack: MediaTrackLayout.microphoneTrack
+            microphoneTrack: 0
         )
         self.sampleForwarder = sampleForwarder
 
         do {
             try await recorder.start(
                 profile: profile,
-                capturesAudio: configuration.capturesSystemAudio || configuration.capturesMicrophone,
-                webcamEnabled: configuration.capturesWebcam,
-                webcamLayout: configuration.webcamLayout
+                capturesAudio: configuration.capturesMicrophone
             )
             try Task.checkCancellation()
 
@@ -121,23 +115,10 @@ public actor ScreenCaptureRecordingPipeline: RecordingPipeline {
                 }
             }
 
-            if configuration.capturesWebcam {
-                let webcamCapture = WebcamCaptureSource(
-                    blursBackground: configuration.blursWebcamBackground
-                ) { sampleBuffer in
-                    sampleForwarder.yieldWebcam(sampleBuffer)
-                }
-                try await webcamCapture.start(
-                    cameraID: configuration.webcamDeviceID,
-                    frameRate: profile.frameRate
-                )
-                try Task.checkCancellation()
-                self.webcamCapture = webcamCapture
-            }
-
             let outputBridge = ScreenCaptureOutputBridge(
-                onSample: { [visualChangeSampler, contextCapture] sampleBuffer, outputType in
-                    if outputType == .screen, case let .window(window) = configuration.source {
+                window: configuration.source.windowSource,
+                onSample: { [visualChangeSampler, contextCapture] sampleBuffer, outputType, window in
+                    if outputType == .screen, let window {
                         let host = CMTimeGetSeconds(sampleBuffer.presentationTimeStamp)
                         Task { await contextCapture?.recordWindowFrame(window: window, hostTime: host) }
                     }
@@ -163,13 +144,6 @@ public actor ScreenCaptureRecordingPipeline: RecordingPipeline {
                 type: .screen,
                 sampleHandlerQueue: outputBridge.videoQueue
             )
-            if configuration.capturesSystemAudio {
-                try captureStream.addStreamOutput(
-                    outputBridge,
-                    type: .audio,
-                    sampleHandlerQueue: outputBridge.audioQueue
-                )
-            }
             self.outputBridge = outputBridge
             self.captureStream = captureStream
             try await captureStream.startCapture()
@@ -194,9 +168,9 @@ public actor ScreenCaptureRecordingPipeline: RecordingPipeline {
         let content = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: true)
         guard generation == captureGeneration else { return }
         let target = try ScreenCaptureKitContentFilterFactory.resolve(for: source, in: content, excludingBundleIdentifier: bundleIdentifier)
-        let bridge = ScreenCaptureOutputBridge(onSample: { [contextCapture] sample, type in
+        let bridge = ScreenCaptureOutputBridge(window: source.windowSource, onSample: { [contextCapture] sample, type, window in
             forwarder.yield(sample, outputType: type)
-            if type == .screen, case let .window(window) = source {
+            if type == .screen, let window {
                 let host = CMTimeGetSeconds(sample.presentationTimeStamp)
                 Task { await contextCapture?.recordWindowFrame(window: window, hostTime: host) }
             }
@@ -205,12 +179,15 @@ public actor ScreenCaptureRecordingPipeline: RecordingPipeline {
         })
         let stream = SCStream(filter: target.filter, configuration: configuration, delegate: bridge)
         try stream.addStreamOutput(bridge, type: .screen, sampleHandlerQueue: bridge.videoQueue)
-        if configuration.capturesAudio { try stream.addStreamOutput(bridge, type: .audio, sampleHandlerQueue: bridge.audioQueue) }
         guard generation == captureGeneration else { return }
         captureStream = stream
         outputBridge = bridge
         try await stream.startCapture()
         if generation != captureGeneration { bridge.invalidate(); try? await stream.stopCapture() }
+    }
+
+    public func refreshWindowMetadata(_ window: WindowSource) {
+        outputBridge?.refreshWindowMetadata(window)
     }
 
     public func changeSpeech(_ settings: SpeechSettings) async {
@@ -297,10 +274,6 @@ public actor ScreenCaptureRecordingPipeline: RecordingPipeline {
         captureStream = nil
         outputBridge = nil
 
-        let webcamCapture = self.webcamCapture
-        self.webcamCapture = nil
-        await webcamCapture?.stop()
-
         let microphoneCapture = self.microphoneCapture
         self.microphoneCapture = nil
         await microphoneCapture?.stop()
@@ -336,8 +309,6 @@ struct ForwardedSample: @unchecked Sendable {
 
 final class MediaSampleForwarder: @unchecked Sendable {
     private let videoContinuation: AsyncStream<ForwardedSample>.Continuation
-    private let webcamVideoContinuation: AsyncStream<ForwardedSample>.Continuation
-    private let systemAudioContinuation: AsyncStream<ForwardedSample>.Continuation
     private let microphoneContinuation: AsyncStream<ForwardedSample>.Continuation
     private let tasks: [Task<Void, Never>]
     private let lock = NSLock()
@@ -345,46 +316,23 @@ final class MediaSampleForwarder: @unchecked Sendable {
 
     init(
         sink: any MediaSampleSink,
-        systemAudioTrack: UInt8 = 0,
         microphoneTrack: UInt8 = 0
     ) {
         let videoSamples = AsyncStream.makeStream(
             of: ForwardedSample.self,
             bufferingPolicy: .bufferingNewest(2)
         )
-        let webcamVideoSamples = AsyncStream.makeStream(
-            of: ForwardedSample.self,
-            bufferingPolicy: .bufferingNewest(2)
-        )
-        let systemAudioSamples = AsyncStream.makeStream(
-            of: ForwardedSample.self,
-            bufferingPolicy: .bufferingNewest(64)
-        )
         let microphoneSamples = AsyncStream.makeStream(
             of: ForwardedSample.self,
             bufferingPolicy: .bufferingNewest(64)
         )
         videoContinuation = videoSamples.continuation
-        webcamVideoContinuation = webcamVideoSamples.continuation
-        systemAudioContinuation = systemAudioSamples.continuation
         microphoneContinuation = microphoneSamples.continuation
         tasks = [
             Task {
                 for await sample in videoSamples.stream {
                     guard !Task.isCancelled else { break }
                     await sink.appendVideo(sample.buffer, track: 0)
-                }
-            },
-            Task {
-                for await sample in webcamVideoSamples.stream {
-                    guard !Task.isCancelled else { break }
-                    await sink.appendVideo(sample.buffer, track: 1)
-                }
-            },
-            Task {
-                for await sample in systemAudioSamples.stream {
-                    guard !Task.isCancelled else { break }
-                    await sink.appendAudio(sample.buffer, track: systemAudioTrack)
                 }
             },
             Task {
@@ -403,17 +351,12 @@ final class MediaSampleForwarder: @unchecked Sendable {
         case .screen:
             videoContinuation.yield(sample)
         case .audio:
-            systemAudioContinuation.yield(sample)
+            break
         case .microphone:
             microphoneContinuation.yield(sample)
         @unknown default:
             break
         }
-    }
-
-    func yieldWebcam(_ sampleBuffer: CMSampleBuffer) {
-        guard lock.withLock({ acceptsSamples }) else { return }
-        webcamVideoContinuation.yield(ForwardedSample(buffer: sampleBuffer))
     }
 
     func yieldMicrophone(_ sampleBuffer: CMSampleBuffer) {
@@ -430,8 +373,6 @@ final class MediaSampleForwarder: @unchecked Sendable {
         guard shouldStop else { return }
 
         videoContinuation.finish()
-        webcamVideoContinuation.finish()
-        systemAudioContinuation.finish()
         microphoneContinuation.finish()
         for task in tasks {
             task.cancel()
@@ -556,144 +497,6 @@ private final class MicrophoneCaptureSource: NSObject, AVCaptureAudioDataOutputS
     }
 }
 
-private enum WebcamCaptureError: Error, LocalizedError {
-    case cameraUnavailable
-    case cannotAddCamera
-    case cannotAddOutput
-
-    var errorDescription: String? {
-        switch self {
-        case .cameraUnavailable:
-            "The selected webcam is unavailable."
-        case .cannotAddCamera:
-            "The selected webcam could not be added to the capture session."
-        case .cannotAddOutput:
-            "The webcam video output could not be configured."
-        }
-    }
-}
-
-private final class WebcamCaptureSource: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, @unchecked Sendable {
-    private let session = AVCaptureSession()
-    private let sessionQueue = DispatchQueue(
-        label: "one.behavio.context.capture.webcam.session",
-        qos: .userInitiated
-    )
-    private let sampleQueue = DispatchQueue(
-        label: "one.behavio.context.capture.webcam.samples",
-        qos: .userInteractive
-    )
-    private let onSample: @Sendable (CMSampleBuffer) -> Void
-    private var videoOutput: AVCaptureVideoDataOutput?
-    private let blursBackground: Bool
-    // Accessed exclusively on sampleQueue.
-    private let backgroundBlur = WebcamBackgroundBlurProcessor()
-
-    init(blursBackground: Bool, onSample: @escaping @Sendable (CMSampleBuffer) -> Void) {
-        self.blursBackground = blursBackground
-        self.onSample = onSample
-    }
-
-    func start(cameraID: String?, frameRate: Int) async throws {
-        try await withCheckedThrowingContinuation { continuation in
-            sessionQueue.async { [self] in
-                do {
-                    let camera = cameraID.flatMap(AVCaptureDevice.init(uniqueID:))
-                        ?? AVCaptureDevice.default(for: .video)
-                    guard let camera else {
-                        throw WebcamCaptureError.cameraUnavailable
-                    }
-
-                    let input = try AVCaptureDeviceInput(device: camera)
-                    let output = AVCaptureVideoDataOutput()
-                    output.alwaysDiscardsLateVideoFrames = true
-                    output.videoSettings = [
-                        kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
-                    ]
-                    output.setSampleBufferDelegate(self, queue: sampleQueue)
-
-                    session.beginConfiguration()
-                    if session.canSetSessionPreset(.hd1280x720) {
-                        session.sessionPreset = .hd1280x720
-                    }
-                    session.inputs.forEach(session.removeInput)
-                    session.outputs.forEach(session.removeOutput)
-                    guard session.canAddInput(input) else {
-                        session.commitConfiguration()
-                        throw WebcamCaptureError.cannotAddCamera
-                    }
-                    session.addInput(input)
-                    guard session.canAddOutput(output) else {
-                        session.commitConfiguration()
-                        throw WebcamCaptureError.cannotAddOutput
-                    }
-                    session.addOutput(output)
-                    session.commitConfiguration()
-                    try configureFrameRate(frameRate, for: camera)
-                    videoOutput = output
-                    session.startRunning()
-                    continuation.resume()
-                } catch {
-                    continuation.resume(throwing: error)
-                }
-            }
-        }
-    }
-
-    func stop() async {
-        await withCheckedContinuation { continuation in
-            sessionQueue.async { [self] in
-                videoOutput?.setSampleBufferDelegate(nil, queue: nil)
-                if session.isRunning {
-                    session.stopRunning()
-                }
-                videoOutput = nil
-                continuation.resume()
-            }
-        }
-    }
-
-    func captureOutput(
-        _ output: AVCaptureOutput,
-        didOutput inputSample: CMSampleBuffer,
-        from connection: AVCaptureConnection
-    ) {
-        let sampleBuffer: CMSampleBuffer
-        if blursBackground {
-            guard let processed = autoreleasepool(invoking: { backgroundBlur.process(sampleBuffer: inputSample) }) else { return }
-            sampleBuffer = processed
-        } else {
-            sampleBuffer = inputSample
-        }
-        guard let synchronizationClock = session.synchronizationClock else {
-            onSample(sampleBuffer)
-            return
-        }
-        let hostClock = CMClockGetHostTimeClock()
-        let synchronizedSample = copySampleBuffer(
-            sampleBuffer,
-            convertingTimestampsWith: {
-                CMSyncConvertTime($0, from: synchronizationClock, to: hostClock)
-            }
-        ) ?? sampleBuffer
-        onSample(synchronizedSample)
-    }
-
-    private func configureFrameRate(_ frameRate: Int, for camera: AVCaptureDevice) throws {
-        let requestedRate = Double(frameRate)
-        guard camera.activeFormat.videoSupportedFrameRateRanges.contains(where: {
-            $0.minFrameRate <= requestedRate && requestedRate <= $0.maxFrameRate
-        }) else {
-            return
-        }
-        let duration = CMTime(value: 1, timescale: CMTimeScale(frameRate))
-        try camera.lockForConfiguration()
-        defer { camera.unlockForConfiguration() }
-        camera.activeVideoMinFrameDuration = duration
-        camera.activeVideoMaxFrameDuration = duration
-    }
-}
-
 func copySampleBuffer(
     _ sampleBuffer: CMSampleBuffer,
     convertingTimestampsWith convert: (CMTime) -> CMTime
@@ -773,18 +576,27 @@ func isCompleteScreenCaptureFrame(
 
 private final class ScreenCaptureOutputBridge: NSObject, SCStreamOutput, SCStreamDelegate, @unchecked Sendable {
     let videoQueue = DispatchQueue(label: "one.behavio.context.capture.video", qos: .userInteractive)
-    let audioQueue = DispatchQueue(label: "one.behavio.context.capture.audio", qos: .userInitiated)
-    private let onSample: @Sendable (CMSampleBuffer, SCStreamOutputType) -> Void
+    private let onSample: @Sendable (CMSampleBuffer, SCStreamOutputType, WindowSource?) -> Void
+    private var window: WindowSource?
     private let onFatalError: @Sendable (Error) -> Void
     private let lock = NSLock()
     private var acceptsCallbacks = true
 
     init(
-        onSample: @escaping @Sendable (CMSampleBuffer, SCStreamOutputType) -> Void,
+        window: WindowSource?,
+        onSample: @escaping @Sendable (CMSampleBuffer, SCStreamOutputType, WindowSource?) -> Void,
         onFatalError: @escaping @Sendable (Error) -> Void
     ) {
         self.onSample = onSample
         self.onFatalError = onFatalError
+        self.window = window
+    }
+
+    func refreshWindowMetadata(_ updated: WindowSource) {
+        lock.withLock {
+            guard window?.windowID == updated.windowID else { return }
+            window = updated
+        }
     }
 
     func invalidate() {
@@ -807,7 +619,7 @@ private final class ScreenCaptureOutputBridge: NSObject, SCStreamOutput, SCStrea
             guard isCompleteScreenCaptureFrame(attachments?.first) else { return }
         }
         guard let synchronizationClock = stream.synchronizationClock else {
-            onSample(sampleBuffer, outputType)
+            onSample(sampleBuffer, outputType, lock.withLock { window })
             return
         }
         let hostClock = CMClockGetHostTimeClock()
@@ -817,7 +629,7 @@ private final class ScreenCaptureOutputBridge: NSObject, SCStreamOutput, SCStrea
                 CMSyncConvertTime($0, from: synchronizationClock, to: hostClock)
             }
         ) ?? sampleBuffer
-        onSample(synchronizedSample, outputType)
+        onSample(synchronizedSample, outputType, lock.withLock { window })
     }
 
     func stream(_ stream: SCStream, didStopWithError error: Error) {

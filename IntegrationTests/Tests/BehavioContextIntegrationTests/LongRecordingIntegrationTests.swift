@@ -6,7 +6,7 @@ import BehavioContextCore
 import XCTest
 
 final class LongRecordingIntegrationTests: XCTestCase {
-    func testLongRecordingWithAllInputsFinalizesPlayableMP4() async throws {
+    func testLongRecordingWithWindowAndMicrophoneFinalizesPlayableMP4() async throws {
         let recordingsDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(
             "behaviocontext-integration-\(UUID().uuidString)",
             isDirectory: true
@@ -21,9 +21,7 @@ final class LongRecordingIntegrationTests: XCTestCase {
                 frameRate: 30,
                 audioBitRate: 128_000
             ),
-            capturesAudio: true,
-            webcamEnabled: true,
-            webcamLayout: .defaultLayout
+            capturesAudio: true
         )
 
         let frameRate = 30
@@ -42,7 +40,6 @@ final class LongRecordingIntegrationTests: XCTestCase {
                 )
                 let video = try makeVideoSampleBuffer(presentationTimeStamp: timestamp)
                 await recorder.appendVideo(video, track: 0)
-                await recorder.appendVideo(video, track: 1)
 
                 let audio = try makeAudioSampleBuffer(
                     format: audioFormat,
@@ -50,7 +47,6 @@ final class LongRecordingIntegrationTests: XCTestCase {
                     presentationTimeStamp: timestamp
                 )
                 await recorder.appendAudio(audio, track: 0)
-                await recorder.appendAudio(audio, track: 1)
                 try await Task.sleep(for: .milliseconds(34))
             }
             try await Task.sleep(for: .milliseconds(500))

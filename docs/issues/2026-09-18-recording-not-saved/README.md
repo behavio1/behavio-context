@@ -1,6 +1,6 @@
 # Błąd zapisu nagrania — 2026-09-18
 
-Projekt do dalszej pracy: `/Users/Marcin_1/Documents/Behavio.one/Projects/behavio-context`.
+Projekt do dalszej pracy: `<repo>`.
 
 Skopiowano źródła, historię Git i niezacommitowane zmiany z `research/behavio-context`. Pominięto katalogi wynikowe `.build`, `DerivedData` i pliki `.DS_Store`. Oryginał zachowano.
 
@@ -12,7 +12,7 @@ Aplikacja Behavio Context nie działa. Zrzut pokazuje:
 - “No usable recording was produced. Check your recording settings and try again.”
 - “Could not extract the visual moment at 0 ms.”
 
-![Zrzut błędu](recording-error.png)
+Zrzut z prywatnego środowiska pominięto w publicznym repozytorium.
 
 ## Naprawa — 2026-09-18
 
@@ -37,7 +37,7 @@ Test regresyjny w `Tools/BehavioContextChecks/main.swift` tworzy MP4 zaczynając
 
 Aplikacja: `/Applications/Behavio Context.app`.
 
-Kopia poprzedniej wersji: `/Users/Marcin_1/Documents/Behavio.one/Projects/behavio-context/.build/rollback/20260918-133350/Behavio Context.app`.
+Kopia poprzedniej wersji: `<repo>/.build/rollback/20260918-133350/Behavio Context.app`.
 
 SHA256 zainstalowanej binarki: `bd749bb32dff6e69719f53b65a15adba501b7a0ded5a7a5b47675a8306f18d11`.
 

@@ -35,7 +35,6 @@
 		B10000000000000000000004 /* BehavioContextCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BehavioContextCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B10000000000000000000005 /* BehavioContext.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BehavioContext.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B10000000000000000000006 /* BehavioContextCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BehavioContextCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		B10000000000000000000033 /* Analytics.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Configuration/Analytics.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -57,7 +56,6 @@
 				B10000000000000000000007 /* BehavioContext */,
 				B10000000000000000000008 /* BehavioContextCore */,
 				B10000000000000000000009 /* BehavioContextCoreTests */,
-				B10000000000000000000033 /* Analytics.xcconfig */,
 				B10000000000000000000011 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -74,6 +72,21 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXShellScriptBuildPhase section */
+        B10000000000000000000034 /* Package local speech and resources */ = {
+            isa = PBXShellScriptBuildPhase;
+            alwaysOutOfDate = 1;
+            buildActionMask = 2147483647;
+            files = ();
+            inputPaths = ();
+            outputPaths = ();
+            name = "Package local speech and resources";
+            runOnlyForDeploymentPostprocessing = 0;
+            shellPath = /bin/sh;
+            shellScript = "export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\"\n\"$SRCROOT/script/package_resources.sh\" \"$TARGET_BUILD_DIR/$CONTENTS_FOLDER_PATH\" \"${EXPANDED_CODE_SIGN_IDENTITY:--}\"\n";
+        };
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		B1000000000000000000000B /* BehavioContext */ = {
 			isa = PBXNativeTarget;
@@ -83,6 +96,7 @@
 				B1000000000000000000000E /* Frameworks */,
 				B10000000000000000000018 /* Resources */,
 				B1000000000000000000000A /* Embed Frameworks */,
+                B10000000000000000000034 /* Package local speech and resources */,
 			);
 			buildRules = ();
 			dependencies = (B10000000000000000000023 /* PBXTargetDependency */, );
@@ -181,12 +195,10 @@
 
 /* Begin XCBuildConfiguration section */
 		B10000000000000000000026 /* Debug */ = {isa = XCBuildConfiguration; buildSettings = {CLANG_ENABLE_MODULES = YES; ENABLE_TESTABILITY = YES; MACOSX_DEPLOYMENT_TARGET = 15.0; ONLY_ACTIVE_ARCH = YES; SDKROOT = macosx; SWIFT_OPTIMIZATION_LEVEL = "-Onone"; SWIFT_VERSION = 6.0; }; name = Debug; };
-		B10000000000000000000027 /* Release */ = {isa = XCBuildConfiguration; buildSettings = {CLANG_ENABLE_MODULES = YES; DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym"; MACOSX_DEPLOYMENT_TARGET = 15.0; ONLY_ACTIVE_ARCH = NO; SDKROOT = macosx; SWIFT_COMPILATION_MODE = wholemodule; SWIFT_VERSION = 6.0; }; name = Release; };
+		B10000000000000000000027 /* Release */ = {isa = XCBuildConfiguration; buildSettings = {CLANG_ENABLE_MODULES = YES; DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym"; MACOSX_DEPLOYMENT_TARGET = 15.0; ONLY_ACTIVE_ARCH = NO; SDKROOT = macosx; SWIFT_COMPILATION_MODE = wholemodule; SWIFT_UPCOMING_FEATURE_CONCISE_MAGIC_FILE = YES; SWIFT_VERSION = 6.0; }; name = Release; };
 		B10000000000000000000028 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B10000000000000000000033 /* Analytics.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = BehavioContext.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -195,7 +207,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_TESTABILITY = YES;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = "BehavioContext-Info.plist";
+				INFOPLIST_FILE = "Configuration/BehavioContextApp.plist";
+                ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "one.behavio.context";
@@ -208,9 +221,7 @@
 		};
 		B10000000000000000000029 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B10000000000000000000033 /* Analytics.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = BehavioContext.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -218,7 +229,8 @@
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = "BehavioContext-Info.plist";
+				INFOPLIST_FILE = "Configuration/BehavioContextApp.plist";
+                ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "one.behavio.context";
