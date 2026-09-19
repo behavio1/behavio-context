@@ -2,20 +2,22 @@
 
 by Behavio
 
-Talk to the active window, point with the cursor, and give an AI agent a compact folder instead of a full screen recording.
+Show an AI agent what you want changed: point at the screen, explain it aloud, then paste the recorded context.
 
-UI Screen Context is a native macOS utility built for bug reports, UI feedback, and agent-assisted work. It follows the active window as you switch apps and windows, transcribes speech locally in the selected language, tracks relevant pointer activity, detects visual changes, and compiles the result into a small text-first package.
+UI Screen Context records the active window as you switch between apps. It combines local speech transcription, cursor positions and selected screenshots into a context package for your agent. Use it to explain a UI change or show how to reproduce a bug.
 
 ## How it works
 
 1. Put the window you want to explain in front.
-2. Press **⌃⌘R**.
-3. Confirm or change the active microphone from the picker in the Recording Capsule.
+2. Before your first recording, choose your microphone, spoken language and local speech engine in Settings (see below).
+3. Press **⌃⌘R**. The Recording Capsule lets you change the microphone and spoken language during recording.
 4. Speak naturally, point, pause over text, click, and scroll.
 5. Stop with **Esc**, **⌃⌘R**, or the Stop button beside the timer.
-6. Paste the resulting `context/` folder path into your agent. Post-processing is already complete.
+6. Wait for **“Context copied. Share it with your agent.”** The completed context text and its local image-directory reference are now in your clipboard. Paste into your agent; the app stays in the background.
 
-The floating Recording Capsule shows elapsed time, a microphone picker, microphone level, live transcription, the current window, and a Stop action. Use its collapse/expand button to switch to a compact 300 × 44 pt bar with the timer, Stop, audio level, and a warning indicator. The compact view hides transcription and window/device names without changing what is recorded. The app remembers the selected view; hover over a warning indicator for details. Changing the microphone while recording switches the live input and persists the choice for the next session.
+Open **Recordings** when you want to review a saved recording. Results do not open automatically, and playback waits for you to press Play.
+
+The floating Recording Capsule shows elapsed time, microphone selection and level, the spoken-language menu, the current window, and Stop. Apple recognition can show live transcription; Whisper transcribes after you stop. The compact bar keeps the timer, Stop, audio level, spoken-language menu and warning indicator, while hiding transcription and window/device names. The app remembers the selected view. Changing the microphone switches the live input and persists the choice for the next session.
 
 ## Agent package
 
@@ -30,19 +32,49 @@ Behavio Context YYYY-MM-DD HH-MM-SS/
     └── on-demand/             # additional indexed evidence when needed
 ```
 
-After Stop, the app retries missing speech against the finalized local recording, detects pointer dwell as well as clicks, and runs Apple Vision OCR near the pointer. `context.md` is an agent-ready timeline that joins speech with the visible text being indicated. Images are selected from clicks, pointer dwell, pointing language, transcript boundaries, visual changes, and sparse coverage. Near-duplicate OCR targets within the same window are collapsed. Schema 3 includes `window_timeline` with app, window ID, title and time intervals, plus window attribution for images and pointer events. Transitions are sampled; short visits and gaps are explicitly not evidence of continuous interaction. The first pass is capped at eight images with a 1280 px long edge; pointer-focused crops are capped at 768 px. No audio or video is written inside `context/`.
+After Stop, Whisper transcribes the finalized local recording; Apple recognition can retry missing speech locally. The app detects pointer dwell as well as clicks, and runs Apple Vision OCR near the pointer. `context.md` is an agent-ready timeline that associates speech with nearby pointer evidence by time. This association does not prove which element the user meant. When OCR finds no label, the timeline retains selected pointer positions with full-canvas images instead of inventing a target name. Images are selected from clicks, pointer dwell, pointing language, transcript boundaries, visual changes, and sparse coverage. Near-duplicate OCR targets within the same window are collapsed. Schema 3 includes `window_timeline` with app, window ID, title and time intervals, plus window attribution for images and pointer events. Transitions are sampled; short visits and gaps are explicitly not evidence of continuous interaction. The first pass is capped at eight images with a 1280 px long edge; pointer-focused crops are capped at 768 px. No audio or video is written inside `context/`.
 
 ## Using the output with an AI agent
 
 This repository includes the [read-behavio-context skill](.agents/skills/read-behavio-context/SKILL.md). It teaches an agent how to interpret speech, cursor targets, OCR uncertainty, missing images, and the difference between copied text and a local folder path. Agents in this project can discover it under `.agents/skills/`; using it in another project requires making the skill available there. Pasting the recording alone does not install the skill.
 
-**Copy Path** and **Copy Path & Return** copy the local context folder path; **Copy Context Text** copies the Markdown text. If context compilation fails, the path can instead point to the saved MP4. **Copy Video & Return** places a video file URL on the clipboard. “Return” brings the previous app forward; it does not send a message. The latter does not attach the referenced images. For an agent without access to your Mac's files, attach the relevant context files explicitly.
+Context text is copied automatically once processing finishes. **Copy Context Text** copies it again, including the current local context directory. Neither action attaches images. A local agent can resolve image paths using that directory; for an agent without access to your Mac, attach the referenced images or context files explicitly.
+
+**Copy Path** and **Copy Path & Return** copy only the local context folder path; if context compilation fails, the path can instead point to the saved MP4. **Copy Video & Return** places a video file URL on the clipboard; the receiving app determines whether it becomes an attachment. “Return” brings the previous app forward without sending a message.
 
 In Settings, **Recordings and contexts folder** controls where new recordings are saved. Earlier recordings remain in their original folders and stay available in the recording list. **Show icon in menu bar** controls the menu containing start/stop, recordings, the recording folder, and settings.
 
 ## Language and settings
 
-The interface supports English, Polish, Spanish, and German. **Follow System** matches the preferred languages and falls back to English. The separate **Spoken language** control selects English, Polish, Spanish or German for recognition. Choose Apple on-device recognition or local Whisper Small / Large v3 Turbo. The recording bar has the same language menu; changing it reprocesses the whole recording in that language when recording stops. Missing Apple models show setup instructions and a recheck action. The audio meter indicates input level independently of transcription.
+The interface supports English, Polish, Spanish, and German. **Follow System** matches preferred languages and falls back to English. Interface language and spoken language are independent.
+
+### Configure speech recognition
+
+1. Open **Settings → Speech Recognition**.
+2. Set **Spoken language** to the language you will speak: English, Polish, Spanish or German.
+3. Choose **Recognition engine** and follow its readiness message:
+
+| Engine | Setup | When transcription appears |
+| --- | --- | --- |
+| **Apple · On this Mac** | Requires speech permission and an available Apple offline model for the selected language. | During recording, with a local recovery attempt after stopping when needed. |
+| **Whisper Small · Local** | Import the supported model or explicitly download about **488 MB**. | After stopping. |
+| **Whisper Large v3 Turbo · Local** | Import the supported model or explicitly download about **1.63 GB**. | After stopping. |
+
+Whisper is a speech-recognition model. It transcribes your audio on your Mac; the app assembles the context from that transcript and screen evidence. Audio is not sent to an online transcription service.
+
+For an unavailable Apple language, use **Open Dictation Settings**, add the language in **System Settings → Keyboard → Dictation**, allow any offered download, then return and choose **Check Again**. Availability depends on Apple's offline support on your Mac; selecting a language in macOS does not guarantee this app can use it offline. Choose local Whisper if Apple remains unavailable.
+
+For Whisper, **Download Model…** asks for confirmation before downloading public weights from Hugging Face. The app shows progress, supports cancellation and retry, and verifies the model's size and SHA-256 checksum. A valid model already installed for this app is reused.
+
+If you already have weights, choose the matching engine and **Use Existing Model…**. Select the supported `ggml-small.bin` or `ggml-large-v3-turbo.bin` file, or a folder containing that file or `ggml-model.bin`. The app verifies the selected weights and imports a **local copy** into its sandbox; this avoids another download but uses additional disk space. Arbitrary quantized or modified `.bin` variants are not accepted by the pinned checksum validation. OpenAI `.pt` weights need offline conversion with `script/convert_existing_whisper.sh`; MLX weights cannot be imported directly. Choose the existing model yourself; the app does not scan your disk for weights.
+
+The recording bar also has a spoken-language menu. Changing it during a recording reprocesses the whole recording using the newly selected language after Stop; it does not create separate language segments. The language is saved with the recording.
+
+### Language of copied context
+
+Speech remains in the selected spoken language, without translation into English. Structural headings remain English, and screen quotes, filenames and identifiers stay in their original form. The context asks the receiving agent to generate responses in the recording's language unless the user explicitly requests another language. The receiving agent decides how to follow this instruction. Changing app settings does not rewrite previously saved packages.
+
+The audio meter confirms input level, not successful recognition. A `complete` transcript can still contain recognition errors. Short phrases can be misrecognized; inspect the transcript and referenced frames before making ambiguous changes.
 
 **More Settings** expands by clicking its entire header. It contains the recording folder and menu-bar icon toggle with a matching icon preview. The menu provides Start/Stop, Recordings, Open Recordings Folder, and Settings. The app uses a simplified template version of its logo for the menu bar and its full icon in the Dock.
 
@@ -67,7 +99,7 @@ See the [privacy policy](docs/privacy.md).
 - Input Monitoring is optional but required for pointer-aware moments outside the app.
 - Swift 6.0+ for command-line builds, or Xcode for the Xcode project.
 
-The app keeps recording and produces visual context if speech recognition or Input Monitoring is unavailable. `manifest.json` reports the real transcript status instead of pretending transcription succeeded.
+The app can save video and visual context when speech recognition is unavailable. Pointer-event coverage may be limited without Input Monitoring. `manifest.json` records transcript status, language, engine and any captured recognition error; a successful recognition status is not an accuracy score.
 
 ## Build
 
@@ -102,7 +134,7 @@ Or open `BehavioContext.xcodeproj` in Xcode and select the `BehavioContext` sche
 - SwiftUI and AppKit provide the menu bar app and nonactivating Recording Capsule.
 - ScreenCaptureKit captures one `SCWindow` at a time through `desktopIndependentWindow`, replacing the stream when the active window changes. Source intervals identify each recorded window; transitions can contain gaps.
 - Speech performs Apple local partial/final transcription in the selected language, with a local finalized-file retry. Whisper uses the finalized audio and preserves media-relative timestamps. Exported transcript metadata includes language, engine and a failure reason.
-- A short-lived global pointer monitor records normalized mouse events only during recording.
+- A short-lived global pointer monitor and 250 ms position sampler record normalized positions only during recording, including an initially stationary cursor. Repeated stationary samples preserve the beginning of a dwell.
 - AVFoundation extracts and downsizes selected frames after the MP4 is finalized; Vision resolves nearby text at pointer dwell and click moments.
 - The package writer validates a temporary directory before publishing `context/` atomically.
 
@@ -128,7 +160,3 @@ On this machine, SDK 27 Command Line Tools lack SwiftUI macro/asset tools. The v
 ```
 
 Full Xcode is required for XCTest here. Project development guidance lives in `.agents/skills/macos-swift-development` and `.agents/skills/local-speech-recognition`, linked from `AGENTS.md`.
-
-The copied context includes an agent response-language instruction derived from the recording’s saved speech language, independently of the app interface language. Structural headings remain English. Agents should generate responses directly in that language unless the user requests otherwise; transcript text, screen quotes, filenames and identifiers remain unchanged. Previously saved packages are not rewritten.
-
-After a recording finishes compiling, its context text and local image-directory reference are copied to the clipboard automatically. A brief nonactivating notice confirms it is ready for ⌘V. The app does not open the results window or start playback; open Recordings to review a saved recording manually. If context generation fails, the recording stays saved and no success notice is shown.
